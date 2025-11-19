@@ -174,6 +174,9 @@ export default function CardForm() {
     const updateQuantity = (id: number, delta: number, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         
+        // FIX: Set the expanded card ID to the ID of the card being updated
+        setExpandedCardId(id); 
+
         setCart(prev => {
             const currentQty = prev[id] || 0;
             const newQty = Math.max(0, currentQty + delta);
