@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Navbar from "./components/public/Navbar";
 import Footer from "./components/public/Footer";
 import { Abhaya_Libre } from "next/font/google";
+import { Inter } from "next/font/google";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,6 +23,11 @@ const abhaya = Abhaya_Libre({
   weight: ["800"],
   subsets: ["latin"],
   variable: "--font-abhaya",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 
@@ -104,7 +111,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable}  antialiased bg-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable} ${inter.variable} antialiased bg-black`}
       >
         <Navbar />
         {children}

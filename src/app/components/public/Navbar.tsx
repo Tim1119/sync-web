@@ -22,7 +22,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-[#030C32] ">
+    <nav className="bg-[#030C32] font-[inter] ">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="relative flex items-center h-20">
           {/* Logo Left */}
@@ -44,7 +44,7 @@ export default function Navbar() {
               <Link
                 key={item.title}
                 href={item.url}
-                className={`text-sm font-medium transition-colors relative group ${
+                className={`text-sm font-medium transition-colors relative group font-[inter] ${
                   pathname === item.url
                     ? "text-[#113CFC]"
                     : "text-white hover:[#030C32]"
