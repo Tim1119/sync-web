@@ -7,6 +7,7 @@ import {
     Plus, 
     CreditCard, 
     ArrowLeft,
+    RotateCw, // Icon for the flip button
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -65,36 +66,93 @@ const CARD_TEMPLATES: CardTemplate[] = [
     },
 ];
 
-// --- Mock Card Component ---
-const MockCard = ({ template, isSelected }: { template: CardTemplate, isSelected?: boolean }) => {
+// --- Mock Card Back Component ---
+const MockCardBack = ({ template }: { template: CardTemplate }) => {
     return (
         <div 
-            className={`relative w-full aspect-[1/1.58] rounded-xl overflow-hidden shadow-2xl transition-all duration-300
-            ${isSelected ? 'ring-2 ring-white/50' : 'opacity-90 hover:opacity-100'}`}
+            className="absolute inset-0 w-full aspect-[1/1.58] rounded-xl overflow-hidden shadow-2xl backface-hidden"
             style={{
                 background: template.theme,
                 backgroundImage: `linear-gradient(135deg, ${template.color}, ${template.color}EE)`,
             }}
         >
-            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.8),transparent)]" />
-            
             <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white">
-                 {/* Logo Vertical */}
-                 <div className="flex-grow flex items-center justify-center gap-2 rotate-90 opacity-90">
-                    <Image
-                        src="/landing/sync-shape.svg"
-                        className="object-contain text-white"
-                        alt="Sync Logo"
-                        width={30}
-                        height={30}
-                    />
-                    <span className="font-bold text-xl tracking-widest">Sync</span>
+                
+                {/* Magnetic Stripe Area */}
+                <div className="w-full h-10 bg-neutral-800/80 mt-4 rounded-sm" />
+
+                {/* Signature/QR Code Area */}
+                <div className="space-y-4">
+                    <div className="flex justify-end">
+                        <div className="w-20 h-10 bg-white rounded flex items-center justify-center">
+                            <Image
+                                src="/landing/sync-shape.svg"
+                                className="object-contain text-blue-900"
+                                alt="Sync Logo"
+                                width={20}
+                                height={20}
+                            />
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-400 text-center">
+                        Secure Digital Identity Access Card
+                    </p>
                 </div>
 
-                {/* Bottom Details */}
-                <div className="flex justify-end">
-                    <Wifi className="w-5 h-5 rotate-90 opacity-80" />
+                {/* Chip area (Optional) */}
+                <div className="flex justify-end opacity-70">
+                    <div className="font-mono text-[8px] tracking-wide">
+                        Powered by SYNCNET
+                    </div>
                 </div>
+            </div>
+        </div>
+    );
+};
+
+
+// --- Mock Card Front/Flip Container Component ---
+const MockCard = ({ template, isSelected, isFlipped }: { template: CardTemplate, isSelected?: boolean, isFlipped?: boolean }) => {
+    return (
+        // Flip Container
+        <div 
+            className={`relative w-full aspect-[1/1.58] rounded-xl transition-all duration-700 preserve-3d
+            ${isFlipped ? 'rotate-y-180' : ''}
+            ${isSelected ? 'ring-2 ring-white/50' : 'opacity-90 hover:opacity-100'}`}
+        >
+            {/* Card Front (Backface Hidden) */}
+            <div 
+                className="absolute inset-0 w-full aspect-[1/1.58] rounded-xl overflow-hidden shadow-2xl backface-hidden"
+                style={{
+                    background: template.theme,
+                    backgroundImage: `linear-gradient(135deg, ${template.color}, ${template.color}EE)`,
+                }}
+            >
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.8),transparent)]" />
+                
+                <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white">
+                     {/* Logo Vertical */}
+                     <div className="flex-grow flex items-center justify-center gap-2 rotate-90 opacity-90">
+                        <Image
+                            src="/landing/sync-shape.svg"
+                            className="object-contain text-white"
+                            alt="Sync Logo"
+                            width={30}
+                            height={30}
+                        />
+                        <span className="font-bold text-xl tracking-widest">Sync</span>
+                    </div>
+
+                    {/* Bottom Details */}
+                    <div className="flex justify-end">
+                        <Wifi className="w-5 h-5 rotate-90 opacity-80" />
+                    </div>
+                </div>
+            </div>
+
+            {/* Card Back (Rotated 180deg) */}
+            <div className="absolute inset-0 rotate-y-180 backface-hidden">
+                <MockCardBack template={template} />
             </div>
         </div>
     );
@@ -158,6 +216,8 @@ export default function CardForm() {
     const [step, setStep] = useState(1);
     const [cart, setCart] = useState<Record<number, number>>({ 1: 1, 2: 0, 3: 0 });
     const [expandedCardId, setExpandedCardId] = useState<number>(1); 
+    // NEW STATE: Control the flip animation for Stage 2
+    const [isFlipped, setIsFlipped] = useState(false); 
 
     const [contact, setContact] = useState<ContactDetails>({
         firstName: '',
@@ -174,7 +234,7 @@ export default function CardForm() {
     const updateQuantity = (id: number, delta: number, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         
-        // FIX: Set the expanded card ID to the ID of the card being updated
+        // Ensure card details are expanded when quantity is changed
         setExpandedCardId(id); 
 
         setCart(prev => {
@@ -241,7 +301,8 @@ export default function CardForm() {
                             onClick={() => setExpandedCardId(template.id)}
                         >
                             <div className="w-full max-w-[160px] mb-4">
-                                <MockCard template={template} isSelected={expandedCardId === template.id} />
+                                {/* Use MockCard in Stage 1, without flip */}
+                                <MockCard template={template} isSelected={expandedCardId === template.id} isFlipped={false} />
                             </div>
                             <span className={`font-bold text-sm md:text-base ${expandedCardId === template.id ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
                                 {template.name}
@@ -256,7 +317,6 @@ export default function CardForm() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 px-4">
                 {/* Left Column: Selection List with Accordion */}
                 <div className="lg:col-span-8 space-y-4">
-                    {/* Removed the "Choose Your Card" h2 from here as it is now at top */}
                     
                     {CARD_TEMPLATES.map(template => {
                         const isExpanded = expandedCardId === template.id;
@@ -329,142 +389,172 @@ export default function CardForm() {
     );
 
     // --- Stage 2: Details ---
-    const renderStage2 = () => (
-        <div className="animate-fadeIn">
-            {/* HEADER: Centered */}
-            <div className="text-center mb-8 md:mb-10 px-4">
-                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Card Customization</h1>
-                <p className="text-gray-400 max-w-xl mx-auto">Enter details for your cards below.</p>
-            </div>
+    const renderStage2 = () => {
+        
+        // --- LOGIC TO GENERATE DESCRIPTIVE LABELS (carried over from previous request) ---
+        const recipientLabels: string[] = [];
+        const orderedCardIds = Object.keys(cart).map(Number).sort((a, b) => a - b);
+        
+        for (const id of orderedCardIds) {
+            const qty = cart[id] || 0;
+            const template = CARD_TEMPLATES.find(t => t.id === id);
 
-             {/* Mock Cards Scroll - Centered on Desktop */}
-             <div className="mb-10 px-4 relative">
-                 <h2 className="text-white text-center text-sm uppercase tracking-wider text-gray-500 mb-4">Selected Cards</h2>
-                 
-                 <div 
-                    className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-4 no-scrollbar md:justify-center"
-                    style={{ maskImage: 'linear-gradient(to right, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)' }}
-                 >
-                    {Object.entries(cart).map(([id, qty]) => {
-                        if (qty === 0) return null;
-                        const template = CARD_TEMPLATES.find(t => t.id === Number(id))!;
-                        return (
-                             <div key={id} className="flex-none w-[40%] md:w-[200px] snap-center bg-[#0B1739] rounded-xl p-4 border border-white/10 flex flex-col items-center">
-                                <div className="w-full mb-3 relative">
-                                    <MockCard template={template} />
-                                    <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#0B1739]">
-                                        {qty}
+            if (qty > 0 && template) {
+                for (let i = 1; i <= qty; i++) {
+                    recipientLabels.push(`${template.name} Card #${i}`);
+                }
+            }
+        }
+        // ---------------------------------------------------------------------------------
+
+        return (
+            <div className="animate-fadeIn">
+                {/* HEADER: Centered */}
+                <div className="text-center mb-8 md:mb-10 px-4">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Card Customization</h1>
+                    <p className="text-gray-400 max-w-xl mx-auto">Enter details for your cards below.</p>
+                </div>
+
+                 {/* Mock Cards Scroll - Centered on Desktop */}
+                 <div className="mb-10 px-4 relative">
+                     <h2 className="text-white text-center text-sm uppercase tracking-wider text-gray-500 mb-4">Selected Cards</h2>
+                     
+                     <div className="flex justify-center mb-6">
+                        <button
+                            onClick={() => setIsFlipped(f => !f)}
+                            className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition p-2 rounded-full border border-blue-600/50 hover:bg-blue-900/20"
+                        >
+                            <RotateCw size={14} className={isFlipped ? 'animate-spin-reverse' : ''}/> 
+                            {isFlipped ? 'Show Front' : 'Show Back'}
+                        </button>
+                     </div>
+
+                     <div 
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-4 no-scrollbar md:justify-center"
+                        style={{ maskImage: 'linear-gradient(to right, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)' }}
+                     >
+                        {Object.entries(cart).map(([id, qty]) => {
+                            if (qty === 0) return null;
+                            const template = CARD_TEMPLATES.find(t => t.id === Number(id))!;
+                            return (
+                                 <div key={id} className="flex-none w-[40%] md:w-[200px] snap-center bg-[#0B1739] rounded-xl p-4 border border-white/10 flex flex-col items-center">
+                                    <div className="w-full mb-3 relative">
+                                        {/* Use MockCard in Stage 2 with flip control */}
+                                        <MockCard template={template} isFlipped={isFlipped} /> 
+                                        <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#0B1739]">
+                                            {qty}
+                                        </div>
                                     </div>
+                                    <span className="text-gray-300 text-sm font-medium">{template.name}</span>
                                 </div>
-                                <span className="text-gray-300 text-sm font-medium">{template.name}</span>
-                            </div>
-                        );
-                    })}
-                    <div className="flex-none w-4 md:hidden"></div>
+                            );
+                        })}
+                        <div className="flex-none w-4 md:hidden"></div>
+                     </div>
                  </div>
-             </div>
 
-            {/* Main Grid: Form (Left) and Summary (Right) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 px-4">
-                
-                {/* Left Column: Form Inputs */}
-                <div className="lg:col-span-6">
-                    <div className="space-y-6">
-                        {/* Stacked Inputs (Vertical) */}
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-xs text-gray-400 uppercase">First name</label>
-                                <input 
-                                    type="text" 
-                                    name="firstName" 
-                                    value={contact.firstName} 
-                                    onChange={handleContactChange} 
-                                    placeholder="First name" 
-                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs text-gray-400 uppercase">Last name</label>
-                                <input 
-                                    type="text" 
-                                    name="lastName" 
-                                    value={contact.lastName} 
-                                    onChange={handleContactChange} 
-                                    placeholder="Last name" 
-                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                />
-                            </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                            <label className="text-xs text-gray-400 uppercase">Your Email</label>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                value={contact.email} 
-                                onChange={handleContactChange} 
-                                placeholder="buyer@example.com" 
-                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                            />
-                        </div>
-
-                        {totalQuantity > 1 && (
-                            <div className="border-t border-gray-800 pt-6 space-y-3">
-                                <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'single' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
-                                    <input type="radio" name="deliveryMethod" value="single" checked={contact.deliveryMethod === 'single'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
-                                    <span className="text-sm text-gray-300">Send all card details to <b>one email</b></span>
-                                </label>
-                                
-                                <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'multiple' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
-                                    <input type="radio" name="deliveryMethod" value="multiple" checked={contact.deliveryMethod === 'multiple'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
-                                    <span className="text-sm text-gray-300">Send each card to a <b>different email</b></span>
-                                </label>
-                            </div>
-                        )}
-
-                        <div className="space-y-3 pt-2">
-                            {contact.deliveryMethod === 'single' || totalQuantity <= 1 ? (
+                {/* Main Grid: Form (Left) and Summary (Right) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 px-4">
+                    
+                    {/* Left Column: Form Inputs */}
+                    <div className="lg:col-span-6">
+                        <div className="space-y-6">
+                            {/* Stacked Inputs (Vertical) */}
+                            <div className="space-y-4">
                                 <div className="space-y-2">
-                                    <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
+                                    <label className="text-xs text-gray-400 uppercase">First name</label>
                                     <input 
-                                        type="email" 
-                                        placeholder="Where should we send the cards?" 
+                                        type="text" 
+                                        name="firstName" 
+                                        value={contact.firstName} 
+                                        onChange={handleContactChange} 
+                                        placeholder="First name" 
                                         className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
                                     />
                                 </div>
-                            ) : (
-                                <div className="space-y-4 animate-fadeIn">
-                                    <p className="text-sm text-blue-400">Please enter an email for each card:</p>
-                                    {Array.from({ length: totalQuantity }).map((_, idx) => (
-                                        <div key={idx} className="space-y-1">
-                                            <label className="text-xs text-gray-500 uppercase">Card #{idx + 1} Recipient</label>
-                                            <input 
-                                                type="email" 
-                                                value={contact.recipientEmails[idx] || ''}
-                                                onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
-                                                placeholder={`Email for Card ${idx + 1}`}
-                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                            />
-                                        </div>
-                                    ))}
+                                <div className="space-y-2">
+                                    <label className="text-xs text-gray-400 uppercase">Last name</label>
+                                    <input 
+                                        type="text" 
+                                        name="lastName" 
+                                        value={contact.lastName} 
+                                        onChange={handleContactChange} 
+                                        placeholder="Last name" 
+                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <label className="text-xs text-gray-400 uppercase">Your Email</label>
+                                <input 
+                                    type="email" 
+                                    name="email" 
+                                    value={contact.email} 
+                                    onChange={handleContactChange} 
+                                    placeholder="buyer@example.com" 
+                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                />
+                            </div>
+
+                            {totalQuantity > 1 && (
+                                <div className="border-t border-gray-800 pt-6 space-y-3">
+                                    <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'single' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
+                                        <input type="radio" name="deliveryMethod" value="single" checked={contact.deliveryMethod === 'single'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
+                                        <span className="text-sm text-gray-300">Send all card details to <b>one email</b></span>
+                                    </label>
+                                    
+                                    <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'multiple' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
+                                        <input type="radio" name="deliveryMethod" value="multiple" checked={contact.deliveryMethod === 'multiple'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
+                                        <span className="text-sm text-gray-300">Send each card to a <b>different email</b></span>
+                                    </label>
                                 </div>
                             )}
+
+                            <div className="space-y-3 pt-2">
+                                {contact.deliveryMethod === 'single' || totalQuantity <= 1 ? (
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
+                                        <input 
+                                            type="email" 
+                                            placeholder="Where should we send the cards?" 
+                                            className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4 animate-fadeIn">
+                                        <p className="text-sm text-blue-400">Please enter an email for each card:</p>
+                                        {Array.from({ length: totalQuantity }).map((_, idx) => (
+                                            <div key={idx} className="space-y-1">
+                                                <label className="text-xs text-gray-500 uppercase">{recipientLabels[idx]} Recipient</label>
+                                                <input 
+                                                    type="email" 
+                                                    value={contact.recipientEmails[idx] || ''}
+                                                    onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
+                                                    placeholder={`Email for ${recipientLabels[idx]}`}
+                                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                     {/* Right Column: Summary */}
+                     <div className="lg:col-span-4 relative">
+                        <div className="sticky top-8 space-y-6">
+                            <OrderSummary cart={cart} total={totalAmount} />
+                            <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white hover:bg-blue-700 py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-900/20 transition-all">
+                                Proceed to Payment
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                 {/* Right Column: Summary */}
-                 <div className="lg:col-span-4 relative">
-                    <div className="sticky top-8 space-y-6">
-                        <OrderSummary cart={cart} total={totalAmount} />
-                        <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white hover:bg-blue-700 py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-900/20 transition-all">
-                            Proceed to Payment
-                        </button>
-                    </div>
-                </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     // --- Stage 3: Payment ---
     const renderStage3 = () => (
@@ -504,6 +594,26 @@ export default function CardForm() {
              <div className="fixed inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
             <div className="fixed top-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
             <div className="fixed bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
+            
+            {/* Added style to enable 3D perspective for flip */}
+            <style jsx global>{`
+                .preserve-3d {
+                    transform-style: preserve-3d;
+                }
+                .backface-hidden {
+                    backface-visibility: hidden;
+                }
+                .rotate-y-180 {
+                    transform: rotateY(180deg);
+                }
+                @keyframes spin-reverse {
+                    from { transform: rotate(360deg); }
+                    to { transform: rotate(0deg); }
+                }
+                .animate-spin-reverse {
+                    animation: spin-reverse 1s linear infinite;
+                }
+            `}</style>
 
             <main className="relative z-10 max-w-7xl mx-auto md:px-8 py-4">
                 <div className="flex items-center justify-between mb-8 px-4">
