@@ -61,39 +61,6 @@ export default function HeroComponent() {
     },
   };
 
-  // --- NEW VARIANTS FOR MOBILE ANIMATION ---
-  const mobileCardVariant: Variants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: [0, -5, 0], // Subtle float animation
-      transition: {
-        opacity: { duration: 0.8, delay: 0.2 },
-        scale: { duration: 0.5, delay: 0.2 },
-        y: { 
-          duration: 4, // Slow, subtle float
-          repeat: Infinity,
-          ease: "easeInOut" as const,
-        },
-      },
-    },
-  };
-
-  const glowVariant: Variants = {
-    animate: {
-      scale: [1, 1.05, 1],
-      opacity: [0.3, 0.4, 0.3],
-      transition: {
-        duration: 8,
-        repeat: Infinity,
-        ease: "easeInOut" as const,
-        repeatType: "reverse" as const,
-      },
-    },
-  };
-  // -----------------------------------------
-
   return (
     <div
       className="relative w-full overflow-hidden"
@@ -205,62 +172,43 @@ export default function HeroComponent() {
                 </span>
             </h1>
 
-              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS & ANIMATIONS === */}
+              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS === */}
               <div className="relative flex justify-center pt-8 pb-4 lg:hidden">
-                {/* GLOWS BEHIND THE CARDS - NOW ANIMATED */}
+                {/* GLOWS BEHIND THE CARDS - MORE INTENSE (copied from desktop image's glows) */}
               
-                {/* 1. Large, central white subtle glow (Static for clarity) */}
+                {/* 1. Large, central white subtle glow */}
                 <div
                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0"
                 />
-                
-                {/* 2. Top-left blue focused glow (Animated) */}
-                <motion.div
+                {/* 2. Top-left blue focused glow */}
+                <div
                   className="absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
-                  variants={glowVariant}
-                  animate="animate"
                 />
-                
-                {/* 3. Bottom-right blue focused glow (Animated) */}
-                <motion.div
+                {/* 3. Bottom-right blue focused glow */}
+                <div
                   className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
-                  variants={glowVariant}
-                  animate="animate"
                 />
-                
-                {/* 4. Small, intense central white spot (Static) */}
+                {/* 4. Small, intense central white spot */}
                 <div
                   className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-white/40 blur-[80px] rounded-full z-0"
                 />
-                
-                {/* 5. Top-right subtle white glow (Static) */}
+                {/* 5. Top-right subtle white glow */}
                 <div
                   className="absolute top-[-5%] right-[0%] w-[150px] h-[150px] bg-white/20 blur-[70px] rounded-full z-0"
                 />
-                
-                {/* 6. Bottom-left subtle blue spread (Animated) */}
-                <motion.div
+                {/* 6. Bottom-left subtle blue spread */}
+                <div
                   className="absolute bottom-[-5%] left-[0%] w-[150px] h-[150px] bg-[#113CFC]/30 blur-[70px] rounded-full z-0"
-                  variants={glowVariant}
-                  animate="animate"
                 />
 
-                {/* ANIMATED IMAGE */}
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={mobileCardVariant}
-                  className="relative z-10 w-full max-w-sm" // Container for the Image motion
-                >
-                  <Image
-                    src="/landing/sync-wallet-hero-cards.svg"
-                    alt="Cards Graphic"
-                    width={900} 
-                    height={900} 
-                    className="w-full h-full object-contain" 
-                    priority
-                  />
-                </motion.div>
+                <Image
+                  src="/landing/sync-wallet-hero-cards.svg"
+                  alt="Cards Graphic"
+                  width={900} 
+                  height={900} 
+                  className="w-full max-w-sm object-contain relative z-10" 
+                  priority
+                />
               </div>
               {/* ======================================== */}
 

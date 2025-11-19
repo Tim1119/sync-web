@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Navbar from "./components/public/Navbar";
-import HeroSection from "./components/public/Hero";
+import Hero from "./components/public/Hero";
+import HeroClientsSection from "./components/public/HeroClientsSection";
+import ClientsSection from "./components/public/OurClients";
+// import HeroClientsSection from "./components/public/hhherro";
+
+
 import LandingPage from "./components/public/LandingPage";
-import ClientsSection from "./components/public/clientSection";
 import UniquenessSection from "./components/public/Uniqueness";
 import TargetAndFaqSection from "./components/public/TargetAndFaqSection";
 import Footer from "./components/public/Footer";
@@ -78,7 +82,11 @@ export default function Home() {
       {/* <Navbar /> */}
       
       {/* Hero section with absolute positioned background image */}
-      <HeroSection />
+      {/* <Hero /> */}
+      <HeroClientsSection />
+
+      <ClientsSection />
+
 
       <UniquenessSection />
 

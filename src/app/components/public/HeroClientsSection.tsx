@@ -8,6 +8,7 @@ import { motion, Variants } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 
 // --- Mock Button Component (Replace with your actual import if available) ---
+// Note: Adjusted props to match usage in the Hero section (Link/passHref)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Button = ({ children, className, variant, style, ...props }: any) => (
   <button className={className} style={style} {...props}>
@@ -24,6 +25,9 @@ interface Client {
 
 // Client data
 const clients: Client[] = [
+  { name: "Revolut", logo: "/revolut-logo.svg" },
+  { name: "NorthOne", logo: "/northone-logo.svg" },
+  { name: "Checkout", logo: "/checkout-logo.svg" },
   { name: "Revolut", logo: "/revolut-logo.svg" },
   { name: "NorthOne", logo: "/northone-logo.svg" },
   { name: "Checkout", logo: "/checkout-logo.svg" },
@@ -68,24 +72,36 @@ export default function HeroClientsSection() {
   // Effect to determine how many items should be visible based on viewport width
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setItemsPerView(1); // Mobile: 1 logo
-      } else if (window.innerWidth < 1024) {
-        setItemsPerView(2); // Medium: 2 logos
-      } else {
-        setItemsPerView(3); // Large: 3 logos
+      // Safely access window.innerWidth
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth < 768) {
+          setItemsPerView(1); // Mobile: 1 logo
+        } else if (window.innerWidth < 1024) {
+          setItemsPerView(2); // Medium: 2 logos
+        } else {
+          setItemsPerView(3); // Large: 3 logos
+        }
       }
     };
 
-    handleResize(); // Set initial value
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (typeof window !== 'undefined') {
+      handleResize(); // Set initial value
+      window.addEventListener("resize", handleResize);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
   }, []);
 
   // Duplicate the clients array to fill the track (3 sets for itemsPerView=3, 2 for itemsPerView=2, etc.)
   const duplicatedClients = useMemo(() => {
     // We duplicate the list to ensure the track is full enough for smooth looping
-    const duplicates = Array(itemsPerView * 2).fill(null).map(() => [...clients]).flat();
+    // Using 3x clients for 1 and 2 itemsPerView, and 2x clients for 3 itemsPerView
+    // A simplified approach for looping: duplicate enough to cover the viewport + a full set to scroll past
+    const effectiveDuplicates = itemsPerView === 3 ? 2 : 3;
+    const duplicates = Array(effectiveDuplicates).fill(null).map(() => [...clients]).flat();
     return duplicates;
   }, [itemsPerView]);
 
@@ -100,16 +116,22 @@ export default function HeroClientsSection() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsImageVisible(false);
-      } else {
-        setIsImageVisible(true);
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > 50) {
+          setIsImageVisible(false);
+        } else {
+          setIsImageVisible(true);
+        }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    if (typeof window !== 'undefined') {
+      window.addEventListener("scroll", handleScroll);
+    }
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("scroll", handleScroll);
+      }
     };
   }, []);
 
@@ -150,7 +172,7 @@ export default function HeroClientsSection() {
     >
 
       {/* ==================================================
-        CENTRALIZED GLOW SYSTEM (Hidden on Mobile)
+        CENTRALIZED GLOW SYSTEM 
         ==================================================
       */}
       <div className="absolute inset-0 pointer-events-none z-10">
@@ -174,7 +196,7 @@ export default function HeroClientsSection() {
             md:absolute md:top-1/2 md:left-1/2
             transform -translate-x-1/2 -translate-y-1/2
             md:w-[1600px] md:h-[1400px]
-           bg-red-400
+            bg-white/1
             blur-[300px]
             mix-blend-screen
             rounded-full
@@ -211,9 +233,9 @@ export default function HeroClientsSection() {
       {isImageVisible && (
         <div
           className={`
-            fixed -top-60 -left-32 w-[450px] h-[350px] opacity-40
-            sm:h-[1000px] sm:w-[1000px] sm:-top-10 sm:-left-80
-            lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
+            fixed -top-[120px] -left-[155px] w-[650px] h-[1000px] opacity-40
+            sm:h-[1000px] sm:w-[1000px] sm:-top-30 sm:-left-80
+             lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
             pointer-events-none z-0
             2xl:-top-60 2xl:-left-110 2xl:w-[1400px] 2xl:h-[1300px]
           `}
@@ -223,14 +245,14 @@ export default function HeroClientsSection() {
             alt="Decorative background"
             width={800}
             height={800}
-            className="w-full h-full object-contain z-[99]"
+            className="w-full h-full object-cover z-[99]"
             priority
           />
         </div>
       )}
 
       {/* ==================================================
-        HERO CONTENT SECTION
+        HERO CONTENT SECTION (REFURBISHED)
         ==================================================
       */}
       <div className="relative z-20">
@@ -244,38 +266,75 @@ export default function HeroClientsSection() {
               variants={textVariant}
             >
               <h1 className="text-center text-4xl sm:text-5xl lg:text-7xl font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
-                {/* 'One Card.' is now a flex item that takes full width on large screens (lg) */}
                 <span className="lg:w-full lg:text-left">
                     One Card.
                 </span>
-                {/* 'Endless Possibilities' is also a flex item that takes full width on large screens (lg) */}
                 <span className="text-[#113CFC] lg:w-full lg:text-left">
                     Endless Possibilities
                 </span>
             </h1>
 
-              <p className="text-xl sm:text-lg text-gray-300 leading-relaxed max-w-md text-center lg:text-left">
+              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS === */}
+              <div className="relative flex justify-center pt-8 pb-4 lg:hidden">
+                {/* GLOWS BEHIND THE CARDS - MORE INTENSE */}
+              
+                {/* 1. Large, central white subtle glow */}
+                <div
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0"
+                />
+                {/* 2. Top-left blue focused glow */}
+                <div
+                  className="absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
+                />
+                {/* 3. Bottom-right blue focused glow */}
+                <div
+                  className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
+                />
+                {/* 4. Small, intense central white spot */}
+                <div
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-white/40 blur-[80px] rounded-full z-0"
+                />
+                {/* 5. Top-right subtle white glow */}
+                <div
+                  className="absolute top-[-5%] right-[0%] w-[150px] h-[150px] bg-white/20 blur-[70px] rounded-full z-0"
+                />
+                {/* 6. Bottom-left subtle blue spread */}
+                <div
+                  className="absolute bottom-[-5%] left-[0%] w-[150px] h-[150px] bg-[#113CFC]/30 blur-[70px] rounded-full z-0"
+                />
+
+                <Image
+                  // Path changed to the original in HeroClientsSection
+                   src="/landing/sync-wallet-hero-cards.svg"
+                  alt="Cards Graphic"
+                  width={900} 
+                  height={900} 
+                  className="w-full max-w-sm object-contain relative z-10" 
+                  priority
+                />
+              </div>
+              {/* ======================================== */}
+
+
+              <p className="text-xl lg:text-lg text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 text-justify font-[inter]">
                 Create, share, and manage your digital identity — built for
                 professionals, teams, and institutions.
               </p>
 
               {/* Buttons */}
              <motion.div
-                  // Removed 'flex-col' to default to 'flex-row' on small screens
                   className="flex gap-4 pt-2 justify-center lg:justify-start"
                   initial="hidden"
                   animate="visible"
                   variants={buttonVariant}
               >
-                  <Link href="/contact">
-                      <Button
-                          className="bg-[#113CFC] hover:bg-[#0E33E0] text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-4 text-base font-medium rounded-lg shadow-lg transition-all duration-300"
-                      >
+                  <Link href="/contact" passHref>
+                       <Button className="bg-[#113CFC] hover:bg-[#0E33E0] text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-4 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
                           Get Started
                       </Button>
                   </Link>
 
-                  <Link href="/how-it-works">
+                  <Link href="/how-it-works" passHref>
                       <Button
                           variant="outline"
                           className="w-full sm:w-auto text-base font-medium
@@ -288,25 +347,54 @@ export default function HeroClientsSection() {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT SIDE IMAGE */}
+            {/* RIGHT SIDE IMAGE (DESKTOP) */}
             <motion.div
-              className="flex justify-center lg:justify-end"
+              // Hidden on mobile, only visible on large screens
+              className="relative hidden lg:flex justify-end"
               initial="hidden"
               animate="visible"
               variants={imageVariant}
             >
+              {/* GLOWS BEHIND THE CARDS - MORE INTENSE */}
+              
+              {/* 1. Large, central white subtle glow */}
+              <div
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/30 blur-[200px] rounded-full z-0"
+              />
+              {/* 2. Top-left blue focused glow */}
+              <div
+                className="absolute top-[5%] left-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0"
+              />
+              {/* 3. Bottom-right blue focused glow */}
+              <div
+                className="absolute bottom-[5%] right-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0"
+              />
+              {/* 4. Small, intense central white spot */}
+              <div
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-white/40 blur-[120px] rounded-full z-0"
+              />
+              {/* 5. Top-right subtle white glow */}
+              <div
+                className="absolute top-[-5%] right-[0%] w-[180px] h-[180px] bg-white/20 blur-[100px] rounded-full z-0"
+              />
+              {/* 6. Bottom-left subtle blue spread */}
+              <div
+                className="absolute bottom-[-5%] left-[0%] w-[180px] h-[180px] bg-[#113CFC]/30 blur-[110px] rounded-full z-0"
+              />
+
               <Image
-                src="/hero-cards.svg"
+                src="/landing/hero-cards.svg"
                 alt="Cards Graphic"
-                width={800}
-                height={800}
-                className="w-full max-w-sm sm:max-w-md lg:max-w-lg object-contain"
+                width={900} 
+                height={900} 
+                className="w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10" 
                 priority
               />
             </motion.div>
           </div>
         </div>
       </div>
+
 
       {/* ==================================================
         CLIENTS CONTENT SECTION
