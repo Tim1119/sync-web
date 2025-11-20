@@ -302,9 +302,9 @@ export default function MergedLandingSection() {
                   animate="visible"
                   variants={buttonVariant}
               >
-                  <Link href="/contact" passHref>
+                  <Link href="/cards" passHref>
                        <Button className="bg-[#113CFC] hover:bg-[#0E33E0] cursor-pointer text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-3 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
-                          Get Started
+                          Buy Card
                       </Button>
                   </Link>
 

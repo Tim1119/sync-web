@@ -130,3 +130,7 @@
     transform: translateX(-33.333%); 
   }
 }
+
+.no-scroll {
+  overflow: hidden; 
+}
