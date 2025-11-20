@@ -258,6 +258,12 @@ export default function MergedLandingSection() {
                 </span>
             </h1>
 
+              <p className="text-lg lg:text-lg text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 text-justify font-[inter]">
+                Create, share, and manage your digital identity — built for
+                professionals, teams, and institutions.
+              </p>
+
+
               {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS === */}
               <div className="relative flex justify-center pt-8 pb-4 lg:hidden">
                 {/* GLOWS BEHIND THE CARDS - MOBILE */}
@@ -291,11 +297,7 @@ export default function MergedLandingSection() {
                 />
               </div>
 
-              <p className="text-lg lg:text-lg text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 text-justify font-[inter]">
-                Create, share, and manage your digital identity — built for
-                professionals, teams, and institutions.
-              </p>
-
+            
              <motion.div
                   className="flex gap-4 pt-2 justify-center lg:justify-start"
                   initial="hidden"
