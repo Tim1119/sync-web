@@ -85,22 +85,18 @@ export default function Footer() {
                         className="col-span-full md:col-span-1 text-center md:text-left"
                     >
                         <motion.div variants={linkItemVariants} className="mb-4">
-                            {/* Logo */}
-                            {/* <svg className="w-8 h-8 text-[#113CFC] mb-3 inline-block align-middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
-                                <path d="M10 8l4 4-4 4"></path>
-                                <path d="M14 8l-4 4 4 4"></path>
-                            </svg>
-                            <span className="text-2xl font-bold ml-2 text-[#113CFC]">Sync</span> */}
+                          
 
                             <Link href="/">
-                                <Image
-                                     src="/landing/sync-logo.svg"
-                                    className="object-contain"
-                                    alt="Company Logo"
-                                    width={100}
-                                    height={40}
-                                />
+                                 <div className="relative w-[100px] h-10" >
+                                    <Image
+                                        src="/landing/sync-logo.svg"
+                                        fill
+                                        alt="Company Logo"
+                                        loading="eager"
+                                        className="object-contain"
+                                    />
+                                </div>
                             </Link>
                         </motion.div>
                         

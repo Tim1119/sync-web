@@ -28,13 +28,17 @@ export default function Navbar() {
           {/* Logo Left */}
           <div className="flex-shrink-0">
             <Link href="/">
-              <Image
-                src="/landing/sync-logo.svg"
-                className="object-contain"
-                alt="Company Logo"
-                width={100}
-                height={40}
-              />
+            <div className="relative w-[100px] h-10" >
+
+                <Image
+                  src="/landing/sync-logo.svg"
+                  fill
+                  alt="Company Logo"
+                  loading="eager"
+                  className="object-contain"
+                />
+            </div>
+
             </Link>
           </div>
 

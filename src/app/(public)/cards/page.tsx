@@ -41,8 +41,8 @@ const CARD_TEMPLATES: CardTemplate[] = [
         theme: 'bg-blue-600', 
         color: '#2563EB', 
         tagline: 'Sleek. Modern. High-performance.',
-        description: 'The Nova Card delivers advanced smart identity technology in a refined, durable plastic design.',
-        features: ['Smooth finish', 'NFC-enabled', 'Water resistant'] 
+        description: 'The {name} Card delivers advanced smart identity technology in a refined, durable plastic design. Perfect for everyday use with a premium feel.',
+        features: ['Smooth, lightweight finish engineered for daily carry', 'NFC-enabled for instant identity verification and smart access', 'Resistant to bending, wear, and environmental exposure','Customizable surface for institutional branding'] 
     },
     { 
         id: 2, 
@@ -51,8 +51,8 @@ const CARD_TEMPLATES: CardTemplate[] = [
         theme: 'bg-[#E3CAA5]', 
         color: '#D4B99F', 
         tagline: 'Natural. Sustainable. Unique.',
-        description: 'Crafted from real wood, the Maple card combines eco-friendly materials with cutting-edge technology.',
-        features: ['Real wood veneer', 'Eco-friendly core', 'Unique grain'] 
+        description: 'Nature meets technology. The {name} Card is crafted from polished premium wood, delivering a warm, sophisticated aesthetic fused with modern smart identity capabilities.',
+        features: ['Hand-crafted wooden body with a refined natural texture', 'Embedded NFC chip for seamless smart interactions', 'Eco-friendly, sustainable material choice','Each card carries a unique natural grain pattern'] 
     },
     { 
         id: 3, 
@@ -60,9 +60,9 @@ const CARD_TEMPLATES: CardTemplate[] = [
         price: 50000, 
         theme: 'bg-neutral-900', 
         color: '#171717', 
-        tagline: 'Luxury. Exclusive. Powerful.',
-        description: 'The gold standard of digital cards. Matte black finish with VIP functionality.',
-        features: ['Matte black', 'Heavier weight', 'Priority support'] 
+        tagline: 'Engineered prestige.',
+        description: 'The {name} Card is built from precision-cut steel, offering unmatched luxury, durability, and presence. A statement piece for those who value excellence.',
+        features: ['Premium stainless-steel construction with a polished metallic finish', 'Ultra-durable, scratch-resistant, and prestige-grade', 'High-performance NFC core for instant authentication','Executive feel that commands attention'] 
     },
 ];
 
@@ -73,13 +73,13 @@ const MockCardBack = ({ template }: { template: CardTemplate }) => {
 
     return (
         <div 
-            className="absolute inset-0 w-full aspect-[1/1.58] rounded-xl overflow-hidden shadow-2xl backface-hidden"
+            className="absolute inset-0 w-full aspect-[1/1.58] rounded-xl overflow-hidden shadow-2xl backface-hidden "
             style={{
                 background: template.theme,
                 backgroundImage: `linear-gradient(135deg, ${template.color}, ${template.color}EE)`,
             }}
         >
-            <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white">
+            <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white " >
                 
                 {/* 1. Magnetic Stripe Area (Top) */}
                 <div className="w-full h-8 md:h-10 bg-neutral-800/80 mt-2 rounded-sm" />
@@ -105,13 +105,15 @@ const MockCardBack = ({ template }: { template: CardTemplate }) => {
                     {/* 3. Sync Logo (Bottom Left) */}
                     <div className="flex items-end justify-between pb-1">
                         <div className="flex items-center gap-1 opacity-90">
-                            <Image
-                                src="/landing/sync-shape.svg"
-                                className="object-contain text-white"
-                                alt="Sync Logo"
-                                width={18}
-                                height={18}
-                            />
+                            <div className="relative w-[18px] h-[18px]" >
+                                <Image
+                                    src="/landing/sync-shape.svg"
+                                    fill
+                                    alt="Company Logo"
+                                    loading="eager"
+                                    className="object-contain"
+                                />
+                            </div>
                             <span className="font-bold text-sm tracking-widest">Sync</span>
                         </div>
 
@@ -149,13 +151,17 @@ const MockCard = ({ template, isSelected, isFlipped }: { template: CardTemplate,
                 <div className="absolute inset-0 p-3 md:p-4 flex flex-col justify-between text-white">
                      {/* Logo Vertical */}
                      <div className="flex-grow flex items-center justify-center gap-2 rotate-90 opacity-90">
-                        <Image
-                            src="/landing/sync-shape.svg"
-                            className="object-contain text-white"
-                            alt="Sync Logo"
-                            width={30}
-                            height={30}
-                        />
+                         <div className="relative w-[30px] h-[30px]" >
+                                <Image
+                                    src="/landing/sync-shape.svg"
+                                    fill
+                                    alt="Company Logo"
+                                    loading="eager"
+                                    className="object-contain"
+                                />
+                            </div>
+                        
+                       
                         <span className="font-bold text-xl tracking-widest">Sync</span>
                     </div>
 
@@ -368,10 +374,21 @@ export default function CardForm() {
                                 <div className={`grid transition-all duration-300 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100 pb-4' : 'grid-rows-[0fr] opacity-0'}`}>
                                     <div className="overflow-hidden px-4 md:pl-20 md:pr-6">
                                         <p className="text-white font-semibold mb-2 text-sm">{template.tagline}</p>
-                                        <p className="text-gray-400 text-sm mb-3 leading-relaxed">{template.description}</p>
+                                        {/* <p className="text-white text-sm mb-3 leading-relaxed">{template.description}</p> */}
+                                        <p className="text-white text-sm mb-3 leading-relaxed">
+                                            {template.description.split('{name}').map((part, idx, arr) => (
+                                                <React.Fragment key={idx}>
+                                                {part}
+                                                {idx !== arr.length - 1 && (
+                                                    <span className="text-blue-400 font-semibold">{template.name}</span>
+                                                )}
+                                                </React.Fragment>
+                                            ))}
+                                        </p>
+
                                         <ul className="space-y-1">
                                             {template.features.map((f, i) => (
-                                                <li key={i} className="flex items-center gap-2 text-xs text-gray-500">
+                                                <li key={i} className="flex items-center gap-2 text-xs text-white">
                                                     <div className="w-1 h-1 rounded-full bg-blue-500" /> {f}
                                                 </li>
                                             ))}
@@ -607,7 +624,7 @@ export default function CardForm() {
 
     return (
         <div className="min-h-screen bg-[#030C32] relative overflow-x-hidden font-sans selection:bg-blue-500 selection:text-white pb-20">
-             <div className="fixed inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+             <div className="fixed inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
             <div className="fixed top-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
             <div className="fixed bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
             
