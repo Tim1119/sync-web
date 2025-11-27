@@ -14,10 +14,10 @@ const IconIndividual = () => <div className="text-4xl bg-white p-2 text-sm round
 
 </div>;
 const IconBusiness = () => <div className="text-4xl  bg-white w-[50px] h-[50px] flex justify-center text-sm rounded-full group-hover:text-gray-900 transition-colors duration-300">
-    <Image alt="" src={"/businesses.svg"} width={"22"} height={"22"}  />
+    <Image alt="" src={"/landing/businesses.svg"} width={"22"} height={"22"}  />
 </div>;
 const IconUniversity = () => <div className="text-4xl  bg-white w-[50px] h-[50px] flex justify-center text-sm rounded-full group-hover:text-gray-900 transition-colors duration-300">
-    <Image alt="" src={"/graduation-cap.svg"} width={"30"} height={"30"}  /> 
+    <Image alt="" src={"/landing/graduation-cap.svg"} width={"30"} height={"30"}  /> 
 </div>;
 const IconPlus = ({ isOpen }: { isOpen: boolean }) => (
   <span className="text-2xl transition-transform duration-300">
