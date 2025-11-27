@@ -28,7 +28,8 @@ const IconPlus = ({ isOpen }: { isOpen: boolean }) => (
 // --- 1. ACCORDION COMPONENT ---
 interface AccordionItemProps {
   title: string;
-  content: string;
+  // content: string;
+   content: React.ReactNode;
 }
 
 const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
@@ -50,7 +51,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        <div className="px-5 pb-5 text-gray-400">
+        <div className="px-5 pb-5 text-white">
           <p>{content}</p>
         </div>
       </motion.div>
@@ -99,11 +100,12 @@ const TargetCard = ({ icon: Icon, title, description }: (typeof targetData)[0]) 
 // --- 3. MAIN COMPONENT (Combines Target and FAQ) ---
 export default function TargetAndFaqSection() {
   const faqItems: AccordionItemProps[] = [
-    { title: "Morbi fringilla metus ac lacus dapibus.", content: "Sed nec pharetra nulla, in ultricies nisl. Phasellus varius semper tellus, ac dapibus eros commodo id. Mauris eget ex quam. Ut eu imperdiet velit, ac ultrices magna. Duis at tempor nulla. Mauris ex quam, dictum gravida pretium sed, molestie nec ante. Sed ac ullamcorper nisl." },
-    { title: "What we like to do & what we don't like to do", content: "We love simplicity and transparency. We don't like hidden fees or complicated sign-up processes. Our mission is to make digital identity simple, secure, and accessible to everyone, from individuals to large institutions." },
-    { title: "Fusce fermentum tempus, sapien a sagittis tellus mattis id. Cras et enim ex.", content: "Aliquam rhoncus, justo eget posuere rhoncus, velit nisi eleifend metus, non tincidunt dolor velit a massa. Sed nec pharetra nulla, in ultricies nisl." },
-    { title: "Nunc aliquam tempus iaculis. Ut eu imperdiet velit.", content: "Duis at tempor nulla. Mauris ex quam, dictum gravida pretium sed, molestie nec ante. Sed ac ullamcorper nisl." },
-    { title: "Nam sit amet neque auctor, dignissim augue eu, condimentum justo.", content: "Phasellus varius semper tellus, ac dapibus eros commodo id. Mauris eget ex quam." },
+    { title: "Who is SYNC designed for?", content:"SYNC is designed for individuals, universities, government agencies, hospitals, private organizations, security agencies, and membership-based communities." },
+    { title: "How secure is SYNC?", content:  <> SYNC is fully secure, with <strong>encrypted NFC communication, multi-level access permissions, secure cloud storage, and audit trails with real-time monitoring.</strong></> },
+    { title: "Can SYNC integrate with our existing systems?", content: "Yes. SYNC supports seamless integration with ERPs, student portals, HR systems, hospital management systems, and access control hardware." },
+    { title: "What happens if a card is lost or stolen?", content: "The card can be instantly deactivated via the user dashboard, and a replacement can be issued immediately." },
+    { title: "Are the cards customizable?", content: <>Yes. Choose from <strong>Nova (plastic), Maple (wood)</strong>, or <strong>Auric (steel)</strong>. Custom branding and personalization are available at a <strong> minimum order quantity (MOQ) of 10 cards.</strong></> },
+    { title: "How long does corporate implementation take?", content: <>Implementation time depends on the dynamics of the organization; however, the standard deployment, including setup, data capture, card production, and training, is approximately <strong>4 weeks.</strong></> },
   ];
 
   // Ref for the "Who It's For" section to trigger animation when in view
