@@ -42,7 +42,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        {title}
+       <p className="font-medium"> {title}</p>
         <IconPlus isOpen={isOpen} />
       </button>
       <motion.div
