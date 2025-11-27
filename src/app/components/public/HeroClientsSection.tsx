@@ -462,7 +462,7 @@ export default function MergedLandingSection() {
 
           {/* Cards Grid */}
           <motion.div
-            className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory pt-6 pb-4 px-6 md:px-8 lg:px-0 lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-x-visible lg:justify-items-center"
+            className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory pt-1 pb-1  px-6 md:px-8 lg:px-0 lg:grid lg:grid-cols-3 lg:gap-14 lg:overflow-x-visible lg:justify-items-center lg:w-fit mx-auto"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
