@@ -233,6 +233,90 @@ const OrderSummary = ({ cart, total }: { cart: Record<number, number>, total: nu
     );
 };
 
+// --- Duplicate Email Modal Component ---
+const DuplicateEmailModal = ({ 
+    isOpen, 
+    onClose, 
+    onConfirm, 
+    duplicateGroups 
+}: { 
+    isOpen: boolean; 
+    onClose: () => void; 
+    onConfirm: () => void;
+    duplicateGroups: Array<{ email: string; cards: string[] }>;
+}) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+            {/* Backdrop */}
+            <div 
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={onClose}
+            />
+            
+            {/* Modal */}
+            <div className="relative bg-[#0B1739] border border-blue-500/30 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-b border-yellow-500/20 px-6 py-4">
+                    <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                            <span className="text-2xl">⚠️</span>
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-white mb-1">Duplicate Email Detected</h3>
+                            <p className="text-sm text-gray-300">Multiple cards will be sent to the same recipient</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="px-6 py-5 max-h-[50vh] overflow-y-auto">
+                    <p className="text-gray-300 text-sm mb-4">
+                        You&apos;ve entered the same email address for multiple cards. Please review below:
+                    </p>
+
+                    <div className="space-y-4">
+                        {duplicateGroups.map((group, idx) => (
+                            <div key={idx} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                                    <p className="text-blue-400 font-mono text-sm break-all">{group.email}</p>
+                                </div>
+                                <div className="space-y-2 pl-4">
+                                    <p className="text-xs text-gray-400 uppercase tracking-wide">Will receive:</p>
+                                    {group.cards.map((card, cardIdx) => (
+                                        <div key={cardIdx} className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-gray-500" />
+                                            <span className="text-white text-sm">{card}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="border-t border-white/10 px-6 py-4 flex flex-col sm:flex-row gap-3">
+                    <button
+                        onClick={onClose}
+                        className="flex-1 px-6 py-3 rounded-xl border border-white/20 text-white hover:bg-white/5 transition-all font-medium"
+                    >
+                        Go Back & Edit
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="flex-1 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-all font-bold shadow-lg"
+                    >
+                        Continue Anyway
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- Main Form Component ---
 export default function CardForm() {
     const [step, setStep] = useState(1);
@@ -249,9 +333,92 @@ export default function CardForm() {
         deliveryMethod: 'single',
         recipientEmails: []
     });
+    const [deliveryEmail, setDeliveryEmail] = useState('');
+    const [showDuplicateModal, setShowDuplicateModal] = useState(false);
 
     const totalQuantity = Object.values(cart).reduce((a, b) => a + b, 0);
     const totalAmount = CARD_TEMPLATES.reduce((sum, card) => sum + (card.price * (cart[card.id] || 0)), 0);
+
+    // Validation function for email fields
+    const isValidEmail = (email: string) => {
+        return email.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const hasDuplicateEmails = () => {
+        if (contact.deliveryMethod === 'multiple' && totalQuantity > 1) {
+            const emails = contact.recipientEmails.filter(email => email.trim() !== '');
+            const uniqueEmails = new Set(emails.map(e => e.toLowerCase().trim()));
+            return emails.length !== uniqueEmails.size;
+        }
+        return false;
+    };
+
+    const getDuplicateEmailGroups = () => {
+        if (contact.deliveryMethod !== 'multiple' || totalQuantity <= 1) return [];
+
+        // Generate card labels
+        const recipientLabels: string[] = [];
+        const orderedCardIds = Object.keys(cart).map(Number).sort((a, b) => a - b);
+        
+        for (const id of orderedCardIds) {
+            const qty = cart[id] || 0;
+            const template = CARD_TEMPLATES.find(t => t.id === id);
+            if (qty > 0 && template) {
+                for (let i = 1; i <= qty; i++) {
+                    recipientLabels.push(`${template.name} Card #${i}`);
+                }
+            }
+        }
+
+        // Group emails
+        const emailMap: Record<string, number[]> = {};
+        contact.recipientEmails.forEach((email, idx) => {
+            const normalizedEmail = email.toLowerCase().trim();
+            if (normalizedEmail) {
+                if (!emailMap[normalizedEmail]) {
+                    emailMap[normalizedEmail] = [];
+                }
+                emailMap[normalizedEmail].push(idx);
+            }
+        });
+
+        // Filter only duplicates
+        return Object.entries(emailMap)
+            .filter(([_, indices]) => indices.length > 1)
+            .map(([email, indices]) => ({
+                email,
+                cards: indices.map(idx => recipientLabels[idx])
+            }));
+    };
+
+    const canProceedToPayment = () => {
+        // Check if all basic contact fields are filled
+        if (!contact.firstName.trim() || !contact.lastName.trim() || !isValidEmail(contact.email)) {
+            return false;
+        }
+
+        // Check delivery email validation based on delivery method
+        if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
+            return isValidEmail(deliveryEmail);
+        } else {
+            // For multiple delivery, all recipient emails must be valid
+            return contact.recipientEmails.length === totalQuantity && 
+                   contact.recipientEmails.every(email => isValidEmail(email));
+        }
+    };
+
+    const handleProceedToPayment = () => {
+        if (hasDuplicateEmails()) {
+            setShowDuplicateModal(true);
+        } else {
+            setStep(s => s + 1);
+        }
+    };
+
+    const confirmProceedWithDuplicates = () => {
+        setShowDuplicateModal(false);
+        setStep(s => s + 1);
+    };
 
     const updateQuantity = (id: number, delta: number, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
@@ -549,7 +716,9 @@ export default function CardForm() {
                                     <div className="space-y-2">
                                         <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
                                         <input 
-                                            type="email" 
+                                            type="email"
+                                            value={deliveryEmail}
+                                            onChange={(e) => setDeliveryEmail(e.target.value)}
                                             placeholder="Where should we send the cards?" 
                                             className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
                                         />
@@ -579,7 +748,15 @@ export default function CardForm() {
                      <div className="lg:col-span-4 relative">
                         <div className="sticky top-8 space-y-6">
                             <OrderSummary cart={cart} total={totalAmount} />
-                            <button onClick={() => setStep(s => s + 1)} className="w-full bg-blue-600 text-white hover:bg-blue-700 py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-900/20 transition-all">
+                            <button 
+                                onClick={handleProceedToPayment} 
+                                disabled={!canProceedToPayment()}
+                                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all
+                                    ${canProceedToPayment() 
+                                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-900/20' 
+                                        : 'bg-gray-800 text-gray-500 cursor-not-allowed'}
+                                `}
+                            >
                                 Proceed to Payment
                             </button>
                         </div>
@@ -668,6 +845,14 @@ export default function CardForm() {
                 {step === 2 && renderStage2()}
                 {step === 3 && renderStage3()}
             </main>
+
+            {/* Duplicate Email Modal */}
+            <DuplicateEmailModal 
+                isOpen={showDuplicateModal}
+                onClose={() => setShowDuplicateModal(false)}
+                onConfirm={confirmProceedWithDuplicates}
+                duplicateGroups={getDuplicateEmailGroups()}
+            />
         </div>
     );
 }
