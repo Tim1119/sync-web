@@ -103,7 +103,7 @@ export default function FeaturesSection() {
                     - Image is contained on Mobile 
                 */}
                 <motion.div
-                    className="relative p-8 rounded-xl bg-[#030C32] border border-white/10 shadow-2xl h-full lg:h-[300px] col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col justify-between"
+                    className="relative p-8 lg:p-[50px] rounded-xl bg-[#030C32] border border-white/10 shadow-2xl h-auto lg:h-[300px] col-span-1 md:col-span-2 lg:col-span-2 overflow-hidden flex flex-col justify-between"
                     variants={cardVariant}
                     custom={1} // Stagger index 1
                 >
@@ -114,14 +114,14 @@ export default function FeaturesSection() {
 
                    
                     {/* Content on the left, Image on the right (internal flex) */}
-                    <div className="flex flex-col lg:flex-row justify-between h-[400px]">
+                    <div className="flex flex-col lg:flex-row justify-between h-[600px] gap-4 lg:h-[400px]">
                         
                         {/* TEXT CONTENT (Left side) */}
-                        <div className="lg:w-1/2 mb-6 lg:mb-0 pt-4 relative z-30 flex flex-col justify-center">
-                            <h3 className="text-4xl font-medium text-white mb-4">Seamless <br /> onboarding</h3>
-                            <p className="text-base text-gray-300 max-w-lg text-justify">
+                        <div className="lg:w-1/2 mb-6 lg:mb-0 pt-4 relative z-30 flex flex-col justify-center text-center lg:text-left">
+                            <h3 className="text-4xl font-medium text-white mb-4">Seamless  onboarding</h3>
+                            <span className="text-base text-gray-300  text-justify w-full">
                              Get started using a completely digital on-boarding process, and activate your OneCard in less than 5 minutes.
-                            </p>
+                            </span>
                         </div>
                         
                         {/* IMAGE CONTAINER (Right side) */}
@@ -144,36 +144,60 @@ export default function FeaturesSection() {
                                 width={180} // Smaller base dimensions for mobile
                                 height={360}
                                 // CRUCIAL: Contained on mobile
-                                className="object-contain block lg:hidden mt-8 mx-auto w-full max-w-[200px] max-h-[250px]"
+                                // className="object-cover block lg:hidden mt-8 mx-auto w-full max-w-fit max-h-fit"
+                                className="object-cover  absolute h-[700px] w-[600px] block -top-[80px] mx-auto rotate-[10deg] lg:hidden"
                             />
                         </div>
                     </div>
                 </motion.div>
 
+            
+
+
                 {/* CARD 3: Networking (Full width, spanning 3 columns) - UNIFORM HEIGHT */}
-                <motion.div
-                    className="p-8 rounded-xl bg-[#030C32] border border-white/10 shadow-2xl h-full lg:h-[300px] col-span-1 md:col-span-2 lg:col-span-3 overflow-hidden"
-                    variants={cardVariant}
-                    custom={2} // Stagger index 2
-                >
-                    <div className="flex flex-col lg:flex-row justify-between items-center h-full">
-                        <div className="lg:w-1/2">
-                            <h3 className="text-4xl font-medium text-white mb-4">Networking</h3>
-                            <p className="text-base text-gray-300 max-w-lg text-justify">
-                                Share SYNC with new people. They get their own co-branded OneCard with separate offers while you keep track and control.
-                            </p>
-                        </div>
-                        <div className="lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0">
-                            <Image
-                                src="/landing/networking-card.svg" // Placeholder - Replace with your actual image path
-                                alt="Stacked OneCard designs"
-                                width={400}
-                                height={300}
-                                className="object-contain"
-                            />
-                        </div>
-                    </div>
-                </motion.div>
+<motion.div
+    // className="relative p-8 lg:p-0 rounded-xl bg-[#030C32] border border-white/10 shadow-2xl h-full lg:h-[300px] col-span-1 md:col-span-2 lg:col-span-3 overflow-hidden"
+    className="relative p-8 lg:p-0 rounded-xl bg-[#030C32] border border-white/10 shadow-2xl h-full lg:h-[300px] col-span-1 md:col-span-2 lg:col-span-3 overflow-hidden"
+    variants={cardVariant}
+    custom={2} // Stagger index 2
+>
+    <div className="flex flex-col lg:flex-row justify-between items-center h-full ">
+        
+        {/* LEFT TEXT SECTION */}
+        {/* <div className="lg:w-1/2 lg:px-8 px-0"> */}
+        <div className="lg:w-1/2 lg:px-[70px] px-0 text-center lg:text-left">
+            <h3 className="text-4xl font-medium text-white mb-4">Networking</h3>
+            <p className="text-base text-gray-300 max-w-lg text-justify">
+                Share SYNC with new people. They get their own co-branded OneCard with separate offers while you keep track and control.
+            </p>
+        </div>
+
+        {/* RIGHT IMAGE SECTION */}
+        <div className="lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0 relative">
+
+            {/* DESKTOP IMAGE (large screens only) */}
+            <Image
+                src="/landing/networking-card.svg"
+                alt="Stacked OneCard designs desktop"
+                width={350}
+                height={350}
+                // className="object-contain hidden lg:block"
+                className="object-cover absolute lg:top-0   lg:-translate-y-1/2 lg:-right-2.5 lg:w-[500px] lg:h-[410px]  lg:block hidden z-10" 
+            />
+
+            {/* MOBILE IMAGE (visible only on small screens) */}
+            <Image
+                src="/landing/networking-card.svg"
+                alt="Stacked OneCard designs mobile"
+                width={280}
+                height={280}
+                className="object-contain block lg:hidden"
+            />
+
+        </div>
+    </div>
+</motion.div>
+
 
             </motion.div>
         </div>
