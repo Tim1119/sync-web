@@ -7,7 +7,7 @@ import { motion, useInView, Variants } from "framer-motion"; // Ensure Variants 
 // --- Mock Icon Components (Replace with your actual icons) ---
 const IconIndividual = () => <div className="text-4xl bg-white p-2 text-sm rounded-full text-black group-hover:text-gray-900 transition-colors duration-300">
     
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30/Users/ajanitimothy/Downloads/svg.svg" viewBox="0 0 24 24" role="img" aria-labelledby="titleFilledUser">
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" role="img" aria-labelledby="titleFilledUser">
   <title id="titleFilledUser">User</title>
   <path fill="currentColor" d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 3.134-7 7 0 .552.448 1 1 1h12c.552 0 1-.448 1-1 0-3.866-3.134-7-7-7z"/>
 </svg>
