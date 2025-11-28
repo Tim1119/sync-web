@@ -16,9 +16,9 @@ import Link from 'next/link';
 // --- Data Structures ---
 
 const QuickLinks = [
-    { title: 'Home', href: '#' },
-    { title: 'About', href: '#' },
-    { title: 'Cards', href: '#' },
+    { title: 'Home', href: '/' },
+    { title: 'About', href: '/about' },
+    { title: 'Cards', href: '/cards' },
     { title: 'Services', href: '#' },
     { title: 'Contact', href: '#' },
 ];
