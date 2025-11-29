@@ -133,7 +133,7 @@ export default function AboutUsPage() {
             SYNC: <span className="text-[#113CFC]">One Card.</span> Every Function.
           </h1>
           <p className="text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto font-[inter]">
-            It’s time to replace plastic with purpose. Transform how you connect, access, and operate with **SYNC**, the next-generation NFC-enabled platform for the modern world.
+            It’s time to replace plastic with purpose. Transform how you connect, access, and operate with <b>SYNC</b>, the next-generation NFC-enabled platform for the modern world.
           </p>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
              SYNC is more than a card; it&apos;s your digital passport for life and work.
