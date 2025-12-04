@@ -52,14 +52,14 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
   return (
     <motion.div
       className="relative p-6 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
-                 ring-1 ring-[#113CFC]/30  transition-all duration-300
-                hover:ring-[#113CFC]/60  w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
+                   transition-all duration-300
+                 w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
       variants={cardVariants}
       custom={custom}
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
     >
       {/* INTENSE, FOCUSED, ANIMATED GLOW WITHIN CARD - These are still local to the card, which is good */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+      {/* <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
           className="absolute -top-16 -right-16 w-80 h-80 bg-[#113CFC]/70 blur-[150px] rounded-full"
           style={{ mixBlendMode: 'screen' }}
@@ -76,7 +76,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
           viewport={{ once: true, amount: 0.5 }}
           whileHover={{ opacity: 0.5, scale: 1.25, transition: { duration: 0.5, ease: "easeOut" } }}
         />
-      </div>
+      </div> */}
 
       <div className="relative z-10 flex flex-col items-start text-left space-y-4 cursor-pointer">
        <div
