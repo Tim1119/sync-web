@@ -51,10 +51,9 @@ const LogoItem = ({ client }: { client: Client }) => (
 const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => {
   return (
     <motion.div
-      className="relative p-6 rounded-xl border border-white/10 bg-[#030C32] shadow-2xl overflow-hidden group 
-                 ring-1 ring-[#113CFC]/30 shadow-[0_0_15px_rgba(17,60,252,0.15)] transition-all duration-300
-                hover:ring-[#113CFC]/60 hover:shadow-[0_0_30px_rgba(17,60,252,0.3)] 
-                w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
+      className="relative p-6 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
+                 ring-1 ring-[#113CFC]/30  transition-all duration-300
+                hover:ring-[#113CFC]/60  w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
       variants={cardVariants}
       custom={custom}
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
