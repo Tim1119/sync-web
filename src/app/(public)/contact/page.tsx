@@ -156,7 +156,7 @@ export default function ContactUsPage() {
                 >
                     <h2 className="text-3xl font-bold text-white">Contact Us</h2>
                     <p className="text-gray-300">
-                        We're here to help. Reach out with any questions or feedback.
+                        We&apos;re here to help. Reach out with any questions or feedback.
                     </p>
                 </motion.div>
 

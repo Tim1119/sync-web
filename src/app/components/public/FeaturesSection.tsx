@@ -129,23 +129,27 @@ export default function FeaturesSection() {
                             
                             {/* Desktop Phone Image: ABSOLUTE/CLIPPED (Hidden on Mobile) */}
                             <Image
-                                src="/landing/iphone-feature.svg"
+                                src="/landing/iphone-feature2.png"
                                 alt="Seamless onboarding sign-up screen"
                                 width={350} 
                                 height={700}
                                 // CRUCIAL: Centering the large image vertically to make it spill out on both top and bottom edges
-                                className="object-cover absolute lg:top-[120px] lg:right-[20px]  lg:-translate-y-1/2 lg:right-[-40px] lg:w-[350px] lg:h-[250px]  lg:block hidden z-10" 
+                                // className="object-cover absolute lg:top-[120px] lg:right-[20px]  lg:-translate-y-1/2 lg:right-[-40px] lg:w-[350px] lg:h-[250px]  lg:block hidden z-10" 
+                                className="object-cover absolute lg:top-[230px] lg:right-[20px]  lg:-translate-y-1/2 lg:right-[-40px] lg:w-[350px] lg:h-[full]  lg:block hidden z-10 " 
                             />
                             
                             {/* Mobile Phone Image: RESPONSIVE/FULLY VISIBLE (Hidden on Desktop) */}
+                           {/* Mobile Phone Image: RESPONSIVE/FULLY VISIBLE (Hidden on Desktop) */}
                             <Image
-                                 src="/landing/iphone.svg"
+                                 src="/landing/iphone-feature4.svg"
                                 alt="Seamless onboarding sign-up screen"
                                 width={180} // Smaller base dimensions for mobile
                                 height={360}
+                                objectFit="cover"
+                                objectPosition="top" 
                                 // CRUCIAL: Contained on mobile
                                 // className="object-cover block lg:hidden mt-8 mx-auto w-full max-w-fit max-h-fit"
-                                className="object-cover  absolute h-[700px] w-[600px] block -top-[80px] mx-auto rotate-[10deg] lg:hidden"
+                                className="object-cover  absolute  h-[700px] md:h-fit md-p-3  w-[600px] block -top-[10px] md:-top-[70px] mx-auto lg:hidden"
                             />
                         </div>
                     </div>
