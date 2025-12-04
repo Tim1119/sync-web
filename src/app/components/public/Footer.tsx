@@ -20,7 +20,7 @@ const QuickLinks = [
     { title: 'About', href: '/about' },
     { title: 'Cards', href: '/cards' },
     { title: 'Services', href: '#' },
-    { title: 'Contact', href: '#' },
+    { title: 'Contact', href: '/contact' },
 ];
 
 const ServicesLinks = [
