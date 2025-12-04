@@ -250,7 +250,7 @@ export default function MergedLandingSection() {
               animate="visible"
               variants={textVariant}
             >
-              <h1 className="text-center text-4xl sm:text-5xl lg:text-7xl font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
+              <h1 className="text-center text-4xl sm:text-5xl lg:text-[84px] font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
                 <span className="lg:w-full lg:text-left">
                     One Card.
                 </span>
@@ -259,7 +259,7 @@ export default function MergedLandingSection() {
                 </span>
             </h1>
 
-              <p className="text-center text-lg lg:text-lg text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 lg:text-justify font-[inter]">
+              <p className="text-center text-lg lg:text-xl text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 lg:text-justify font-[inter]">
                 Create, share, and manage your digital identity — built for
                 professionals, teams, and institutions.
               </p>
@@ -306,7 +306,7 @@ export default function MergedLandingSection() {
                   variants={buttonVariant}
               >
                   <Link href="/cards" passHref>
-                       <Button className="bg-[#113CFC] hover:bg-[#0E33E0] cursor-pointer text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-3 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
+                       <Button className="font-[inter] bg-[#113CFC] hover:bg-[#0E33E0] cursor-pointer text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-3 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
                           Buy Card
                       </Button>
                   </Link>
@@ -314,7 +314,7 @@ export default function MergedLandingSection() {
                   <Link href="/how-it-works" passHref>
                       <Button
                           variant="outline"
-                          className="w-full sm:w-auto text-base font-medium cursor-pointer
+                          className="font-[inter] w-full sm:w-auto text-base font-medium cursor-pointer
                                     text-white border-2 border-[#113CFC] bg-transparent
                                     hover:bg-[#113CFC] hover:text-white transition-all duration-300 rounded-lg px-3 py-3 lg:px-8 lg:py-3s"
                       >

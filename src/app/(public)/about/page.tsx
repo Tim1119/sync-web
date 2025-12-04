@@ -130,7 +130,7 @@ export default function AboutUsPage() {
             The Future of Unified Identity
           </p>
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold font-[abhaya] text-white leading-tight">
-            SYNC: <span className="text-[#113CFC]">One Card.</span> Every Function.
+            SYNC: <span className="text-[#113CFC]">One Card.</span> Endless Possibilities.
           </h1>
           <p className="text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto font-[inter]">
             It’s time to replace plastic with purpose. Transform how you connect, access, and operate with <b>SYNC</b>, the next-generation NFC-enabled platform for the modern world.
