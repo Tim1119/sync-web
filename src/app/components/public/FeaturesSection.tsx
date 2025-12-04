@@ -181,17 +181,18 @@ export default function FeaturesSection() {
 
             {/* DESKTOP IMAGE (large screens only) */}
             <Image
-                src="/landing/networking-card.svg"
+                src="/landing/networking-card-new.svg"
                 alt="Stacked OneCard designs desktop"
                 width={350}
                 height={350}
                 // className="object-contain hidden lg:block"
-                className="object-cover absolute lg:top-0   lg:-translate-y-1/2 lg:-right-2.5 lg:w-[500px] lg:h-[410px]  lg:block hidden z-10" 
+                // className="object-cover absolute lg:top-0   lg:-translate-y-1/2 lg:-right-2.5 lg:w-[500px] lg:h-[410px]  lg:block hidden z-10" 
+                className="object-cover absolute    lg:block hidden z-10" 
             />
 
             {/* MOBILE IMAGE (visible only on small screens) */}
             <Image
-                src="/landing/networking-card.svg"
+                src="/landing/networking-card-new.svg"
                 alt="Stacked OneCard designs mobile"
                 width={280}
                 height={280}
