@@ -366,21 +366,21 @@ export default function MergedLandingSection() {
         <div
           className="md:absolute md:top-[700px] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[900px] md:h-[700px] bg-white/3 blur-[250px] mix-blend-screen rounded-full"
         />
-        <div
+        {/* <div
           className="absolute -top-40 right-1/4 transform translate-x-1/2 w-[600px] h-[500px] bg-[#113CFC]/30 blur-[250px] rounded-full mix-blend-screen"
-        />
-        <div
+        /> */}
+        {/* <div
           className="absolute -top-60 right-1/2 transform translate-x-1/2 w-[1000px] h-[800px] bg-white/10 blur-[300px] rounded-full mix-blend-screen"
-        />
-        <div
+        /> */}
+        {/* <div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[800px] bg-white/8 blur-[220px] rounded-full mix-blend-screen"
         />
         <div
           className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-[#113CFC]/15 blur-[180px] rounded-full mix-blend-screen"
-        />
-        <div
+        /> */}
+        {/* <div
           className="absolute top-10 left-10 w-[500px] h-[400px] bg-white/15 blur-[180px] rounded-full mix-blend-screen"
-        />
+        /> */}
       </div>
 
       {/* Background Decorative Image - Conditionally Rendered */}

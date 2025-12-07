@@ -222,7 +222,7 @@ export default function MergedLandingSection() {
             sm:h-[1000px] sm:w-[1000px] sm:-top-30 sm:-left-80
              lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
             pointer-events-none z-0
-            2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px]
+            2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px] z-10
           `}
         >
           <Image
@@ -230,7 +230,7 @@ export default function MergedLandingSection() {
             alt="Decorative background"
             width={800}
             height={800}
-            className="w-full h-full object-cover !z-[100]"
+            className="w-full h-full object-cover z-10"
             priority
           />
         </div>
