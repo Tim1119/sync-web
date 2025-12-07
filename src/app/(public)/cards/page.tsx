@@ -1262,7 +1262,7 @@ export default function CardForm() {
 
     // --- Stage 1: Choose Card ---
     const renderStage1 = () => (
-        <div className="animate-fadeIn px-4 lg:px-0">
+        <div className="animate-fadeIn px-4 lg:px-0 pt-10">
             <div className="text-center mb-8 md:mb-10 px-4">
                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">Choose Your Card</h1>
                 <p className="text-gray-400 max-w-xl mx-auto">Pick a style that fits your personality. You can customize your details next.</p>

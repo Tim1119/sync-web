@@ -92,7 +92,7 @@ const UNSPLASH_IMAGE_URLS = {
 export default function AboutUsPage() {
   return (
     <div
-      className="relative w-full overflow-hidden min-h-screen"
+      className="relative w-full overflow-hidden min-h-screen p-10"
       style={{
         background: '#030C32', // Main background color
       }}

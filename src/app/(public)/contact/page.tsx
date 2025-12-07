@@ -130,7 +130,7 @@ export default function ContactUsPage() {
 
   return (
     <div
-      className="relative w-full overflow-hidden min-h-screen"
+      className="relative w-full overflow-hidden min-h-screen pt-10"
       style={{
         background: unifiedBackground,
       }}

@@ -72,7 +72,7 @@ const Navbar: FC = () => {
   }, [mobileMenuOpen]); 
 
   return (
-    <nav className="bg-[#030C32] font-[inter] ">
+    <nav className="bg-[#030C32] font-[inter] fixed top-0 left-0 right-0 z-50 w-full">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="relative flex items-center h-20">
           
