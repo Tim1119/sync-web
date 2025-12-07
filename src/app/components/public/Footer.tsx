@@ -65,7 +65,7 @@ export default function Footer() {
     return (
         // Apply the dark background color found in your screenshots
         <motion.footer
-            className="bg-[#0b0f2c] text-white pt-20 pb-10"
+            className="bg-[#0b0f2c] text-white pt-5 pb-5"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
@@ -77,7 +77,7 @@ export default function Footer() {
                 <div 
                     // ⭐ CLEANED UP GRID: 1 column default, 4 columns on desktop (md:)
                     // The mobile layout is controlled by the children's flex/grid classes
-                    className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16"
+                    className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-6"
                 >
                     
                     {/* Column 1: Logo and Description (Full width, centered on mobile) */}
@@ -186,7 +186,7 @@ export default function Footer() {
 
                 {/* Bottom Section: Copyright */}
                 <motion.div 
-                    className="pt-8 text-center" 
+                    className="pt-7 text-center" 
                     variants={linkItemVariants}
                 >
                     <p className="text-gray-500 text-sm">

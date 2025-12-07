@@ -51,7 +51,7 @@ const LogoItem = ({ client }: { client: Client }) => (
 const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => {
   return (
     <motion.div
-      className="relative px-4 py-2 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
+      className="relative px-4 py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
                  ring-1 ring-[#113CFC]/30  transition-all duration-300
                 hover:ring-[#113CFC]/60 hover:shadow-[0_0_30px_rgba(17,60,252,0.3)] 
                 w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
@@ -60,7 +60,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
     >
       {/* INTENSE, FOCUSED, ANIMATED GLOW WITHIN CARD */}
-      <div className="absolute inset-0 pointer-events-none z-0 ">
+      <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
           className="absolute -top-16 -right-16 w-80 h-80 bg-[#113CFC]/70 blur-[150px] rounded-full"
           style={{ mixBlendMode: 'screen' }}
@@ -81,20 +81,20 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
 
       <div className="relative z-10 flex flex-col items-start text-left space-y-4 cursor-pointer">
        <div
-          className={`w-full h-40 flex items-center justify-center rounded-lg  font-[inter]`}
+          className={`w-full h-40 flex items-center justify-center mb-4 rounded-lg  font-[inter]`}
         >
           <Image
             src={card.image}
             alt={card.name}
             width={220} 
-            height={80} 
+            height={140} 
             className="object-contain"
             priority 
           />
         </div>
 
-        <h3 className="text-xl font-bold text-white m-0 p-1">{card.name}</h3>
-        <p className="text-lg text-white font-semibold m-0">{card.price}</p>
+        <h3 className="text-xl font-bold text-white m-0 p-0">{card.name}</h3>
+        <p className="text-lg text-white font-semibold m-0 pb-2">{card.price}</p>
 
         <ul className="text-gray-300 text-sm space-y-1 text-left w-full pl-0">
           {card.features.map((feature, idx) => (
@@ -591,7 +591,7 @@ export default function MergedLandingSection() {
         SECTION 3: CARD SELECTION 
         ==================================================
       */}
-      <div className="relative w-full overflow-hidden pt-12 md:pt-3 pb-24 md:pb-3"> 
+      <div className="relative w-full overflow-hidden pt-12 md:pt-3 pb-24 md:pb-3 "> 
 
         <div className="relative z-10 max-w-7xl mx-auto px-0 lg:px-8">
           {/* Section Heading and Description */}
@@ -602,7 +602,7 @@ export default function MergedLandingSection() {
             viewport={{ once: true, amount: 0.3 }}
             variants={sectionTextVariants}
           >
-            <h2 className="text-3xl sm:text-5xl font-bold text-white">
+            <h2 className="text-4xl sm:text-5xl font-bold text-white">
               Choose Your Perfect Card
             </h2>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">

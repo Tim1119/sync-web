@@ -166,7 +166,7 @@ const Stage1TemplateSelection: React.FC<Omit<StageProps, 'prevStage'>> = ({ form
 
     return (
         <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Choose Your Card Template</h2>
+            <h2 className="text-3xl md:text-2xl font-bold text-white mb-3">Choose Your Card Template</h2>
             <p className="text-gray-400 mb-12">Pick a style that fits your personality. You can customize your details next.</p>
 
             <div className="flex flex-col items-center md:flex-row justify-center gap-8 mb-16">

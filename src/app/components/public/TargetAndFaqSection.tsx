@@ -38,7 +38,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
   return (
     <div className="mt-4 rounded-xl border border-white/10 bg-gray-800/60 transition-colors duration-200 hover:border-[#1F79F2]/40">
       <button
-        className="flex justify-between items-center w-full p-5 text-left text-lg font-semibold text-white"
+        className="flex justify-between items-center w-full p-2 px-3 text-left text-lg font-semibold text-white"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
