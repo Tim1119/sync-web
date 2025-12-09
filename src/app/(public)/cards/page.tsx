@@ -885,7 +885,6 @@ import {
     Wifi, 
     Minus, 
     Plus, 
-    CreditCard, 
     ArrowLeft,
     RotateCw,
     Check,
@@ -1687,23 +1686,6 @@ export default function CardForm() {
             <h2 className="text-gray-400 text-lg mb-2">Total amount</h2>
             <div className="text-5xl md:text-6xl font-bold text-white mb-12">
                 ₦{totalAmount.toLocaleString()}
-            </div>
-
-            <div className="w-full max-w-md space-y-3 mb-8">
-                <label className="text-sm font-semibold text-gray-300 ml-1">Payment method</label>
-                
-                <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:border-blue-500 hover:bg-white/10 transition">
-                    <div className="w-12 h-10 bg-white rounded flex items-center justify-center shrink-0">
-                        <CreditCard className="text-blue-900" size={24} />
-                    </div>
-                    <div className="flex-grow min-w-0">
-                        <p className="text-white font-semibold text-lg truncate">Paystack</p>
-                        <p className="text-xs text-gray-400 truncate">Pay with Paystack</p>
-                    </div>
-                    <div className="ml-auto shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                        <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
-                    </div>
-                </div>
             </div>
 
             <div className="w-full max-w-md">
