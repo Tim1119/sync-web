@@ -34,9 +34,9 @@ interface StageProps {
 
 // --- Configuration Data ---
 const CARD_TEMPLATES: CardTemplate[] = [
-    { id: 1, name: 'Nova', price: 30000, theme: 'bg-blue-600', color: '#2563EB', subtext: 'Bold and Modern' },
-    { id: 2, name: 'Maple', price: 40000, theme: 'bg-yellow-800', color: '#B45309', subtext: 'Natural Wood Grain' },
-    { id: 3, name: 'Auric', price: 50000, theme: 'bg-gray-900', color: '#111827', subtext: 'Sleek and Minimal' },
+    { id: 1, name: 'Nova', price: 35000, theme: 'bg-blue-600', color: '#2563EB', subtext: 'Bold and Modern' },
+    { id: 2, name: 'Maple', price: 50000, theme: 'bg-yellow-800', color: '#B45309', subtext: 'Natural Wood Grain' },
+    { id: 3, name: 'Auric', price: 60000, theme: 'bg-gray-900', color: '#111827', subtext: 'Sleek and Minimal' },
 ];
 
 // --- Mock Card Component for Preview ---
@@ -302,7 +302,7 @@ const Stage3Payment: React.FC<StageProps> = ({ formData, nextStage, prevStage })
 
     const isBuyDisabled = !paymentMethod;
 
-    const displayPrice = template.price || 50000;
+    const displayPrice = template.price || 60000;
 
     return (
         <div className="text-center">

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { PaystackButton } from 'react-paystack';
-import { CardType, OrderItem, purchaseCards } from '@/lib/api';
+import { CardType, OrderItem, PurchaseRequest, purchaseCards } from '@/lib/api';
 import { toast } from 'react-hot-toast'; // Assuming react-hot-toast is available or I should install it. 
 // Wait, package.json didn't show react-hot-toast in sync-web-v2. I should probably use simple alerts or install it.
 // Let's check package.json again or just use simple UI for now.
@@ -17,9 +17,9 @@ import { Check, Minus, Plus, CreditCard, Loader2 } from 'lucide-react';
 
 // Pricing (Mock)
 const PRICES = {
-  [CardType.NOVA]: 5000,
-  [CardType.MARBLE]: 10000,
-  [CardType.AURIC]: 20000,
+  [CardType.NOVA]: 35000,
+  [CardType.MARBLE]: 50000,
+  [CardType.AURIC]: 60000,
 };
 
 export default function CardPurchaseFlow() {
@@ -74,7 +74,13 @@ export default function CardPurchaseFlow() {
   const handlePaystackSuccess = (reference: any) => {
     // In a real app, we verify the reference with backend.
     // Here we just call the purchase endpoint.
-    purchaseMutation.mutate(details);
+    const purchaseRequest: PurchaseRequest = {
+      items: details,
+      buyerEmail: details[0]?.email,
+      buyerName: details[0]?.name,
+      paymentReference: reference.reference || reference,
+    };
+    purchaseMutation.mutate(purchaseRequest);
   };
 
   const handlePaystackClose = () => {

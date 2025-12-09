@@ -21,12 +21,19 @@ export interface OrderItem {
   email: string;
 }
 
+export interface PurchaseRequest {
+  items: OrderItem[];
+  buyerEmail?: string;
+  buyerName?: string;
+  paymentReference?: string;
+}
+
 export interface PurchaseResponse {
   success: boolean;
   data: any;
 }
 
-export const purchaseCards = async (items: OrderItem[]): Promise<PurchaseResponse> => {
-  const response = await api.post('/orders/purchase', { items });
+export const purchaseCards = async (request: PurchaseRequest): Promise<PurchaseResponse> => {
+  const response = await api.post('/orders/purchase', request);
   return response.data;
 };

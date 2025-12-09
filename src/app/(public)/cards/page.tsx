@@ -888,6 +888,7 @@ import {
     CreditCard, 
     ArrowLeft,
     RotateCw,
+    Check,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useMutation } from '@tanstack/react-query';
@@ -930,7 +931,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
         id: 1, 
         name: 'Nova', 
         type: CardType.NOVA,
-        price: 30000, 
+        price: 35000, 
         theme: 'bg-blue-600', 
         color: '#2563EB', 
         tagline: 'Sleek. Modern. High-performance.',
@@ -943,7 +944,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
         id: 2, 
         name: 'Maple', 
         type: CardType.MARBLE, // Mapping Maple to Marble as per API enum
-        price: 40000, 
+        price: 50000, 
         theme: 'bg-[#E3CAA5]', 
         color: '#D4B99F', 
         tagline: 'Natural. Sustainable. Unique.',
@@ -956,7 +957,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
         id: 3, 
         name: 'Auric', 
         type: CardType.AURIC,
-        price: 50000, 
+        price: 60000, 
         theme: 'bg-neutral-900', 
         color: '#171717', 
         tagline: 'Engineered prestige.',
@@ -1154,6 +1155,8 @@ export default function CardForm() {
         recipientEmails: []
     });
     const [deliveryEmail, setDeliveryEmail] = useState('');
+    const [deliveryName, setDeliveryName] = useState('');
+    const [recipientNames, setRecipientNames] = useState<string[]>([]);
     const [showDuplicateModal, setShowDuplicateModal] = useState(false);
 
     const totalQuantity = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -1214,10 +1217,12 @@ export default function CardForm() {
         }
 
         if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
-            return isValidEmail(deliveryEmail);
+            return isValidEmail(deliveryEmail) && deliveryName.trim() !== '';
         } else {
             return contact.recipientEmails.length === totalQuantity && 
-                   contact.recipientEmails.every(email => isValidEmail(email));
+                   contact.recipientEmails.every(email => isValidEmail(email)) &&
+                   recipientNames.length === totalQuantity &&
+                   recipientNames.every(name => name.trim() !== '');
         }
     };
 
@@ -1259,6 +1264,18 @@ export default function CardForm() {
                 return { ...prevContact, recipientEmails: newEmails };
             });
 
+            // Update recipient names array
+            setRecipientNames(prevNames => {
+                let newNames = [...prevNames];
+                if (newTotalQuantity > prevNames.length) {
+                    const diff = newTotalQuantity - prevNames.length;
+                    newNames = [...newNames, ...new Array(diff).fill('')];
+                } else if (newTotalQuantity < prevNames.length) {
+                    newNames = newNames.slice(0, newTotalQuantity);
+                }
+                return newNames;
+            });
+
             return newCart;
         });
     };
@@ -1272,6 +1289,12 @@ export default function CardForm() {
         const newEmails = [...contact.recipientEmails];
         newEmails[index] = value;
         setContact(prev => ({ ...prev, recipientEmails: newEmails }));
+    };
+
+    const handleRecipientNameChange = (index: number, value: string) => {
+        const newNames = [...recipientNames];
+        newNames[index] = value;
+        setRecipientNames(newNames);
     };
 
     const purchaseMutation = useMutation({
@@ -1290,27 +1313,43 @@ export default function CardForm() {
     const handlePaystackSuccess = (reference: any) => {
         // Construct OrderItems from cart and contact
         const items: OrderItem[] = [];
-        let emailIndex = 0;
+        let recipientIndex = 0;
 
         Object.entries(cart).forEach(([id, qty]) => {
             const template = CARD_TEMPLATES.find(t => t.id === Number(id));
             if (template && qty > 0) {
                 for (let i = 0; i < qty; i++) {
-                    let email = contact.email;
-                    if (contact.deliveryMethod === 'multiple' && contact.recipientEmails[emailIndex]) {
-                        email = contact.recipientEmails[emailIndex];
+                    let email: string;
+                    let name: string;
+                    
+                    if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
+                        // Single delivery - use delivery email and name
+                        email = deliveryEmail;
+                        name = deliveryName;
+                    } else {
+                        // Multiple delivery - use recipient email and name
+                        email = contact.recipientEmails[recipientIndex] || '';
+                        name = recipientNames[recipientIndex] || '';
                     }
+                    
                     items.push({
                         type: template.type,
-                        name: `${contact.firstName} ${contact.lastName}`,
+                        name: name,
                         email: email
                     });
-                    emailIndex++;
+                    recipientIndex++;
                 }
             }
         });
 
-        purchaseMutation.mutate(items);
+        // Include buyer information
+        const buyerName = `${contact.firstName} ${contact.lastName}`.trim();
+        purchaseMutation.mutate({
+            items,
+            buyerEmail: contact.email,
+            buyerName: buyerName || undefined,
+            paymentReference: reference.reference || reference,
+        });
     };
 
     const handlePaystackClose = () => {
@@ -1557,29 +1596,52 @@ export default function CardForm() {
 
                             <div className="space-y-3 pt-2">
                                 {contact.deliveryMethod === 'single' || totalQuantity <= 1 ? (
-                                    <div className="space-y-2">
-                                        <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
-                                        <input 
-                                            type="email"
-                                            value={deliveryEmail}
-                                            onChange={(e) => setDeliveryEmail(e.target.value)}
-                                            placeholder="Where should we send the cards?" 
-                                            className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Recipient Full Name</label>
+                                            <input 
+                                                type="text"
+                                                value={deliveryName}
+                                                onChange={(e) => setDeliveryName(e.target.value)}
+                                                placeholder="Full name of the recipient" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
+                                            <input 
+                                                type="email"
+                                                value={deliveryEmail}
+                                                onChange={(e) => setDeliveryEmail(e.target.value)}
+                                                placeholder="Where should we send the cards?" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="space-y-4 animate-fadeIn">
-                                        <p className="text-sm text-blue-400">Please enter an email for each card:</p>
+                                        <p className="text-sm text-blue-400">Please enter full name and email for each card:</p>
                                         {Array.from({ length: totalQuantity }).map((_, idx) => (
-                                            <div key={idx} className="space-y-1">
-                                                <label className="text-xs text-gray-500 uppercase">{recipientLabels[idx]} Recipient</label>
-                                                <input 
-                                                    type="email" 
-                                                    value={contact.recipientEmails[idx] || ''}
-                                                    onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
-                                                    placeholder={`Email for ${recipientLabels[idx]}`}
-                                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                                />
+                                            <div key={idx} className="space-y-3 p-4 border border-white/10 rounded-lg bg-white/5">
+                                                <div className="space-y-1">
+                                                    <label className="text-xs text-gray-500 uppercase">{recipientLabels[idx]} Recipient</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={recipientNames[idx] || ''}
+                                                        onChange={(e) => handleRecipientNameChange(idx, e.target.value)}
+                                                        placeholder={`Full name for ${recipientLabels[idx]}`}
+                                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <input 
+                                                        type="email" 
+                                                        value={contact.recipientEmails[idx] || ''}
+                                                        onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
+                                                        placeholder={`Email for ${recipientLabels[idx]}`}
+                                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -1668,6 +1730,9 @@ export default function CardForm() {
                         deliveryMethod: 'single',
                         recipientEmails: []
                     });
+                    setDeliveryEmail('');
+                    setDeliveryName('');
+                    setRecipientNames([]);
                     setIsSuccess(false);
                 }}
                 className="px-8 py-4 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition-colors"
