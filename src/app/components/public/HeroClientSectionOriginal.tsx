@@ -51,7 +51,7 @@ const LogoItem = ({ client }: { client: Client }) => (
 const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => {
   return (
     <motion.div
-      className="relative px-4 py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
+      className="relative p-6 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
                  ring-1 ring-[#113CFC]/30  transition-all duration-300
                 hover:ring-[#113CFC]/60 hover:shadow-[0_0_30px_rgba(17,60,252,0.3)] 
                 w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
@@ -59,7 +59,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
       custom={custom}
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
     >
-      {/* INTENSE, FOCUSED, ANIMATED GLOW WITHIN CARD */}
+      {/* INTENSE, FOCUSED, ANIMATED GLOW WITHIN CARD - These are still local to the card, which is good */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
           className="absolute -top-16 -right-16 w-80 h-80 bg-[#113CFC]/70 blur-[150px] rounded-full"
@@ -83,6 +83,8 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
        <div
           className={`w-full h-40 flex items-center justify-center mb-4 rounded-lg  font-[inter]`}
         >
+
+
           <Image
             src={card.image}
             alt={card.name}
@@ -93,10 +95,10 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
           />
         </div>
 
-        <h3 className="text-xl font-bold text-white m-0 p-0">{card.name}</h3>
-        <p className="text-lg text-white font-semibold m-0 pb-2">{card.price}</p>
+        <h3 className="text-2xl font-bold text-white">{card.name}</h3>
+        <p className="text-xl text-white font-semibold">{card.price}</p>
 
-        <ul className="text-gray-300 text-sm space-y-1 text-left w-full pl-0">
+        <ul className="text-gray-300 text-sm space-y-2 text-left w-full pl-0">
           {card.features.map((feature, idx) => (
             <li key={idx} className="flex items-start">
               <span className="text-[#113CFC] mr-2 text-base  leading-none">•</span>
@@ -118,192 +120,11 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
     </motion.div>
   );
 };
+// --------------------------------------------------------------------------
 
 
 // ==================================================================
-// --- FINAL ANIMATED WALLET CARDS COMPONENT (PARENT HOVER POP-OUT) ---
-// ==================================================================
-
-const CARD_ANIMATION_HEIGHT_STEP = 15; 
-const CARD_WIDTH = 250; 
-const CARD_HEIGHT = 180; 
-const CARD_COUNT = 3;
-const WALLET_WIDTH = 300; 
-const BACK_WALLET_HEIGHT = 190; 
-const FRONT_WALLET_HEIGHT = 247; 
-const WALLET_TOP_ADJUSTMENT = 20; 
-
-const cardEntranceVariants: Variants = {
-    hidden: { opacity: 0, y: -200, rotate: 20, scale: 0.7, x: 0 },
-    
-    // The initial, stacked position
-    visible: (i: number) => ({
-        opacity: 1,
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP, 
-        rotate: 0,
-        scale: 1, 
-        x: 0, 
-        transition: {
-            delay: 0.5 + (i * 0.15), 
-            type: "spring",
-            stiffness: 120, 
-            damping: 15,
-            mass: 0.8
-        },
-    }),
-};
-
-// Animation that runs when the parent is hovered
-const cardPopOutVariants: Variants = {
-    // Note: The `initial` state here overrides the entrance variant's Y when switching between pop/initial, which is intentional for F-M `animate` usage.
-    pop: (i: number) => ({
-        // Lift the card higher by 10px from its stacked position
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP - 10,
-        transition: {
-            duration: 0.3,
-            ease: "easeOut" as const
-        },
-    }),
-    initial: (i: number) => ({
-        // Return to the initial stacked position
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP,
-        transition: {
-            duration: 0.3,
-            ease: "easeOut" as const
-        },
-    }),
-};
-
-
-const AnimatedWalletCards = () => {
-    // State to track if the entire wallet area is hovered
-    const [isWalletHovered, setIsWalletHovered] = useState(false);
-    
-    const cards = [
-        { key: 1, z: 10, image: "/landing/nova-card-back-h.png", customIndex: 0 }, 
-        { key: 2, z: 9, image: "/landing/maple-card-back-h.png", customIndex: 1 }, 
-        { key: 3, z: 8, image: "/landing/metal-card-back-h.png", customIndex: 2 }, 
-    ];
-    
-    const FRONT_WALLET_IMAGE = "/landing/front.png"; 
-    const BACK_WALLET_IMAGE = "/landing/back.png"; 
-    
-    const MAX_Y_OFFSET = (CARD_COUNT - 1) * CARD_ANIMATION_HEIGHT_STEP;
-    const BASE_CARD_TOP = `calc(29% - ${MAX_Y_OFFSET}px / 2 - ${WALLET_TOP_ADJUSTMENT}px)`; 
-    const FRONT_WALLET_INITIAL_Y = '-50%'; 
-
-    return (
-        <motion.div
-            className="relative w-full max-w-sm h-[250px] flex justify-center items-center overflow-hidden cursor-pointer"
-            initial="hidden"
-            whileInView="visible"
-            // Use onHoverStart/End on the container to set the hover state
-            onHoverStart={() => setIsWalletHovered(true)}
-            onHoverEnd={() => setIsWalletHovered(false)}
-            viewport={{ once: true, amount: 0.4 }}
-        >
-            {/* 1. BACK WALLET PIECE (Lowest Z) */}
-            <motion.div 
-                className="absolute rounded-2xl shadow-2xl overflow-hidden"
-                style={{ 
-                    zIndex: 5, 
-                    width: WALLET_WIDTH,
-                    height: BACK_WALLET_HEIGHT,
-                    top: `calc(26%)`,
-                    transform: 'translateY(-30%)',
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
-            >
-                <Image
-                    src={BACK_WALLET_IMAGE}
-                    alt="Sync Purse Back"
-                    fill
-                    className="object-cover w-full h-full"
-                    priority
-                />
-            </motion.div>
-
-            {/* 2. Animated Cards - React to the parent hover state */}
-            {cards.map((card) => {
-                // Calculate the true Y-offset for the initial stack position
-                const currentYOffset = (CARD_COUNT - 1 - card.customIndex) * CARD_ANIMATION_HEIGHT_STEP;
-
-                return (
-                    // The outer motion.div handles the entrance animation
-                    <motion.div
-                        key={card.key}
-                        className={`absolute rounded-xl shadow-xl bg-cover bg-center overflow-hidden`}
-                        custom={card.customIndex}
-                        variants={cardEntranceVariants}
-                        initial="hidden" 
-                        whileInView="visible"
-                        
-                        // Override/Individual Hover for a single card
-                        whileHover={{ 
-                            scale: 1.05, 
-                            y: currentYOffset - 15, 
-                            zIndex: 50 
-                        }}
-
-                        style={{ 
-                            zIndex: card.z, 
-                            width: CARD_WIDTH,
-                            height: CARD_HEIGHT,
-                            top: BASE_CARD_TOP, 
-                        }}
-                    >
-                        {/* The inner motion.div handles the pop-out animation triggered by the parent state */}
-                        <motion.div 
-                            variants={cardPopOutVariants} 
-                            custom={card.customIndex}
-                            animate={isWalletHovered ? "pop" : "initial"}
-                        >
-                            <Image
-                                src={card.image}
-                                alt={`Card ${card.key}`}
-                                width={CARD_WIDTH} 
-                                height={CARD_HEIGHT} 
-                                className="object-cover w-full h-full" 
-                                priority
-                            />
-                        </motion.div>
-                    </motion.div>
-                );
-            })}
-
-
-             {/* 3. FRONT WALLET PIECE (The Mask - Highest Z) */}
-             <motion.div 
-                className="absolute rounded-2xl shadow-2xl overflow-hidden"
-                style={{ 
-                    zIndex: 20, 
-                    width: WALLET_WIDTH,
-                    height: FRONT_WALLET_HEIGHT, 
-                    top: `calc(6% + ${WALLET_TOP_ADJUSTMENT}px)`,
-                    transform: FRONT_WALLET_INITIAL_Y, 
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
-            >
-                <Image
-                    src={FRONT_WALLET_IMAGE}
-                    alt="Sync Purse Front"
-                    fill
-                    className="absolute object-cover w-full h-full"
-                    priority
-                />
-            </motion.div> 
-
-        </motion.div>
-    );
-};
-
-
-// ==================================================================
-// --- MERGED MAIN COMPONENT ---
+// --- MERGED MAIN COMPONENT (Clients Section Height Increased to py-20) ---
 // ==================================================================
 
 export default function MergedLandingSection() {
@@ -351,36 +172,46 @@ export default function MergedLandingSection() {
     <div
       className="relative w-full overflow-hidden pt-20"
       style={{
-        background: '#030C32', 
+        background: '#030C32', // Main background for the entire page
       }}
     >
 
       {/* ==================================================
         GLOBAL CENTRALIZED GLOW SYSTEM 
+        (ALL SECTION-WIDE GLOWS CONSOLIDATED HERE)
         ==================================================
       */}
       <div className="absolute inset-0 pointer-events-none z-10">
+        {/* Glows from original HeroClientsSection */}
+        {/* <div
+          className="md:absolute md:top-1/2 md:left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[1000px] md:h-[750px] bg-white/10 blur-[200px] mix-blend-screen rounded-full"
+        /> */}
+        {/* <div
+          className="md:absolute md:top-1/2 md:left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[1600px] md:h-[1400px] bg-white/1 blur-[300px] mix-blend-screen rounded-full"
+        /> */}
         <div
           className="md:absolute md:top-[600px] md:left-1/3 md:w-[600px] md:h-[400px] bg-white/15 blur-[150px] mix-blend-screen rounded-[40%_60%_50%_70%/60%_40%_70%_50%]"
         />
         <div
           className="md:absolute md:top-[700px] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[900px] md:h-[700px] bg-white/3 blur-[250px] mix-blend-screen rounded-full"
         />
-        {/* <div
+        
+        {/* Glows from original ChoosePerfectCardSection - MOVED HERE */}
+        <div
           className="absolute -top-40 right-1/4 transform translate-x-1/2 w-[600px] h-[500px] bg-[#113CFC]/30 blur-[250px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
+        />
+        <div
           className="absolute -top-60 right-1/2 transform translate-x-1/2 w-[1000px] h-[800px] bg-white/10 blur-[300px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
+        />
+        <div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[800px] bg-white/8 blur-[220px] rounded-full mix-blend-screen"
         />
         <div
           className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-[#113CFC]/15 blur-[180px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
+        />
+        <div
           className="absolute top-10 left-10 w-[500px] h-[400px] bg-white/15 blur-[180px] rounded-full mix-blend-screen"
-        /> */}
+        />
       </div>
 
       {/* Background Decorative Image - Conditionally Rendered */}
@@ -391,7 +222,7 @@ export default function MergedLandingSection() {
             sm:h-[1000px] sm:w-[1000px] sm:-top-30 sm:-left-80
              lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
             pointer-events-none z-0
-            2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px]
+            2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px] z-10
           `}
         >
           <Image
@@ -399,7 +230,7 @@ export default function MergedLandingSection() {
             alt="Decorative background"
             width={800}
             height={800}
-            className="w-full h-full object-cover !z-[100]"
+            className="w-full h-full object-cover z-10"
             priority
           />
         </div>
@@ -434,20 +265,37 @@ export default function MergedLandingSection() {
               </p>
 
 
-              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS - USES ANIMATED COMPONENT === */}
-              <div className="relative flex justify-center pt-8 pb-0 lg:hidden min-h-[300px]">
+              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS === */}
+              <div className="relative flex justify-center pt-0 pb-0 lg:hidden">
                 {/* GLOWS BEHIND THE CARDS - MOBILE */}
+                {/* ... (Mobile-only glows remain local for specific effect) ... */}
                 <div
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0"
+                  className="hidden lg:absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0"
                 />
                 <div
-                  className="absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
+                  className="hidden lg:absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
                 />
                 <div
-                  className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
+                  className="hidden lg:absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
                 />
-                
-                <AnimatedWalletCards /> {/* ⬅️ REVISED ANIMATED COMPONENT */}
+                <div
+                  className="hidden lg:absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-white/40 blur-[80px] rounded-full z-0"
+                />
+                <div
+                  className="hidden lg:absolute top-[-5%] right-[0%] w-[150px] h-[150px] bg-white/20 blur-[70px] rounded-full z-0"
+                />
+                <div
+                  className="hidden lg:absolute bottom-[-5%] left-[0%] w-[150px] h-[150px] bg-[#113CFC]/30 blur-[70px] rounded-full z-0"
+                />
+
+                <Image
+                   src="/landing/sync_purse.png"
+                  alt="Cards Graphic"
+                  width={900} 
+                  height={900} 
+                  className="w-full max-w-sm object-contain relative z-10" 
+                  priority
+                />
               </div>
 
             
@@ -484,6 +332,7 @@ export default function MergedLandingSection() {
               variants={imageVariant}
             >
               {/* GLOWS BEHIND THE CARDS - DESKTOP */}
+              {/* ... (Desktop-only glows remain local for specific effect) ... */}
               <div
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/30 blur-[200px] rounded-full z-0"
               />
@@ -502,7 +351,7 @@ export default function MergedLandingSection() {
               <div
                 className="absolute bottom-[-5%] left-[0%] w-[180px] h-[180px] bg-[#113CFC]/30 blur-[110px] rounded-full z-0"
               />
-               {/* NOTE: You must ensure /landing/hero-cards.svg is accessible in your public folder */}
+
               <Image
                 src="/landing/hero-cards.svg"
                 alt="Cards Graphic"
@@ -518,10 +367,10 @@ export default function MergedLandingSection() {
 
 
       {/* ==================================================
-        SECTION 2: CLIENTS LOGO SCROLL 
+        SECTION 2: CLIENTS LOGO SCROLL (HEIGHT INCREASED to py-20)
         ==================================================
       */}
-      <div className="relative z-20 w-full overflow-hidden pb-12 py-4"> 
+      <div className="relative z-20 w-full overflow-hidden pb-12 py-4"> {/* Reduced pb for tighter integration */}
         <div className="max-w-7xl mx-auto px-6 lg:px-8 ">
             {/* Heading */}
             <motion.div
@@ -541,7 +390,7 @@ export default function MergedLandingSection() {
             </motion.div>
 
             {/* LOGO SCROLL TRACK WRAPPER */}
-            <div className="relative w-full py-5 overflow-hidden border-t border-b border-white/20"> 
+            <div className="relative w-full py-20 overflow-hidden border-t border-b border-white/20"> {/* ⬅️ INCREASED from py-8/py-12 to py-20 */}
 
               {/* Left Glow Effect for the Logo Track */}
               <div 
@@ -557,7 +406,7 @@ export default function MergedLandingSection() {
                 className="
                   md:absolute md:inset-y-0 md:right-0 md:w-32 md:h-full 
                   bg-[#113CFC]/10 blur-3xl rounded-full 
-                  pointer-events-none z-10 
+                  pointer-events-none z-10
                 " 
               />
 
@@ -567,7 +416,6 @@ export default function MergedLandingSection() {
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                // NOTE: The keyframes for 'scroll-left' must be defined globally in your CSS/Tailwind config.
                 style={{
                   animation: `scroll-left ${SCROLL_DURATION} linear infinite`,
                 }}
@@ -588,10 +436,11 @@ export default function MergedLandingSection() {
       </div>
 
       {/* ==================================================
-        SECTION 3: CARD SELECTION 
+        SECTION 3: CARD SELECTION (Adjusted top padding for closer sync)
         ==================================================
       */}
-      <div className="relative w-full overflow-hidden pt-12 md:pt-3 pb-24 md:pb-3 "> 
+      <div className="relative w-full overflow-hidden pt-12 md:pt-16 pb-24 md:pb-32"> {/* Adjusted pt-12/16 */}
+        {/* SECTION GLOW SYSTEM - **REMOVED, NOW PART OF GLOBAL GLOW SYSTEM** */}
 
         <div className="relative z-10 max-w-7xl mx-auto px-0 lg:px-8">
           {/* Section Heading and Description */}

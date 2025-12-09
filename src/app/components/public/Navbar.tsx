@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, FC, MouseEventHandler, ReactNode, useEffect } from "react";
-import Image from "next/image"; // Next.js Image component
-import Link from "next/link";   // Next.js Link component
-import { usePathname } from "next/navigation"; // Next.js hook for routing
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { 
   Menu, X, 
   Home, Info, CreditCard, Wrench, User, ArrowLeft,
-  LucideIcon // Type for Lucide icons
+  LucideIcon
 } from "lucide-react"; 
 
 // --- TYPE DEFINITIONS ---
@@ -28,7 +28,7 @@ interface ButtonProps {
 
 // --- UTILITY COMPONENTS ---
 
-// Mock Button component (can be replaced by a dedicated component library button)
+// Mock Button component
 const Button: FC<ButtonProps> = ({ children, className = "", style, onClick }) => (
     <button 
         className={`p-2 rounded-lg font-medium transition-all ${className}`} 
@@ -49,31 +49,86 @@ const navigationItems: NavigationItem[] = [
   { title: "Contact", url: "/contact", icon: User },
 ];
 
-// --- MAIN COMPONENT ---
+// --- MAIN COMPONENT: NAVBAR (With Waves Image Included) ---
 
 const Navbar: FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isImageVisible, setIsImageVisible] = useState(true); // State to track scroll for wave image
 
   // Effect to manage body scrolling
   useEffect(() => {
     if (mobileMenuOpen) {
-      // Prevents background page scrolling
       document.body.classList.add('no-scroll');
     } else {
-      // Restores background page scrolling
       document.body.classList.remove('no-scroll');
     }
 
-    // Cleanup function: ensures scrolling is restored when the component unmounts
+    // Handle scroll for wave visibility
+    const handleScroll = () => {
+      if (typeof window !== 'undefined') {
+        // Hide image after scrolling past the hero section (e.g., scrollY > 50)
+        if (window.scrollY > 50) { 
+          setIsImageVisible(false); 
+        } else { 
+          setIsImageVisible(true); 
+        }
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener("scroll", handleScroll);
+    }
+    
     return () => {
       document.body.classList.remove('no-scroll');
+      if (typeof window !== 'undefined') {
+        window.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [mobileMenuOpen]); 
 
   return (
-    <nav className="bg-[#030C32] font-[inter] ">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    // Navbar base is z-50
+    <nav className="bg-[#030C32] font-[inter] fixed top-0 left-0 right-0 z-50 w-full shadow-lg border-b border-b-gray-200/20">
+      
+      {/* 🌟 1. GLOBAL CENTRALIZED GLOW SYSTEM 🌟 
+          z-[55] - Behind the waves and the content.
+      */}
+     
+
+
+      {/* 🌊 2. WAVES IMAGE (The Picture) 🌊
+          z-[57] - This ensures the waves are on top of the fixed z-50 navbar and z-55 glow.
+          The opacity transition helps it fade out smoothly on scroll.
+      */}
+      {isImageVisible && (
+        <div
+          className={`
+            fixed -top-[120px] -left-[155px] w-[650px] h-[1000px] opacity-40
+            sm:h-[1000px] sm:w-[1000px] sm:-top-30 sm:-left-80
+            lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
+            2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px]
+            pointer-events-none transition-opacity duration-500
+            z-[57]
+          `}
+        >
+          <Image
+            src="/landing/waves.svg"
+            alt="Decorative background waves"
+            width={800}
+            height={800}
+            className="w-full h-full object-cover"
+            priority
+          />
+        </div>
+      )}
+
+
+      {/* 3. Navbar Content Wrapper (Logo, Links, Button)
+          z-[58] - This must be the highest z-index so the links/logo are clickable and visible over the waves.
+      */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-[58]">
         <div className="relative flex items-center h-20">
           
           {/* Logo Left */}
@@ -135,7 +190,7 @@ const Navbar: FC = () => {
         </div>
       </div>
 
-      {/* Mobile Slide-in Menu */}
+      {/* Mobile Slide-in Menu (z-50) */}
       <div
         className={`lg:hidden fixed top-0 right-0 h-screen w-64 bg-[#030C32] shadow-2xl transform transition-transform duration-300 z-50 rounded-l-xl border-l border-[#1A1F4B]
           ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
@@ -187,7 +242,7 @@ const Navbar: FC = () => {
         </div>
       </div>
 
-      {/* Backdrop */}
+      {/* Backdrop (z-40) */}
       {mobileMenuOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/70 z-40" 
