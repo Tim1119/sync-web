@@ -1311,6 +1311,16 @@ export default function CardForm() {
     });
 
     const handlePaystackSuccess = (reference: any) => {
+        // Extract payment reference from Paystack response
+        // Paystack returns { reference: 'xxx', ... } or just the reference string
+        const paymentRef = reference?.reference || reference;
+        
+        if (!paymentRef) {
+            console.error('No payment reference received from Paystack');
+            toast.error('Payment successful but reference missing. Please contact support.');
+            return;
+        }
+
         // Construct OrderItems from cart and contact
         const items: OrderItem[] = [];
         let recipientIndex = 0;
@@ -1348,7 +1358,7 @@ export default function CardForm() {
             items,
             buyerEmail: contact.email,
             buyerName: buyerName || undefined,
-            paymentReference: reference.reference || reference,
+            paymentReference: paymentRef, // Backend will verify this with Paystack
         });
     };
 

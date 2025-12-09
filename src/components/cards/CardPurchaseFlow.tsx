@@ -72,13 +72,21 @@ export default function CardPurchaseFlow() {
   });
 
   const handlePaystackSuccess = (reference: any) => {
-    // In a real app, we verify the reference with backend.
-    // Here we just call the purchase endpoint.
+    // Extract payment reference from Paystack response
+    // Paystack returns { reference: 'xxx', ... } or just the reference string
+    const paymentRef = reference?.reference || reference;
+    
+    if (!paymentRef) {
+      console.error('No payment reference received from Paystack');
+      alert('Payment successful but reference missing. Please contact support.');
+      return;
+    }
+
     const purchaseRequest: PurchaseRequest = {
       items: details,
       buyerEmail: details[0]?.email,
       buyerName: details[0]?.name,
-      paymentReference: reference.reference || reference,
+      paymentReference: paymentRef, // Backend will verify this with Paystack
     };
     purchaseMutation.mutate(purchaseRequest);
   };
