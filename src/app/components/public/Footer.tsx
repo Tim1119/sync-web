@@ -21,6 +21,7 @@ const QuickLinks = [
     { title: 'Cards', href: '#' },
     { title: 'Services', href: '#' },
     { title: 'Contact', href: '#' },
+    { title: 'Privacy', href: '/privacy' },
 ];
 
 const ServicesLinks = [
