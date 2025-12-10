@@ -19,8 +19,8 @@ const QuickLinks = [
     { title: 'Home', href: '/' },
     { title: 'About', href: '/about' },
     { title: 'Cards', href: '/cards' },
-    { title: 'Services', href: '#' },
-    { title: 'Contact', href: '#' },
+    { title: 'Services', href: '/services/university-solution' },
+    { title: 'Contact', href: '/contact' },
     { title: 'Privacy', href: '/privacy' },
 ];
 
@@ -34,11 +34,11 @@ const SocialMediaLinks = [
     { icon: FaInstagram, title: 'Instagram', href: 'https://www.instagram.com/buysync' },
     { icon: FaLinkedinIn, title: 'LinkedIn', href: 'https://www.linkedin.com/company/sync-innovation' },
     { icon: FaFacebookF, title: 'Facebook', href: '#' },
-    { icon: FaXing, title: 'X', href: 'https://x.com/buysync_' }, // FaXing is often used as a stand-in for the 'X' (Twitter) logo
+    { icon: FaXing, title: 'X', href: 'https://x.com/buysync_' }, 
     { icon: FaTiktok, title: 'Tiktok', href: '#' },
 ];
 
-// --- Animation Variants ---
+
 
 const footerVariants: Variants = {
     hidden: { opacity: 0, y: 50 },
@@ -48,7 +48,7 @@ const footerVariants: Variants = {
         transition: {
             duration: 0.8,
             ease: "easeOut",
-            staggerChildren: 0.1 // Stagger links slightly for effect
+            staggerChildren: 0.1 
         },
     },
 };
@@ -62,7 +62,7 @@ const linkItemVariants: Variants = {
 
 export default function Footer() {
     return (
-        // Apply the dark background color found in your screenshots
+      
         <motion.footer
             className="bg-[#0b0f2c] text-white pt-5 pb-5"
             initial="hidden"
@@ -72,14 +72,13 @@ export default function Footer() {
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 
-                {/* Top Section: Logo, Description, and Link Columns */}
+                
                 <div 
-                    // ⭐ CLEANED UP GRID: 1 column default, 4 columns on desktop (md:)
-                    // The mobile layout is controlled by the children's flex/grid classes
+                   
                     className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-6"
                 >
                     
-                    {/* Column 1: Logo and Description (Full width, centered on mobile) */}
+                    
                     <div 
                         className="col-span-full md:col-span-1 text-center md:text-left"
                     >
@@ -104,7 +103,7 @@ export default function Footer() {
                         </motion.p>
                     </div>
 
-                    {/* Quick Links & Services Wrapper (FOR 50/50 MOBILE SPLIT) */}
+                    
                     <div 
                         // Col-span-full on mobile, but md:col-span-2 on desktop
                         // On small screens, this wrapper uses FLEX to force 50/50 on its children
@@ -158,7 +157,7 @@ export default function Footer() {
                     </div>
 
 
-                    {/* Column 4: Social Media (Full width on mobile, left-aligned) */}
+                   
                     <div 
                         className="col-span-full md:col-span-1"
                     >
@@ -182,8 +181,7 @@ export default function Footer() {
                         </ul>
                     </div>
                 </div>
-
-                {/* Bottom Section: Copyright */}
+                
                 <motion.div 
                     className="pt-7 text-center" 
                     variants={linkItemVariants}

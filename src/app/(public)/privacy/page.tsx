@@ -381,7 +381,7 @@ export default function PrivacyPolicyPage() {
             <ul className="list-none mt-4 space-y-2 text-gray-700">
               <li>Email: privacy@buysync.co</li>
               <li>Website: buysync.co</li>
-              <li>Address: Akure, Nigeria</li>
+              <li>Address: Lagos, Nigeria</li>
             </ul>
           </section>
         </div>
