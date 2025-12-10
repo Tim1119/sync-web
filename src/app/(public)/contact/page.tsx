@@ -278,7 +278,7 @@ export default function ContactUsPage() {
                         <div>
                             <p className="text-sm font-medium text-gray-400">Phone</p>
                             <Link href="/" className="text-white hover:text-[#113CFC] transition-colors duration-200">
-                                +234 81 515 70 457
+                                +234 901 689 5706
                             </Link>
                         </div>
                     </div>

@@ -123,7 +123,7 @@ const valuePropositions = [
 export default function OrganizationSolutionPage() {
   return (
     <div
-      className="relative w-full overflow-hidden min-h-screen p-10 font-[inter]"
+      className="relative w-full overflow-hidden min-h-screen font-[inter] pt-10"
       style={{
         background: '#030C32', // Main background color, consistent with the style guide
       }}
