@@ -10,7 +10,7 @@ import { Info } from 'lucide-react';
 // --- Mock Button Component (To ensure the merged component runs) ---
 // ==================================================================
 // This is a placeholder; replace with your actual Button component import.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const Button = ({ children, className, variant, style, ...props }: any) => (
   <button
     className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${className}`}
@@ -54,7 +54,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
       className="relative px-4 py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
                  ring-1 ring-[#113CFC]/30  transition-all duration-300
                 hover:ring-[#113CFC]/60 hover:shadow-[0_0_30px_rgba(17,60,252,0.3)] 
-                w-[300px] flex-shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
+                w-[300px] shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
       variants={cardVariants}
       custom={custom}
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
@@ -399,7 +399,7 @@ export default function MergedLandingSection() {
             alt="Decorative background"
             width={800}
             height={800}
-            className="w-full h-full object-cover !z-[100]"
+            className="w-full h-full object-cover z-100!"
             priority
           />
         </div>
@@ -580,8 +580,8 @@ export default function MergedLandingSection() {
               </motion.div>
 
               {/* FADE OVERLAYS: Blend logos into the background at the edges */}
-              <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#030C32] to-transparent pointer-events-none z-30" />
-              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#030C32] to-transparent pointer-events-none z-30" />
+              <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#030C32] to-transparent pointer-events-none z-30" />
+              <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#030C32] to-transparent pointer-events-none z-30" />
 
             </div>
         </div>

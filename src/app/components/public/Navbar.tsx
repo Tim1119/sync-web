@@ -186,7 +186,7 @@ const Navbar: FC = () => {
             lg:w-[900px] lg:h-[900px] lg:-top-40 lg:-left-70
             2xl:-top-70 2xl:-left-100 2xl:w-[1300px] 2xl:h-[1300px]
             pointer-events-none transition-opacity duration-500
-            z-[57]
+            z-57
           `}
         >
           <Image
@@ -204,11 +204,11 @@ const Navbar: FC = () => {
       {/* 3. Navbar Content Wrapper (Logo, Links, Button)
           z-[58] - This must be the highest z-index so the links/logo are clickable and visible over the waves.
       */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-[58]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-58">
         <div className="relative flex items-center h-20">
           
           {/* Logo Left */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link href="/">
                 <div className="relative w-[100px] h-10">
                     <Image

@@ -301,7 +301,7 @@ export default function ContactUsPage() {
                 className="hidden lg:flex justify-center items-center overflow-hidden rounded-r-2xl"
                 style={{ height: IMAGE_HEIGHT_PX }}
             >
-                <div className="relative w-full h-full flex justify-center items-center p-8"> 
+                <div className="relative w-full h-full flex justify-center items-center pt-20"> 
                     <Image
                         src={CONTACT_IMAGE_URL}
                         alt="Customer support team assisting clients"
@@ -310,11 +310,6 @@ export default function ContactUsPage() {
                         objectFit="contain" 
                         className="rounded-xl w-full h-full object-contain" 
                     />
-                    
-                    {/* The small 'Contact Us' card overlay from the screenshot */}
-                    <div className="absolute top-[30%] right-[30%] p-4 bg-white/10 backdrop-blur-md rounded-lg border border-white/20">
-                        <p className="text-white font-bold text-sm">Contact Us</p>
-                    </div>
                 </div>
             </div>
         </div>
