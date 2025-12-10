@@ -885,16 +885,26 @@ import {
     Wifi, 
     Minus, 
     Plus, 
-    CreditCard, 
     ArrowLeft,
     RotateCw,
+    Check,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useMutation } from '@tanstack/react-query';
+import dynamic from 'next/dynamic';
+
+const PaystackButton = dynamic(
+  () => import('react-paystack').then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
+import { CardType, OrderItem, purchaseCards } from '@/lib/api';
+import { toast } from 'react-hot-toast';
 
 // --- TypeScript Interfaces ---
 interface CardTemplate {
     id: number;
     name: string;
+    type: CardType;
     price: number;
     theme: string;
     color: string;
@@ -919,7 +929,8 @@ const CARD_TEMPLATES: CardTemplate[] = [
     { 
         id: 1, 
         name: 'Nova', 
-        price: 30000, 
+        type: CardType.NOVA,
+        price: 35000, 
         theme: 'bg-blue-600', 
         color: '#2563EB', 
         tagline: 'Sleek. Modern. High-performance.',
@@ -931,7 +942,8 @@ const CARD_TEMPLATES: CardTemplate[] = [
     { 
         id: 2, 
         name: 'Maple', 
-        price: 40000, 
+        type: CardType.MARBLE, // Mapping Maple to Marble as per API enum
+        price: 50000, 
         theme: 'bg-[#E3CAA5]', 
         color: '#D4B99F', 
         tagline: 'Natural. Sustainable. Unique.',
@@ -943,7 +955,8 @@ const CARD_TEMPLATES: CardTemplate[] = [
     { 
         id: 3, 
         name: 'Auric', 
-        price: 50000, 
+        type: CardType.AURIC,
+        price: 60000, 
         theme: 'bg-neutral-900', 
         color: '#171717', 
         tagline: 'Engineered prestige.',
@@ -1130,6 +1143,7 @@ export default function CardForm() {
     const [cart, setCart] = useState<Record<number, number>>({ 1: 1, 2: 0, 3: 0 });
     const [expandedCardId, setExpandedCardId] = useState<number>(1); 
     const [isFlipped, setIsFlipped] = useState(false); 
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const [contact, setContact] = useState<ContactDetails>({
         firstName: '',
@@ -1140,6 +1154,8 @@ export default function CardForm() {
         recipientEmails: []
     });
     const [deliveryEmail, setDeliveryEmail] = useState('');
+    const [deliveryName, setDeliveryName] = useState('');
+    const [recipientNames, setRecipientNames] = useState<string[]>([]);
     const [showDuplicateModal, setShowDuplicateModal] = useState(false);
 
     const totalQuantity = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -1200,10 +1216,12 @@ export default function CardForm() {
         }
 
         if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
-            return isValidEmail(deliveryEmail);
+            return isValidEmail(deliveryEmail) && deliveryName.trim() !== '';
         } else {
             return contact.recipientEmails.length === totalQuantity && 
-                   contact.recipientEmails.every(email => isValidEmail(email));
+                   contact.recipientEmails.every(email => isValidEmail(email)) &&
+                   recipientNames.length === totalQuantity &&
+                   recipientNames.every(name => name.trim() !== '');
         }
     };
 
@@ -1245,6 +1263,18 @@ export default function CardForm() {
                 return { ...prevContact, recipientEmails: newEmails };
             });
 
+            // Update recipient names array
+            setRecipientNames(prevNames => {
+                let newNames = [...prevNames];
+                if (newTotalQuantity > prevNames.length) {
+                    const diff = newTotalQuantity - prevNames.length;
+                    newNames = [...newNames, ...new Array(diff).fill('')];
+                } else if (newTotalQuantity < prevNames.length) {
+                    newNames = newNames.slice(0, newTotalQuantity);
+                }
+                return newNames;
+            });
+
             return newCart;
         });
     };
@@ -1259,6 +1289,89 @@ export default function CardForm() {
         newEmails[index] = value;
         setContact(prev => ({ ...prev, recipientEmails: newEmails }));
     };
+
+    const handleRecipientNameChange = (index: number, value: string) => {
+        const newNames = [...recipientNames];
+        newNames[index] = value;
+        setRecipientNames(newNames);
+    };
+
+    const purchaseMutation = useMutation({
+        mutationFn: purchaseCards,
+        onSuccess: () => {
+          setIsSuccess(true);
+          setStep(4); // Move to success step
+          toast.success('Payment successful! Cards generated.');
+        },
+        onError: (error) => {
+          console.error('Purchase failed', error);
+          toast.error('Purchase failed. Please try again.');
+        }
+    });
+
+    const handlePaystackSuccess = (reference: any) => {
+        // Extract payment reference from Paystack response
+        // Paystack returns { reference: 'xxx', ... } or just the reference string
+        const paymentRef = reference?.reference || reference;
+        
+        if (!paymentRef) {
+            console.error('No payment reference received from Paystack');
+            toast.error('Payment successful but reference missing. Please contact support.');
+            return;
+        }
+
+        // Construct OrderItems from cart and contact
+        const items: OrderItem[] = [];
+        let recipientIndex = 0;
+
+        Object.entries(cart).forEach(([id, qty]) => {
+            const template = CARD_TEMPLATES.find(t => t.id === Number(id));
+            if (template && qty > 0) {
+                for (let i = 0; i < qty; i++) {
+                    let email: string;
+                    let name: string;
+                    
+                    if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
+                        // Single delivery - use delivery email and name
+                        email = deliveryEmail;
+                        name = deliveryName;
+                    } else {
+                        // Multiple delivery - use recipient email and name
+                        email = contact.recipientEmails[recipientIndex] || '';
+                        name = recipientNames[recipientIndex] || '';
+                    }
+                    
+                    items.push({
+                        type: template.type,
+                        name: name,
+                        email: email
+                    });
+                    recipientIndex++;
+                }
+            }
+        });
+
+        // Include buyer information
+        const buyerName = `${contact.firstName} ${contact.lastName}`.trim();
+        purchaseMutation.mutate({
+            items,
+            buyerEmail: contact.email,
+            buyerName: buyerName || undefined,
+            paymentReference: paymentRef, // Backend will verify this with Paystack
+        });
+    };
+
+    const handlePaystackClose = () => {
+        console.log('Payment closed');
+    };
+
+    const paystackConfig = {
+        reference: (new Date()).getTime().toString(),
+        email: contact.email,
+        amount: totalAmount * 100, // Paystack expects kobo
+        publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    };
+
 
     // --- Stage 1: Choose Card ---
     const renderStage1 = () => (
@@ -1492,29 +1605,52 @@ export default function CardForm() {
 
                             <div className="space-y-3 pt-2">
                                 {contact.deliveryMethod === 'single' || totalQuantity <= 1 ? (
-                                    <div className="space-y-2">
-                                        <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
-                                        <input 
-                                            type="email"
-                                            value={deliveryEmail}
-                                            onChange={(e) => setDeliveryEmail(e.target.value)}
-                                            placeholder="Where should we send the cards?" 
-                                            className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Recipient Full Name</label>
+                                            <input 
+                                                type="text"
+                                                value={deliveryName}
+                                                onChange={(e) => setDeliveryName(e.target.value)}
+                                                placeholder="Full name of the recipient" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
+                                            <input 
+                                                type="email"
+                                                value={deliveryEmail}
+                                                onChange={(e) => setDeliveryEmail(e.target.value)}
+                                                placeholder="Where should we send the cards?" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="space-y-4 animate-fadeIn">
-                                        <p className="text-sm text-blue-400">Please enter an email for each card:</p>
+                                        <p className="text-sm text-blue-400">Please enter full name and email for each card:</p>
                                         {Array.from({ length: totalQuantity }).map((_, idx) => (
-                                            <div key={idx} className="space-y-1">
-                                                <label className="text-xs text-gray-500 uppercase">{recipientLabels[idx]} Recipient</label>
-                                                <input 
-                                                    type="email" 
-                                                    value={contact.recipientEmails[idx] || ''}
-                                                    onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
-                                                    placeholder={`Email for ${recipientLabels[idx]}`}
-                                                    className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                                />
+                                            <div key={idx} className="space-y-3 p-4 border border-white/10 rounded-lg bg-white/5">
+                                                <div className="space-y-1">
+                                                    <label className="text-xs text-gray-500 uppercase">{recipientLabels[idx]} Recipient</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={recipientNames[idx] || ''}
+                                                        onChange={(e) => handleRecipientNameChange(idx, e.target.value)}
+                                                        placeholder={`Full name for ${recipientLabels[idx]}`}
+                                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <input 
+                                                        type="email" 
+                                                        value={contact.recipientEmails[idx] || ''}
+                                                        onChange={(e) => handleRecipientEmailChange(idx, e.target.value)}
+                                                        placeholder={`Email for ${recipientLabels[idx]}`}
+                                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
@@ -1552,28 +1688,49 @@ export default function CardForm() {
                 ₦{totalAmount.toLocaleString()}
             </div>
 
-            <div className="w-full max-w-md space-y-3 mb-8">
-                <label className="text-sm font-semibold text-gray-300 ml-1">Payment method</label>
-                
-                <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:border-blue-500 hover:bg-white/10 transition">
-                    <div className="w-12 h-10 bg-white rounded flex items-center justify-center shrink-0">
-                        <CreditCard className="text-blue-900" size={24} />
-                    </div>
-                    <div className="flex-grow min-w-0">
-                        <p className="text-white font-semibold text-lg truncate">Paystack</p>
-                        <p className="text-xs text-gray-400 truncate">Pay with Paystack</p>
-                    </div>
-                    <div className="ml-auto shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                        <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
-                    </div>
-                </div>
-            </div>
-
             <div className="w-full max-w-md">
-                <button onClick={() => alert('Payment Processing...')} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-900/30 transition-all transform hover:-translate-y-1">
-                    Pay Now
-                </button>
+                <PaystackButton 
+                    {...paystackConfig} 
+                    text={purchaseMutation.isPending ? "Processing..." : "Pay Now"}
+                    onSuccess={handlePaystackSuccess}
+                    onClose={handlePaystackClose}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-900/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+                />
             </div>
+        </div>
+    );
+
+    // --- Stage 4: Success ---
+    const renderStage4 = () => (
+        <div className="animate-fadeIn flex flex-col items-center pt-16 px-4 text-center">
+            <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-8">
+                <Check className="w-12 h-12 text-green-500" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Payment Successful!</h2>
+            <p className="text-gray-400 max-w-lg mx-auto mb-12 text-lg">
+                Your cards have been successfully generated. Please check your email for access details and next steps.
+            </p>
+            <button 
+                onClick={() => {
+                    setStep(1);
+                    setCart({ 1: 1, 2: 0, 3: 0 });
+                    setContact({
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        phone: '',
+                        deliveryMethod: 'single',
+                        recipientEmails: []
+                    });
+                    setDeliveryEmail('');
+                    setDeliveryName('');
+                    setRecipientNames([]);
+                    setIsSuccess(false);
+                }}
+                className="px-8 py-4 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition-colors"
+            >
+                Purchase More Cards
+            </button>
         </div>
     );
 
@@ -1612,7 +1769,7 @@ export default function CardForm() {
             <main className="relative z-10 max-w-7xl mx-auto md:px-8 py-4">
                 <div className="flex items-center justify-between mb-8 px-4">
                     <div className="w-20">
-                        {step > 1 && (
+                        {step > 1 && step < 4 && (
                             <button onClick={() => setStep(s => s - 1)} className="flex items-center text-gray-400 hover:text-white transition">
                                 <ArrowLeft className="mr-2" size={20} /> 
                                 <span className="hidden md:inline">Back</span>
@@ -1620,7 +1777,7 @@ export default function CardForm() {
                         )}
                     </div>
                     <div className="flex-grow flex justify-center">
-                         <ProgressBar step={step} />
+                         {step < 4 && <ProgressBar step={step} />}
                     </div>
                     <div className="w-20" />
                 </div>
@@ -1628,6 +1785,7 @@ export default function CardForm() {
                 {step === 1 && renderStage1()}
                 {step === 2 && renderStage2()}
                 {step === 3 && renderStage3()}
+                {step === 4 && renderStage4()}
             </main>
 
             <DuplicateEmailModal 

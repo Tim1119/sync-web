@@ -34,9 +34,9 @@ interface StageProps {
 
 // --- Configuration Data ---
 const CARD_TEMPLATES: CardTemplate[] = [
-    { id: 1, name: 'Nova', price: 30000, theme: 'bg-blue-600', color: '#2563EB', subtext: 'Bold and Modern' },
-    { id: 2, name: 'Maple', price: 40000, theme: 'bg-yellow-800', color: '#B45309', subtext: 'Natural Wood Grain' },
-    { id: 3, name: 'Auric', price: 50000, theme: 'bg-gray-900', color: '#111827', subtext: 'Sleek and Minimal' },
+    { id: 1, name: 'Nova', price: 35000, theme: 'bg-blue-600', color: '#2563EB', subtext: 'Bold and Modern' },
+    { id: 2, name: 'Maple', price: 50000, theme: 'bg-yellow-800', color: '#B45309', subtext: 'Natural Wood Grain' },
+    { id: 3, name: 'Auric', price: 60000, theme: 'bg-gray-900', color: '#111827', subtext: 'Sleek and Minimal' },
 ];
 
 // --- Mock Card Component for Preview ---
@@ -298,16 +298,12 @@ const Stage2Details: React.FC<StageProps> = ({ formData, setFormData, nextStage,
 // --- Stage 3: Payment ---
 const Stage3Payment: React.FC<StageProps> = ({ formData, nextStage, prevStage }) => {
     const template = formData.selectedTemplate || CARD_TEMPLATES[0];
-    const [paymentMethod, setPaymentMethod] = useState<string>('');
 
-    const isBuyDisabled = !paymentMethod;
-
-    const displayPrice = template.price || 50000;
+    const displayPrice = template.price || 60000;
 
     return (
         <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Card Summary & Payment</h2>
-            <p className="text-gray-400 mb-12">Secure payment powered by Paystack. Your card activates instantly after payment.</p>
             
             <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-10 mb-12 p-4 md:p-8 bg-gray-800/60 rounded-xl border border-gray-700">
                 
@@ -337,38 +333,15 @@ const Stage3Payment: React.FC<StageProps> = ({ formData, nextStage, prevStage })
                 {/* Vertical Separator (Hidden on mobile) */}
                 <div className="hidden md:block w-px h-64 bg-gray-700" />
                 
-                {/* Right Section: Payment Options */}
+                {/* Right Section: Payment Button */}
                 <div className="w-full md:w-2/3 space-y-6 text-left">
-                    <h3 className="text-2xl font-bold text-white mb-4">Payment Options</h3>
-                    
-                    {/* Payment Select Dropdown */}
-                    <div>
-                        <label htmlFor="paymentMethod" className="sr-only">Select Payment Method</label>
-                        <select
-                            id="paymentMethod"
-                            name="paymentMethod"
-                            value={paymentMethod}
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            className="w-full p-4 bg-gray-700 border border-gray-600 rounded-xl text-white focus:ring-blue-500 focus:border-blue-500 transition duration-150 appearance-none text-lg"
-                        >
-                            <option value="" disabled className="bg-gray-800">Select Payment Method</option>
-                            <option value="bankTransfer" className="bg-gray-800">Bank Transfer</option>
-                            <option value="card" className="bg-gray-800">Debit/Credit Card</option>
-                            <option value="ussd" className="bg-gray-800">USSD</option>
-                        </select>
-                    </div>
 
-                    {/* Buy Card Button */}
+                    {/* Pay Now Button */}
                     <button
                         onClick={nextStage}
-                        disabled={isBuyDisabled}
-                        className={`w-full flex items-center justify-center px-10 py-4 rounded-xl font-bold transition-all duration-300 text-lg ${
-                            isBuyDisabled
-                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40'
-                        }`}
+                        className="w-full flex items-center justify-center px-10 py-4 rounded-xl font-bold transition-all duration-300 text-lg bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
                     >
-                        <ShoppingBag className="w-5 h-5 mr-2" /> Buy Card
+                        <ShoppingBag className="w-5 h-5 mr-2" /> Pay Now
                     </button>
                     
                     <p className="text-xs text-gray-500 text-center pt-2">

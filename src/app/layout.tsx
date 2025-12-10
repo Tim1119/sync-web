@@ -7,6 +7,7 @@ import Navbar from "./components/public/Navbar";
 import Footer from "./components/public/Footer";
 import { Abhaya_Libre } from "next/font/google";
 import { Inter } from "next/font/google";
+import ReactQueryProvider from "../components/providers/react-query-provider";
 
 
 const geistSans = Geist({
@@ -113,9 +114,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable} ${inter.variable} antialiased bg-black`}
       >
-        <Navbar />
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ReactQueryProvider>
       </body>
     </html>
   );
