@@ -7,17 +7,28 @@ import { usePathname } from "next/navigation";
 
 import { 
   Menu, X, 
-  Home, Info, CreditCard, Wrench, User, ArrowLeft,
+  Home, Info, CreditCard, Wrench, User, ArrowLeft, ChevronDown,
   LucideIcon
 } from "lucide-react"; 
 
 // --- TYPE DEFINITIONS ---
 
-interface NavigationItem {
+interface SimpleNavigationItem {
     title: string;
     url: string;
     icon: LucideIcon;
 }
+
+interface DropdownLink {
+    title: string;
+    url: string;
+}
+
+interface DropdownNavigationItem extends SimpleNavigationItem {
+    dropdown: DropdownLink[];
+}
+
+type NavigationItem = SimpleNavigationItem | DropdownNavigationItem;
 
 interface ButtonProps {
     children: ReactNode;
@@ -45,9 +56,71 @@ const navigationItems: NavigationItem[] = [
   { title: "Home", url: "/", icon: Home },
   { title: "About", url: "/about", icon: Info },
   { title: "Cards", url: "/cards", icon: CreditCard },
-  { title: "Services", url: "/services", icon: Wrench },
+  // **MODIFICATION START**
+  { 
+    title: "Services", 
+    url: "/services", 
+    icon: Wrench,
+    dropdown: [
+      { title: "University Solution", url: "/services/university-solution" }
+    ]
+  },
+  // **MODIFICATION END**
   { title: "Contact", url: "/contact", icon: User },
 ];
+
+// --- NEW COMPONENT: DROPDOWN ITEM (For Desktop) ---
+
+interface DropdownItemProps {
+    item: DropdownNavigationItem;
+    pathname: string;
+}
+
+const DropdownItem: FC<DropdownItemProps> = ({ item, pathname }) => {
+    // Check if the current pathname matches the main URL OR any of the dropdown URLs
+    const isActive = 
+        pathname === item.url || 
+        item.dropdown.some(dropdownItem => pathname === dropdownItem.url);
+
+    return (
+        <div className="relative group/parent">
+            {/* Parent Link/Button */}
+            <div className={`text-sm font-medium transition-colors relative group/link font-[inter] flex items-center cursor-pointer ${
+                isActive
+                ? "text-[#113CFC]"
+                : "text-white hover:text-[#113CFC]"
+            }`}>
+                {item.title}
+                <ChevronDown className={`h-4 w-4 ml-1 transition-transform duration-200 ${isActive ? 'text-[#113CFC]' : 'text-white group-hover/link:text-[#113CFC]'} group-hover/parent:rotate-180`} />
+                
+                {/* Underline span - W-full if active or group-hover */}
+                <span
+                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[#113CFC] group-hover/link:w-full transition-all duration-300 ${
+                    isActive ? "w-full" : ""
+                  }`}
+                ></span>
+            </div>
+            
+
+            {/* Dropdown Content */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 p-2 w-max bg-[#030C32] rounded-lg shadow-xl border border-[#1A1F4B] opacity-0 invisible group-hover/parent:opacity-100 group-hover/parent:visible transition-all duration-300 z-50">
+                {item.dropdown.map((subItem) => (
+                    <Link
+                        key={subItem.title}
+                        href={subItem.url}
+                        className={`block px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                            pathname === subItem.url
+                                ? "bg-[#113CFC] text-white" 
+                                : "text-gray-300 hover:bg-[#1A1F4B] hover:text-white"
+                        }`}
+                    >
+                        {subItem.title}
+                    </Link>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 // --- MAIN COMPONENT: NAVBAR (With Waves Image Included) ---
 
@@ -55,6 +128,9 @@ const Navbar: FC = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isImageVisible, setIsImageVisible] = useState(true); // State to track scroll for wave image
+  // **MODIFICATION START**
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // State for mobile dropdown
+  // **MODIFICATION END**
 
   // Effect to manage body scrolling
   useEffect(() => {
@@ -148,25 +224,34 @@ const Navbar: FC = () => {
 
           {/* Center Navigation */}
           <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-8">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.title}
-                href={item.url}
-                className={`text-sm font-medium transition-colors relative group font-[inter] ${
-                  pathname === item.url
-                    ? "text-[#113CFC]"
-                    : "text-white hover:text-[#113CFC]"
-                }`}
-              >
-                {item.title}
-                {/* Underline span */}
-                <span
-                  className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[#113CFC] group-hover:w-full transition-all duration-300 ${
-                    pathname === item.url ? "w-full" : ""
+            {navigationItems.map((item) => {
+              // **MODIFICATION START**
+              if ('dropdown' in item) {
+                return <DropdownItem key={item.title} item={item} pathname={pathname} />;
+              }
+              // **MODIFICATION END**
+              
+              const simpleItem = item as SimpleNavigationItem; // Safe cast for non-dropdown items
+              return (
+                <Link
+                  key={simpleItem.title}
+                  href={simpleItem.url}
+                  className={`text-sm font-medium transition-colors relative group font-[inter] ${
+                    pathname === simpleItem.url
+                      ? "text-[#113CFC]"
+                      : "text-white hover:text-[#113CFC]"
                   }`}
-                ></span>
-              </Link>
-            ))}
+                >
+                  {simpleItem.title}
+                  {/* Underline span */}
+                  <span
+                    className={`absolute bottom-0 left-0 w-0 h-0.5 bg-[#113CFC] group-hover:w-full transition-all duration-300 ${
+                      pathname === simpleItem.url ? "w-full" : ""
+                    }`}
+                  ></span>
+                </Link>
+              )
+            })}
           </div>
 
           {/* Right Button */}
@@ -207,11 +292,67 @@ const Navbar: FC = () => {
 
           {navigationItems.map((item) => {
             const Icon = item.icon; 
-            const isActive = pathname === item.url; 
+            
+            // **MODIFICATION START**
+            // Determine active state for both simple links and dropdowns
+            const isDropdown = 'dropdown' in item;
+            const isActive = isDropdown 
+                ? pathname === item.url || item.dropdown.some(d => pathname === d.url)
+                : pathname === item.url;
+            
+            if (isDropdown) {
+                const dropdownItem = item as DropdownNavigationItem;
+                const isDropdownOpen = openDropdown === dropdownItem.title;
+
+                return (
+                    <div key={dropdownItem.title} className="w-full">
+                        {/* Dropdown Header/Link */}
+                        <div 
+                            onClick={() => setOpenDropdown(isDropdownOpen ? null : dropdownItem.title)}
+                            className={`flex items-center justify-between space-x-3 py-3 px-3 rounded-lg transition-all duration-200 group cursor-pointer ${
+                                isActive
+                                    ? "text-[#113CFC] bg-[#113CFC]/10" 
+                                    : "text-gray-300 hover:text-white hover:bg-[#1A1F4B]" 
+                            }`}
+                        >
+                            <div className="flex items-center space-x-3">
+                                {Icon && (
+                                    <Icon className={`h-5 w-5 ${isActive ? 'text-[#113CFC]' : 'text-gray-400 group-hover:text-white'}`} />
+                                )}
+                                <span className={`text-base font-medium ${isActive ? 'text-[#113CFC]' : 'text-white'}`}>
+                                    {dropdownItem.title}
+                                </span>
+                            </div>
+                            <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                        </div>
+
+                        {/* Dropdown Content */}
+                        <div className={`overflow-hidden transition-all duration-300 ${isDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                            {dropdownItem.dropdown.map((subItem) => (
+                                <Link
+                                    key={subItem.title}
+                                    href={subItem.url}
+                                    onClick={() => { setMobileMenuOpen(false); setOpenDropdown(null); }}
+                                    className={`ml-4 pl-8 pr-3 py-2 flex items-center transition-all duration-200 rounded-lg ${
+                                        pathname === subItem.url
+                                            ? "text-[#113CFC] bg-[#113CFC]/10" 
+                                            : "text-gray-300 hover:text-white hover:bg-[#1A1F4B]" 
+                                    }`}
+                                >
+                                    <span className="text-sm">{subItem.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+            
+            // Simple Link rendering
+            const simpleItem = item as SimpleNavigationItem; 
             return (
               <Link
-                key={item.title}
-                href={item.url}
+                key={simpleItem.title}
+                href={simpleItem.url}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`flex items-center space-x-3 py-3 px-3 rounded-lg transition-all duration-200 group ${
                   isActive
@@ -225,11 +366,13 @@ const Navbar: FC = () => {
                 )}
                 {/* Title */}
                 <span className={`text-base font-medium ${isActive ? 'text-[#113CFC]' : 'text-white'}`}>
-                    {item.title}
+                    {simpleItem.title}
                 </span>
               </Link>
             );
           })}
+          {/* **MODIFICATION END** */}
+          
           <div className="mt-auto pt-8">
             <Link href="/cards" onClick={() => setMobileMenuOpen(false)}>
               <Button 
