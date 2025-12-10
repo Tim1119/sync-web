@@ -1,25 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 
-// ==================================================================
-// --- Mock Button Component (Reused for running the code) ---
-// ==================================================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Button = ({ children, className, variant, style, ...props }: any) => (
-  <button
-    className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${className}`}
-    style={style}
-    {...props}
-  >
-    {children}
-  </button>
-);
-// --------------------------------------------------------------------------
-
-// --- Animation Variants (Reused from previous response) ---
 const textVariant: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
@@ -59,7 +42,7 @@ const perpetualGlowVariant: Variants = {
   },
 };
 
-// --- Structured Feature Data ---
+
 const networkingFeatures = [
     { title: "Share Instantly", text: "One tap to exchange contact details, portfolio, and social links.", icon: "🔗" },
     { title: "Track & Follow-Up", text: "Get real-time lead generation and analytics, and sync data to your CRM.", icon: "📈" },
@@ -72,22 +55,15 @@ const accessFeatures = [
     { title: "Simplified Management", text: "Streamline employee, member, or student tracking and access rights digitally.", icon: "⚙️" },
 ];
 
-// --- VALID UNSPLASH IMAGE URLs ---
-// I've selected images that visually represent the concepts you've described.
-const UNSPLASH_IMAGE_URLS = {
-    // Modern interconnected digital identity and technology
-    UNIFIED_IDENTITY: "/landing/honest-pricing.svg",
-    // Contactless card tap with phone - networking/business exchange
-    NETWORKING_IMAGE: "/landing/contactless-card.jpg",
 
-    // Door access control system with card reader
+const UNSPLASH_IMAGE_URLS = {
+    UNIFIED_IDENTITY: "/landing/honest-pricing.svg",
+    NETWORKING_IMAGE: "/landing/contactless-card.jpg",
     ACCESS_CONTROL_IMAGE: "https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3",
 };
 
 
-// ==================================================================
-// --- ABOUT US PAGE COMPONENT ---
-// ==================================================================
+
 
 export default function AboutUsPage() {
   return (
@@ -116,9 +92,7 @@ export default function AboutUsPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-20 md:py-32">
 
-        {/* -------------------------------------------------- */}
-        {/* ## Section 1: Hero - Core Identity */}
-        {/* -------------------------------------------------- */}
+       
         <motion.section
           className="text-center mb-24 space-y-6"
           initial="hidden"
@@ -129,7 +103,7 @@ export default function AboutUsPage() {
           <p className="text-lg font-semibold text-[#113CFC] uppercase tracking-widest">
             The Future of Unified Identity
           </p>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold font-[abhaya] text-white leading-tight">
+          <h1 className="text-5xl sm:text-6xl lg:text-6xl font-bold font-[abhaya] text-white leading-tight">
             SYNC: <span className="text-[#113CFC]">One Card.</span> Endless Possibilities.
           </h1>
           <p className="text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto font-[inter]">
@@ -152,9 +126,7 @@ export default function AboutUsPage() {
 
         <hr className="border-t border-white/10 my-16" />
 
-        {/* -------------------------------------------------- */}
-        {/* ## Section 2: The Power of SYNC - Networking */}
-        {/* -------------------------------------------------- */}
+       
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
             {/* Text Content */}
             <motion.div
@@ -208,9 +180,7 @@ export default function AboutUsPage() {
 
         <hr className="border-t border-white/10 my-16" />
 
-        {/* -------------------------------------------------- */}
-        {/* ## Section 3: The Power of SYNC - Access & Verification */}
-        {/* -------------------------------------------------- */}
+      
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
             {/* Image (Order swapped for visual diversity) */}
             <motion.div
@@ -281,9 +251,7 @@ export default function AboutUsPage() {
 
         <hr className="border-t border-white/10 my-16" />
 
-        {/* -------------------------------------------------- */}
-        {/* ## Section 4: Real-World Transformation (Consolidated) */}
-        {/* -------------------------------------------------- */}
+       
         <motion.section
             className="text-center"
             initial="hidden"
