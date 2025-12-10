@@ -28,12 +28,12 @@ export default function PrivacyPolicyPage() {
               Introduction
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              Welcome to Sync (referred to as "we", "our", or "us"). We are
+              Welcome to Sync (referred to as &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;). We are
               committed to protecting your privacy and ensuring the security of
               your personal information. This Privacy Policy explains how we
               collect, use, disclose, and safeguard your information when you
               use our mobile application, website, and related services
-              (collectively, the "Service").
+              (collectively, the &quot;Service&quot;).
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
               By using our Service, you agree to the collection and use of
@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
               2. Contact Exchange Information
             </h3>
             <p className="text-gray-700 leading-relaxed">
-              When you open someone's contact card link or share your contact
+              When you open someone&apos;s contact card link or share your contact
               information:
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-700">
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-gray-700 leading-relaxed mt-4">
               <strong>Important:</strong> When you open a contact card link, we
               automatically collect and send your contact information to the
-              owner of that link. This information is stored in your browser's
+              owner of that link. This information is stored in your browser&apos;s
               local cache. If you visit the same link again, we use the cached
               information to automatically send your details to the link owner
               without requiring you to re-enter your information.
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
               3. Camera and Photo Access
             </h3>
             <p className="text-gray-700 leading-relaxed">
-              Our mobile application requests access to your device's camera and
+              Our mobile application requests access to your device&apos;s camera and
               photo library to allow you to:
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-700">
@@ -174,7 +174,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ol className="list-decimal pl-6 mt-2 space-y-2 text-gray-700">
               <li>
-                When you open someone's contact card link (shared via QR code,
+                When you open someone&apos;s contact card link (shared via QR code,
                 URL, or other means), we collect your contact information.
               </li>
               <li>
@@ -187,7 +187,7 @@ export default function PrivacyPolicyPage() {
                 accessed.
               </li>
               <li>
-                Your information is stored in your browser's local storage
+                Your information is stored in your browser&apos;s local storage
                 (cache) for future visits.
               </li>
               <li>
@@ -201,8 +201,8 @@ export default function PrivacyPolicyPage() {
               </li>
             </ol>
             <p className="text-gray-700 leading-relaxed mt-4">
-              This automatic sharing only occurs when you access someone's
-              contact card link. You can clear your browser's local storage at
+              This automatic sharing only occurs when you access someone&apos;s
+              contact card link. You can clear your browser&apos;s local storage at
               any time to remove cached contact information.
             </p>
           </section>
@@ -227,7 +227,7 @@ export default function PrivacyPolicyPage() {
             </h3>
             <p className="text-gray-700 leading-relaxed">
               Contact information you provide when accessing contact card links
-              is stored in your device's local browser storage (localStorage).
+              is stored in your device&apos;s local browser storage (localStorage).
               This cached data is used to automatically populate forms on
               subsequent visits to the same or other contact links. You can
               clear this cached data at any time through your browser settings.
@@ -256,7 +256,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-700">
               <li>
-                <strong>Contact Exchange:</strong> When you access someone's
+                <strong>Contact Exchange:</strong> When you access someone&apos;s
                 contact card link, we share your contact information with that
                 link owner as part of our contact exchange feature.
               </li>
@@ -321,7 +321,7 @@ export default function PrivacyPolicyPage() {
                 collection by adjusting your device or browser settings.
               </li>
               <li>
-                <strong>Clear Cache:</strong> You can clear your browser's local
+                <strong>Clear Cache:</strong> You can clear your browser&apos;s local
                 storage to remove cached contact information.
               </li>
               <li>
@@ -347,7 +347,7 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
-              Children's Privacy
+              Children&apos;s Privacy
             </h2>
             <p className="text-gray-700 leading-relaxed">
               Our Service is not intended for individuals under the age of 13.
@@ -365,7 +365,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-gray-700 leading-relaxed">
               We may update our Privacy Policy from time to time. We will notify
               you of any changes by posting the new Privacy Policy on this page
-              and updating the "Last updated" date. You are advised to review
+              and updating the &quot;Last updated&quot; date. You are advised to review
               this Privacy Policy periodically for any changes.
             </p>
           </section>
