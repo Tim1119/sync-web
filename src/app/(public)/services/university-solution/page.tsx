@@ -4,43 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { PiTreeStructure } from "react-icons/pi";
-
-// 1. IMPORT REACT ICONS (Using Material Design Icons - Md)
-import { 
-    MdCreditCard,  // Matches Smart ID/Card
-    MdDashboard,   // Matches Management/Dashboard
-    MdHub,         // Matches Scale/Institution Hub
-    MdVerifiedUser // Matches Verification/Security Check
-} from "react-icons/md"; 
-
 import { BiSolidUserBadge } from "react-icons/bi";
 import { FaChartLine } from "react-icons/fa6";
 import { FaMobileAlt } from "react-icons/fa";
 
-// --- Icons from lucide-react (Mocked with strings for simplicity) ---
-const SolutionIcons = {
-    SmartID: "💳", 
-    ManageStudents: "📊", 
-    Scale: "🌐", 
-    Verify: "✅", 
-};
 
-// ==================================================================
-// --- Mock Button Component (Reused for running the code) ---
-// ==================================================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Button = ({ children, className, variant, style, ...props }: any) => (
-  <button
-    className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${className}`}
-    style={style}
-    {...props}
-  >
-    {children}
-  </button>
-);
-// --------------------------------------------------------------------------
 
-// --- Animation Variants (Reused from previous response) ---
 const textVariant: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
@@ -75,7 +44,6 @@ const perpetualGlowVariant: Variants = {
   },
 };
 
-// 2. UPDATE DATA: Use the imported Icon Components and matching color scheme
 const universityModules = [
     {
         icon: BiSolidUserBadge ,
@@ -112,19 +80,15 @@ const universityModules = [
 ];
 
 
-// ==================================================================
-// --- UNIVERSITY SOLUTION PAGE COMPONENT ---
-// ==================================================================
-
 export default function UniversitySolutionPage() {
   return (
     <div
       className="relative w-full overflow-hidden min-h-screen p-10 font-[inter]"
       style={{
-        background: '#030C32', // Main background color, consistent with the style guide
+        background: '#030C32', 
       }}
     >
-      {/* GLOBAL BACKGROUND GLOW SYSTEM */}
+      
       <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
           className="absolute -top-40 left-[15%] w-[600px] h-[500px] bg-[#113CFC]/20 blur-[200px] rounded-full mix-blend-screen"
@@ -142,9 +106,7 @@ export default function UniversitySolutionPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto lg:px-8 py-20 md:py-32">
 
-        {/* -------------------------------------------------- */}
-        {/* ## Hero/Header Section (Based on the image title) */}
-        {/* -------------------------------------------------- */}
+       
         <motion.header
           className="text-center mb-20 space-y-4"
           initial="hidden"
@@ -160,9 +122,7 @@ export default function UniversitySolutionPage() {
           </p>
         </motion.header>
 
-        {/* -------------------------------------------------- */}
-        {/* ## Solution Modules Grid (Core Content from Image) */}
-        {/* -------------------------------------------------- */}
+        
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           initial="hidden"
@@ -171,7 +131,7 @@ export default function UniversitySolutionPage() {
           variants={containerVariant}
         >
           {universityModules.map((module, index) => {
-            // 3. RENDER ICON COMPONENT
+            
             const IconComponent = module.icon;
             
             return (
@@ -195,13 +155,13 @@ export default function UniversitySolutionPage() {
                       {module.title}
                     </h3>
                   </div>
-                  {/* *** END MODIFICATION *** */}
+                 
 
                   <p className="text-gray-300 text-base text-center md:text-left">
                     {module.description}
                   </p>
 
-                  {/* Image Section - The focus of the card */}
+                 
                   <div className="w-full h-48 mt-4">
                     <Image
                       src={module.imageUrl}

@@ -32,8 +32,8 @@ const ServicesLinks = [
 ];
 
 const SocialMediaLinks = [
-    { icon: FaInstagram, title: 'Instagram', href: '#' },
-    { icon: FaLinkedinIn, title: 'LinkedIn', href: '#' },
+    { icon: FaInstagram, title: 'Instagram', href: 'https://www.instagram.com/buysync' },
+    { icon: FaLinkedinIn, title: 'LinkedIn', href: 'https://www.linkedin.com/company/sync-innovation' },
     { icon: FaFacebookF, title: 'Facebook', href: '#' },
     { icon: FaXing, title: 'X', href: '#' }, // FaXing is often used as a stand-in for the 'X' (Twitter) logo
     { icon: FaTiktok, title: 'Tiktok', href: '#' },
