@@ -25,8 +25,8 @@ const QuickLinks = [
 ];
 
 const ServicesLinks = [
-    { title: 'University use case', href: '/services/university-solution' },
-    { title: 'Organization use case', 'href': '#' },
+    { title: 'University', href: '/services/university-solution' },
+    { title: 'Organization', 'href': '#' },
     
 ];
 
@@ -181,7 +181,7 @@ export default function Footer() {
                         </ul>
                     </div>
                 </div>
-                
+
                 <motion.div 
                     className="pt-7 text-center" 
                     variants={linkItemVariants}

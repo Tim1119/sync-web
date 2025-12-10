@@ -62,7 +62,7 @@ const navigationItems: NavigationItem[] = [
     url: "/services", 
     icon: Wrench,
     dropdown: [
-      { title: "University Solution", url: "/services/university-solution" }
+      { title: "University", url: "/services/university-solution" }
     ]
   },
   // **MODIFICATION END**
