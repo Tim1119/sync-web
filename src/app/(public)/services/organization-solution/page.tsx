@@ -1,32 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-
-// --- Icons for Organization Use Cases (React Icons) ---
 import { BiSolidUserBadge } from "react-icons/bi";
 import { FaChartLine, FaMobileAlt, FaUsers, FaLockOpen, FaHandshake } from "react-icons/fa";
 import { MdOutlineIntegrationInstructions, MdAccessTimeFilled, MdAnalytics } from "react-icons/md";
-import { PiTreeStructure } from "react-icons/pi";
 
-
-// ==================================================================
-// --- Mock Button Component (Reused for running the code) ---
-// ==================================================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Button = ({ children, className, variant, style, ...props }: any) => (
-  <button
-    className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${className}`}
-    style={style}
-    {...props}
-  >
-    {children}
-  </button>
-);
-// --------------------------------------------------------------------------
-
-// --- Animation Variants (Reused from previous response) ---
 const textVariant: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
@@ -61,7 +40,6 @@ const perpetualGlowVariant: Variants = {
   },
 };
 
-// --- Solution Modules Data for Organization Use Cases ---
 const organizationModules = [
     {
         icon: FaChartLine, 
@@ -91,41 +69,37 @@ const organizationModules = [
     },
 ];
 
-// --- Why Organizations Love SYNC (Bulleted List) ---
+
 const valuePropositions = [
     { 
         icon: BiSolidUserBadge, 
         text: "One unified card for identity, access, and networking.",
-        colorClass: "text-blue-400" // Identity / Unified Card
+        colorClass: "text-blue-400" 
     },
     { 
         icon: FaChartLine, 
         text: "Better lead capture and measurable marketing ROI.",
-        colorClass: "text-red-400" // Marketing / ROI / Growth
+        colorClass: "text-red-400" 
     },
     { 
         icon: MdAccessTimeFilled, 
         text: "Smoother onboarding and workforce management.",
-        colorClass: "text-green-400" // HR / Efficiency / Time
+        colorClass: "text-green-400" 
     },
     { 
         icon: FaLockOpen, 
         text: "Secure, trackable, and efficient operations.",
-        colorClass: "text-yellow-400" // Security / Operations
+        colorClass: "text-yellow-400" 
     },
 ];
 
-
-// ==================================================================
-// --- ORGANIZATION SOLUTION PAGE COMPONENT ---
-// ==================================================================
 
 export default function OrganizationSolutionPage() {
   return (
     <div
       className="relative w-full overflow-hidden min-h-screen font-[inter] pt-10"
       style={{
-        background: '#030C32', // Main background color, consistent with the style guide
+        background: '#030C32', 
       }}
     >
       {/* GLOBAL BACKGROUND GLOW SYSTEM */}
@@ -190,42 +164,39 @@ export default function OrganizationSolutionPage() {
                              flex flex-col space-y-4 overflow-hidden h-full"
                   variants={itemVariant}
                 >
-                    {/* Icon and Title Header (Horizontal on MD+, Vertical on Mobile) */}
+                   
                     <div className="flex flex-col items-center mb-2 
                                     md:flex-row md:items-start md:space-x-3 
                                     text-center md:text-left">
-                        {/* Icon Container */}
-                        <div className={`p-2 rounded-lg flex items-center justify-center ${module.colorClass} flex-shrink-0 mb-3 md:mb-0`}>
+                        
+                        <div className={`p-2 rounded-lg flex items-center justify-center ${module.colorClass} shrink-0 mb-3 md:mb-0`}>
                             <IconComponent className={`w-6 h-6 ${module.iconColor}`} />
                         </div>
-                        {/* Title */}
-                        <h3 className="text-2xl font-bold text-white flex-grow leading-snug">
+                        
+                        <h3 className="text-2xl font-bold text-white grow leading-snug">
                             {module.title}
                         </h3>
                     </div>
 
-                    {/* Description */}
                     <p className="text-gray-300 text-base text-center md:text-left">
                         {module.description}
                     </p>
 
-                    {/* Features List */}
                     <motion.div
-                        className="space-y-3 pt-3 flex-grow" // flex-grow pushes image to bottom
+                        className="space-y-3 pt-3 grow" 
                         variants={containerVariant}
                     >
                         {module.features.map((feature, idx) => {
                             const FeatureIcon = feature.icon;
                             return (
                                 <motion.div key={idx} className="flex items-start space-x-2 text-left" variants={itemVariant}>
-                                    <FeatureIcon className={`w-5 h-5 mt-1 ${module.iconColor} flex-shrink-0`} />
+                                    <FeatureIcon className={`w-5 h-5 mt-1 ${module.iconColor} shrink-0`} />
                                     <p className="text-sm text-gray-400">{feature.text}</p>
                                 </motion.div>
                             );
                         })}
                     </motion.div>
 
-                    {/* Image Section - The focus of the card */}
                     <div className="w-full h-48 mt-4">
                         <Image
                           src={module.imageUrl}
@@ -242,9 +213,6 @@ export default function OrganizationSolutionPage() {
 
         <hr className="border-t border-white/10 my-16" />
 
-        {/* -------------------------------------------------- */}
-        {/* ## Section 3: Why Organizations Love SYNC (Bullet Points) */}
-        {/* -------------------------------------------------- */}
         <motion.section
             className="text-center"
             initial="hidden"
@@ -268,7 +236,7 @@ export default function OrganizationSolutionPage() {
                             variants={itemVariant}
                             whileHover={{ y: -5 }}
                         >
-                            {/* *** MODIFICATION HERE: Using prop.colorClass for icon color *** */}
+                            
                             <PropIcon className={`text-4xl mb-2 ${prop.colorClass}`} />
                             <p className="text-lg text-gray-300 font-medium">{prop.text}</p>
                         </motion.div>
@@ -276,9 +244,6 @@ export default function OrganizationSolutionPage() {
                 })}
             </div>
         </motion.section>
-
-       
-
       </div>
     </div>
   );

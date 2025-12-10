@@ -98,8 +98,8 @@ export default function Footer() {
                             </Link>
                         </motion.div>
                         
-                        <motion.p variants={linkItemVariants} className="text-gray-400 text-sm max-w-xs leading-relaxed mx-auto md:mx-0">
-                            We build readymade websites, mobile applications, and elaborate online business services.
+                        <motion.p variants={linkItemVariants} className="text-gray-400 text-sm max-w-xs leading-relaxed mx-auto md:mx-0 text-justify">
+                            We&apos;re redefining identity for the connected world. SYNC is an integrated solution that replaces fragmented tools for networking, access control, and identity verification.
                         </motion.p>
                     </div>
 

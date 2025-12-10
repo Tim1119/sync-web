@@ -150,7 +150,7 @@ export default function AboutUsPage() {
                 >
                     {networkingFeatures.map((feature, index) => (
                         <motion.div key={index} className="flex items-start space-x-3" variants={itemVariant}>
-                            <span className="text-2xl text-[#113CFC] min-w-[24px]">{feature.icon}</span>
+                            <span className="text-2xl text-[#113CFC] min-w-6">{feature.icon}</span>
                             <div>
                                 <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
                                 <p className="text-sm text-gray-400">{feature.text}</p>
@@ -221,7 +221,7 @@ export default function AboutUsPage() {
                 >
                     {accessFeatures.map((feature, index) => (
                         <motion.div key={index} className="flex items-start space-x-3" variants={itemVariant}>
-                            <span className="text-2xl text-[#113CFC] min-w-[24px]">{feature.icon}</span>
+                            <span className="text-2xl text-[#113CFC] min-w-6">{feature.icon}</span>
                             <div>
                                 <h3 className="text-lg font-semibold text-white">{feature.title}</h3>
                                 <p className="text-sm text-gray-400">{feature.text}</p>
