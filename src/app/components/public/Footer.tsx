@@ -25,18 +25,16 @@ const QuickLinks = [
 ];
 
 const ServicesLinks = [
-    { title: 'Smart Scheduling', href: '#' },
-    { title: 'Client Management', 'href': '#' },
-    { title: 'Secure Payments', href: '#' },
-    { title: 'Team Sync', href: '#' },
-    { title: 'Business Analytics', href: '#' },
+    { title: 'University use case', href: '/services/university-solution' },
+    { title: 'Organization use case', 'href': '#' },
+    
 ];
 
 const SocialMediaLinks = [
     { icon: FaInstagram, title: 'Instagram', href: 'https://www.instagram.com/buysync' },
     { icon: FaLinkedinIn, title: 'LinkedIn', href: 'https://www.linkedin.com/company/sync-innovation' },
     { icon: FaFacebookF, title: 'Facebook', href: '#' },
-    { icon: FaXing, title: 'X', href: '#' }, // FaXing is often used as a stand-in for the 'X' (Twitter) logo
+    { icon: FaXing, title: 'X', href: 'https://x.com/buysync_' }, // FaXing is often used as a stand-in for the 'X' (Twitter) logo
     { icon: FaTiktok, title: 'Tiktok', href: '#' },
 ];
 

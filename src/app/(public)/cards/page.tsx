@@ -431,6 +431,7 @@ export default function CardForm() {
         }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePaystackSuccess = (reference: any) => {
         // Extract payment reference from Paystack response
         // Paystack returns { reference: 'xxx', ... } or just the reference string
