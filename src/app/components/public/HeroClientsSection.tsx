@@ -51,10 +51,10 @@ const LogoItem = ({ client }: { client: Client }) => (
 const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => {
   return (
     <motion.div
-      className="relative px-4 py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
+      className="relative px-4 py-2 lg:py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
                  ring-1 ring-[#113CFC]/30  transition-all duration-300
                 hover:ring-[#113CFC]/60 hover:shadow-[0_0_30px_rgba(17,60,252,0.3)] 
-                w-[300px] shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
+                w-[250px] lg:w-[300px] shrink-0 md:w-auto md:max-w-md lg:max-w-none snap-center"
       variants={cardVariants}
       custom={custom}
       whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
@@ -619,9 +619,13 @@ export default function MergedLandingSection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {[...cardsData].reverse().map((card, index) => (
+            {/* {cardsData.map((card, index) => (
               <CardComponent key={card.id} card={card} custom={index} />
-            ))}
+            ))} */}
+            {[...cardsData].reverse().map((card, index) => (
+            <CardComponent key={card.id} card={card} custom={index} />
+          ))}
+
           </motion.div>
         </div>
       </div>

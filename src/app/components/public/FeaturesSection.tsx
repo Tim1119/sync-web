@@ -71,7 +71,7 @@ export default function FeaturesSection() {
         FEATURE CARDS SECTION - UNIFORM HEIGHTS
         ==================================================
       */}
-      <div className="relative z-20 w-full pt-10 pb-28 font-[inter]">
+      <div className="relative z-20 w-full pt-0 lg:pt-10 pb-5 font-[inter]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <motion.div
                 // Use a main 3-column grid (lg:grid-cols-3)
