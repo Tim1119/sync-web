@@ -360,6 +360,152 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+              Child Safety Standards
+            </h2>
+            <p className="text-gray-700 leading-relaxed">
+              Sync is committed to protecting children and preventing child sexual
+              abuse and exploitation (CSAE) on our platform. We have implemented
+              comprehensive safety standards and measures to ensure a safe
+              environment for all users, particularly minors.
+            </p>
+
+            <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
+              Our Commitment
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              We maintain a zero-tolerance policy towards any form of child sexual
+              abuse and exploitation. Our safety standards include:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-700">
+              <li>
+                <strong>Age Verification:</strong> Our Service is not intended for
+                individuals under the age of 13. We do not knowingly collect
+                personal information from children under 13.
+              </li>
+              <li>
+                <strong>Content Moderation:</strong> We actively monitor and
+                moderate content to prevent any material that could harm minors or
+                facilitate exploitation.
+              </li>
+              <li>
+                <strong>Reporting Mechanisms:</strong> Users can report any
+                suspicious activity, inappropriate content, or behavior that may
+                endanger children through our reporting system.
+              </li>
+              <li>
+                <strong>Rapid Response:</strong> We have established procedures
+                to respond immediately to reports of child safety concerns,
+                including cooperation with law enforcement agencies when
+                necessary.
+              </li>
+              <li>
+                <strong>User Education:</strong> We provide resources and
+                information to help users understand how to stay safe online and
+                recognize potential threats.
+              </li>
+              <li>
+                <strong>Technical Safeguards:</strong> We employ advanced
+                technology and automated systems to detect and prevent harmful
+                content and behavior.
+              </li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
+              Reporting Child Safety Concerns
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              If you encounter any content or behavior that may involve child
+              sexual abuse or exploitation, please report it immediately:
+            </p>
+            <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-700">
+              <li>
+                Use our in-app reporting feature to flag concerning content or
+                users
+              </li>
+              <li>
+                Contact us directly at{" "}
+                <a
+                  href="mailto:privacy@buysync.co"
+                  className="text-blue-600 hover:underline"
+                >
+                  privacy@buysync.co
+                </a>{" "}
+                with the subject line &quot;Child Safety Concern&quot;
+              </li>
+              <li>
+                Report to local law enforcement authorities if you believe a
+                child is in immediate danger
+              </li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
+              Published Safety Standards
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              Our complete Child Safety Standards and policies against child sexual
+              abuse and exploitation are published and publicly available at:
+            </p>
+            <p className="text-gray-700 leading-relaxed mt-4">
+              <a
+                href="https://buysync.co/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline font-semibold"
+              >
+                https://buysync.co/privacy
+              </a>
+            </p>
+            <p className="text-gray-700 leading-relaxed mt-4">
+              This document is accessible worldwide, is not editable by users, and
+              contains our comprehensive standards and procedures for preventing
+              and responding to child safety concerns.
+            </p>
+
+            <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
+              Contact Information for Child Safety Matters
+            </h3>
+            <p className="text-gray-700 leading-relaxed">
+              For urgent child safety concerns or questions about our safety
+              standards, please contact us:
+            </p>
+            <ul className="list-none mt-4 space-y-2 text-gray-700">
+              <li>
+                <strong>Email:</strong>{" "}
+                <a
+                  href="mailto:privacy@buysync.co"
+                  className="text-blue-600 hover:underline"
+                >
+                  privacy@buysync.co
+                </a>
+              </li>
+              <li>
+                <strong>Subject Line:</strong> &quot;Child Safety Concern&quot;
+                (for urgent matters)
+              </li>
+              <li>
+                <strong>Website:</strong>{" "}
+                <a
+                  href="https://buysync.co"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  buysync.co
+                </a>
+              </li>
+              <li>
+                <strong>Address:</strong> Lagos, Nigeria
+              </li>
+            </ul>
+            <p className="text-gray-700 leading-relaxed mt-4">
+              We take all reports seriously and will investigate promptly. In
+              cases involving potential criminal activity, we will cooperate
+              fully with law enforcement agencies.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
               Changes to This Privacy Policy
             </h2>
             <p className="text-gray-700 leading-relaxed">
