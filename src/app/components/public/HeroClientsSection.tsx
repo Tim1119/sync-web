@@ -6,11 +6,8 @@ import { motion, Variants } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { Info } from 'lucide-react';
 
-// ==================================================================
-// --- Mock Button Component (To ensure the merged component runs) ---
-// ==================================================================
-// This is a placeholder; replace with your actual Button component import.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Button = ({ children, className, variant, style, ...props }: any) => (
   <button
     className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${className}`}
@@ -20,9 +17,8 @@ const Button = ({ children, className, variant, style, ...props }: any) => (
     {children}
   </button>
 );
-// --------------------------------------------------------------------------
 
-// --- Placeholders for Card Data & Sub-Component (for running the code) ---
+
 interface Client { name: string; logo: string; }
 const clients: Client[] = [ { name: "Revolut", logo: "/landing/revolut-logo.svg" }, { name: "NorthOne", logo: "/landing/northone-logo.svg" }, { name: "Checkout", logo: "/landing/checkout-logo.svg" }, { name: "Revolut", logo: "/landing/revolut-logo.svg" }, { name: "NorthOne", logo: "/landing/northone-logo.svg" }, { name: "Checkout", logo: "/landing/checkout-logo.svg" }, ];
 interface CardFeature { text: string; }
@@ -544,7 +540,7 @@ export default function MergedLandingSection() {
               animate="visible"
               variants={textVariant}
             >
-              <h1 className="text-center text-4xl sm:text-5xl lg:text-[84px] font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
+              <h1 className="text-center text-3xl sm:text-5xl lg:text-[84px] font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
                 <span className="lg:w-full lg:text-left">
                     One Card.
                 </span>
