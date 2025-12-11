@@ -121,7 +121,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
 
 
 // ==================================================================
-// --- FINAL ANIMATED WALLET CARDS COMPONENT (PARENT HOVER POP-OUT) ---
+// --- ORIGINAL ANIMATED WALLET CARDS COMPONENT (LEFT FOR MOBILE VIEW) ---
 // ==================================================================
 
 const CARD_ANIMATION_HEIGHT_STEP = 15; 
@@ -177,6 +177,7 @@ const cardPopOutVariants: Variants = {
 
 const AnimatedWalletCards = () => {
     // State to track if the entire wallet area is hovered
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isWalletHovered, setIsWalletHovered] = useState(false);
     
     const cards = [
@@ -303,6 +304,145 @@ const AnimatedWalletCards = () => {
 
 
 // ==================================================================
+// --- NEW FLOATING CARD STACK COMPONENT (FOR DESKTOP HERO) ---
+// ==================================================================
+
+// CONSTANT for easily adjusting horizontal separation (e.g., set to 60 or 80 for more space)
+const CARD_HORIZONTAL_SPACING = 40; 
+
+// Define the structure for the card data used in the FloatingCardStack
+interface StackCardData { 
+    id: string; 
+    image: string; 
+    alt: string; 
+    rotation: number; 
+    xMultiplier: number; 
+    y: number; 
+    zIndex: number;
+}
+
+const FloatingCardStack = () => {
+    
+    // Data mapping for the three cards 
+    const cardImages: StackCardData[] = [
+        // Metal Card (Farthest Left: xMultiplier = -1)
+        { id: "metal-card", image: "/landing/auric-card-horizontal.png", alt: "Auric Metal Card", rotation: -10, xMultiplier: -4, y: -180, zIndex: 10 },
+        // Maple Card (Center: xMultiplier = 0)
+        { id: "maple-card", image: "/landing/maple-card-front.png", alt: "Maple Wood Card", rotation: 5, xMultiplier: -1 , y: -60, zIndex: 11 },
+        // Nova Card (Farthest Right: xMultiplier = 1)
+        { id: "nova-card", image: "/landing/nova-card-front.png", alt: "Nova Plastic Card", rotation: 10, xMultiplier: 2, y: 85, zIndex: 12 },
+    ];
+    
+    // Variants for the PARENT container (only handles the stagger/sequence)
+    const parentVariants: Variants = {
+        visible: { 
+            transition: { 
+                staggerChildren: 0.15, // Stagger the children's "visible" state
+                delayChildren: 0.2 // Optional initial delay for the first card
+            } 
+        },
+    };
+    
+    // Variants for the CHILD cards (handles the drop down)
+    const childCardVariants: Variants = {
+        // Start far above the target position for a 'drop down' effect
+        hidden: (card: StackCardData) => ({ 
+            opacity: 0, 
+            scale: 0.8, 
+            y: card.y - 300, // Use card data directly from custom prop
+        }),
+        // Target position, using a spring for a satisfying drop
+        visible: (card: StackCardData) => ({
+            opacity: 1,
+            scale: 1,
+            // Calculate X based on the multiplier and the adjustable spacing constant
+            x: card.xMultiplier * CARD_HORIZONTAL_SPACING,
+            y: card.y, // Final resting Y position
+            rotate: card.rotation,
+            transition: {
+                duration: 1.0,
+                ease: "easeOut" as const,
+                type: "spring",
+                stiffness: 80, 
+                damping: 10,
+                mass: 1.0,
+            },
+        }),
+    };
+
+    return (
+        <motion.div 
+            className="relative w-[400px] h-[350px] lg:w-[500px] lg:h-[450px] flex items-center justify-center pointer-events-auto"
+            initial="hidden"
+            whileInView="visible" // Triggers drop down on scroll/load
+            viewport={{ once: false, amount: 0.1 }}
+            variants={parentVariants} // Use the parent variants here for staggering
+        >
+            {cardImages.map((card, index) => {
+                // Calculate the true X-offset for the continuous animation
+                const currentXOffset = card.xMultiplier * CARD_HORIZONTAL_SPACING;
+                
+                return (
+                    <motion.div
+                        key={card.id}
+                        className={`absolute w-[280px] h-[180px] lg:w-[350px] lg:h-[220px] rounded-xl shadow-2xl overflow-hidden cursor-pointer`}
+                        
+                        // Pass the entire card object as custom prop for drop-down variants
+                        custom={card} 
+                        variants={childCardVariants} 
+                        
+                        // --- Continuous float/breathing animation (RESTORED) ---
+                        animate={{
+                            // Apply breathing animation around the calculated offset
+                            x: [currentXOffset, currentXOffset + 5, currentXOffset - 5, currentXOffset],
+                            y: [card.y, card.y + 10, card.y],
+                            rotate: [card.rotation, card.rotation + 0.5, card.rotation - 0.5, card.rotation],
+                            transition: {
+                                duration: 8 + index * 1.5,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            },
+                        }}
+                        // -----------------------------------------------------
+
+                        // --- Hover Animation Implementation ---
+                        whileHover={{
+                            y: card.y - 20, // Lift up 20px from resting Y
+                            scale: 1.05, // Grow 5%
+                            // Rotate further in its existing direction (e.g., -10 becomes -15, 10 becomes 15)
+                            rotate: card.rotation + (card.rotation > 0 ? 5 : -5), 
+                            transition: { 
+                                duration: 0.3, 
+                                ease: "easeOut" as const, 
+                                type: "spring", 
+                                stiffness: 200,
+                                damping: 10,
+                            },
+                        }}
+                        // ---------------------------------------------
+
+                        style={{ 
+                            zIndex: card.zIndex,
+                            // Set the initial transform using the calculated offset
+                            transform: `translate(${currentXOffset}px, ${card.y}px) rotate(${card.rotation}deg)`,
+                        }}
+                    >
+                        <Image
+                            src={card.image}
+                            alt={card.alt}
+                            fill
+                            className="object-cover w-full h-full"
+                            priority
+                        />
+                    </motion.div>
+                )
+            })}
+        </motion.div>
+    );
+};
+
+
+// ==================================================================
 // --- MERGED MAIN COMPONENT ---
 // ==================================================================
 
@@ -366,21 +506,6 @@ export default function MergedLandingSection() {
         <div
           className="md:absolute md:top-[700px] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[900px] md:h-[700px] bg-white/3 blur-[250px] mix-blend-screen rounded-full"
         />
-        {/* <div
-          className="absolute -top-40 right-1/4 transform translate-x-1/2 w-[600px] h-[500px] bg-[#113CFC]/30 blur-[250px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
-          className="absolute -top-60 right-1/2 transform translate-x-1/2 w-[1000px] h-[800px] bg-white/10 blur-[300px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[800px] bg-white/8 blur-[220px] rounded-full mix-blend-screen"
-        />
-        <div
-          className="absolute bottom-10 right-10 w-[500px] h-[400px] bg-[#113CFC]/15 blur-[180px] rounded-full mix-blend-screen"
-        /> */}
-        {/* <div
-          className="absolute top-10 left-10 w-[500px] h-[400px] bg-white/15 blur-[180px] rounded-full mix-blend-screen"
-        /> */}
       </div>
 
       {/* Background Decorative Image - Conditionally Rendered */}
@@ -434,7 +559,7 @@ export default function MergedLandingSection() {
               </p>
 
 
-              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS - USES ANIMATED COMPONENT === */}
+              {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS - USES WALLET COMPONENT === */}
               <div className="relative flex justify-center pt-8 pb-0 lg:hidden min-h-[300px]">
                 {/* GLOWS BEHIND THE CARDS - MOBILE */}
                 <div
@@ -447,7 +572,7 @@ export default function MergedLandingSection() {
                   className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
                 />
                 
-                <AnimatedWalletCards /> {/* ⬅️ REVISED ANIMATED COMPONENT */}
+                <AnimatedWalletCards /> {/* ⬅️ ORIGINAL WALLET ANIMATION */}
               </div>
 
             
@@ -478,7 +603,7 @@ export default function MergedLandingSection() {
 
             {/* RIGHT SIDE IMAGE (DESKTOP) */}
             <motion.div
-              className="relative hidden lg:flex justify-end"
+              className="relative hidden lg:flex justify-center items-center h-[400px]" // Adjusted to center the stack
               initial="hidden"
               animate="visible"
               variants={imageVariant}
@@ -502,15 +627,10 @@ export default function MergedLandingSection() {
               <div
                 className="absolute bottom-[-5%] left-[0%] w-[180px] h-[180px] bg-[#113CFC]/30 blur-[110px] rounded-full z-0"
               />
-               {/* NOTE: You must ensure /landing/hero-cards.svg is accessible in your public folder */}
-              <Image
-                src="/landing/hero-cards.svg"
-                alt="Cards Graphic"
-                width={900} 
-                height={900} 
-                className="w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl object-contain relative z-10" 
-                priority
-              />
+              
+              {/* ⬅️ NEW FLOATING CARD STACK WITH ANIMATIONS */}
+              <FloatingCardStack /> 
+              
             </motion.div>
           </div>
         </div>
@@ -605,11 +725,6 @@ export default function MergedLandingSection() {
             <h2 className="text-4xl sm:text-5xl font-bold text-white">
               Choose Your Perfect Card
             </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              Compare all card types and find the one that matches your style
-              and needs. Each card is designed for different preferences and use
-              cases.
-            </p>
           </motion.div>
 
           {/* Cards Grid */}
@@ -619,9 +734,6 @@ export default function MergedLandingSection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {/* {cardsData.map((card, index) => (
-              <CardComponent key={card.id} card={card} custom={index} />
-            ))} */}
             {[...cardsData].reverse().map((card, index) => (
             <CardComponent key={card.id} card={card} custom={index} />
           ))}
