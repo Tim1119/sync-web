@@ -687,7 +687,7 @@ export default function MergedLandingSection() {
       */}
       <div className="relative z-20 ">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-6 lg:pt-12 pb-8 lg:pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 pt-10 gap-8 lg:gap-10 items-center">
             {/* LEFT SIDE CONTENT */}
             <motion.div
               className="space-y-6 h-full"
@@ -764,12 +764,12 @@ export default function MergedLandingSection() {
       </div>
 
       {/* ==================================================
-        SECTION 2: CLIENTS LOGO SCROLL 
+        SECTION 2: CLIENTS LOGO SCROLL - COMMENTED OUT
         ==================================================
       */}
+      {/* 
       <div className="relative z-20 w-full overflow-hidden pb-6 lg:pb-8 py-3">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 ">
-          {/* Heading */}
           <motion.div
             className="text-center mb-4 lg:mb-6"
             initial={{ opacity: 0, y: 20 }}
@@ -786,9 +786,7 @@ export default function MergedLandingSection() {
             </h2>
           </motion.div>
 
-          {/* LOGO SCROLL TRACK WRAPPER */}
           <div className="relative w-full py-3 lg:py-4 overflow-hidden border-t border-b border-white/20">
-            {/* Left Glow Effect for the Logo Track */}
             <div
               className="
                   md:absolute md:inset-y-0 md:left-0 md:w-32 md:h-full 
@@ -797,7 +795,6 @@ export default function MergedLandingSection() {
                 "
             />
 
-            {/* Right Glow Effect for the Logo Track */}
             <div
               className="
                   md:absolute md:inset-y-0 md:right-0 md:w-32 md:h-full 
@@ -812,23 +809,21 @@ export default function MergedLandingSection() {
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              // NOTE: The keyframes for 'scroll-left' must be defined globally in your CSS/Tailwind config.
               style={{
                 animation: `scroll-left ${SCROLL_DURATION} linear infinite`,
               }}
             >
-              {/* Render the duplicated list of logos for infinite loop */}
               {duplicatedClients.map((client, index) => (
                 <LogoItem key={index} client={client} />
               ))}
             </motion.div>
 
-            {/* FADE OVERLAYS: Blend logos into the background at the edges */}
             <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#030C32] to-transparent pointer-events-none z-30" />
             <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#030C32] to-transparent pointer-events-none z-30" />
           </div>
         </div>
       </div>
+      */}
 
       {/* ==================================================
         SECTION 3: CARD SELECTION 
