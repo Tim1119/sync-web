@@ -101,7 +101,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
           ))}
         </ul>
 
-        <Link href={card.link} passHref className="w-full flex items-center justify-center">
+        {/* <Link href={card.link} passHref className="w-full flex items-center justify-center">
          <Info className="w-5 h-5 text-white" />
           <Button
             variant="ghost"
@@ -109,7 +109,7 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
           >
             More Details
           </Button>
-        </Link>
+        </Link> */}
       </div>
     </motion.div>
   );
