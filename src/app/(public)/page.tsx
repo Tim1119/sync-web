@@ -1,8 +1,8 @@
 
-import HeroClientsSection from "./components/public/HeroClientsSection";
-import FeaturesSection from "./components/public/FeaturesSection";
+import HeroClientsSection from "../components/public/HeroClientsSection";
+import FeaturesSection from "../components/public/FeaturesSection";
 // import UniquenessSection from "./components/public/Uniqueness";
-import TargetAndFaqSection from "./components/public/TargetAndFaqSection";
+import TargetAndFaqSection from "../components/public/TargetAndFaqSection";
 
 
 

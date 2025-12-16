@@ -112,12 +112,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable} ${inter.variable} antialiased bg-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable} ${inter.variable} antialiased bg-gray-50`}
       >
         <ReactQueryProvider>
-          <Navbar />
+          {/* Children will be either (public)/layout.tsx or (dashboard)/layout.tsx */}
           {children}
-          <Footer />
         </ReactQueryProvider>
       </body>
     </html>
