@@ -101,7 +101,7 @@ const DashboardPage: React.FC = () => {
         <button className="text-sm font-semibold text-blue-600 dark:text-blue-400">View All</button>
       </div>
       
-      <div className="bg-white dark:bg-[#161B22] rounded-[2rem] lg:rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-[#161B22] rounded-md border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm">
         <RecentActivityList 
           activities={activityData} 
           isMobileLayout={isMobileLayout} 
