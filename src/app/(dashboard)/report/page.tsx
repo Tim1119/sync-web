@@ -172,7 +172,7 @@ const ReportsPage = () => {
                   <td className="px-8 py-5 text-sm text-gray-500 dark:text-gray-400">Library West Gate</td>
                   <td className="px-8 py-5 text-sm text-gray-500 dark:text-gray-400">Oct 12 • 10:4{item} AM</td>
                   <td className="px-8 py-5">
-                    <span className="flex items-center gap-1.5 px-3 py-1 bg-green-100 dark:bg-green-900/20 text-green-600 text-[10px] font-bold rounded-lg uppercase">
+                    <span className="flex items-center w-fit gap-1.5 px-3 py-1 bg-green-100 dark:bg-green-900/20 text-green-600 text-[10px] font-bold rounded-lg uppercase">
                       <CheckCircle2 className="w-3 h-3" /> Authorized
                     </span>
                   </td>
