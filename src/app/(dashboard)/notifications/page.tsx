@@ -70,12 +70,12 @@ const NotificationsPage = () => {
         <div className="flex-1 px-4 space-y-4">
           {filteredNotifications.map((notification) => (
             <div key={notification.id} className="flex gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-xl transition-colors">
-              <div className="flex-shrink-0 w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+              <div className="shrink-0 w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                 <Bell className="w-6 h-6 text-gray-600 dark:text-gray-400" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-bold text-[#030C32] dark:text-white truncate">
+                  <h3 className="font-semibold text-[#030C32] dark:text-white truncate">
                     {notification.type}: {notification.title}
                   </h3>
                   <span className="text-[10px] text-blue-500 font-medium whitespace-nowrap ml-2">
@@ -141,24 +141,24 @@ const NotificationsPage = () => {
             key={notification.id} 
             className="flex items-start gap-6 group cursor-pointer"
           >
-            <div className="flex-shrink-0 w-14 h-14 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+            <div className="shrink-0 w-14 h-14 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center group-hover:bg-gray-200 transition-colors">
               <Bell className="w-6 h-6 text-gray-600 dark:text-gray-400" />
             </div>
             
             <div className="flex-1 border-b dark:border-gray-800 pb-6">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <h3 className="text-base font-[600] text-[#030C32] dark:text-white">
+                  <h3 className="text-base font-semibold text-[#030C32] dark:text-white">
                     {notification.type}: {notification.title}
                   </h3>
-                  <button className="text-xs text-gray-400 font-bold hover:text-blue-600 transition-colors">
+                  <button className="text-xs text-gray-400 font-medium hover:text-blue-600 transition-colors">
                     View Details
                   </button>
                   <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm max-w-2xl">
                     {notification.description}
                   </p>
                 </div>
-                <span className="text-blue-500 font-bold text-sm">
+                <span className="text-blue-500 font-meidum text-sm">
                   {notification.time}
                 </span>
               </div>
