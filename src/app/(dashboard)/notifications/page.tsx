@@ -5,7 +5,6 @@ import {
   Bell, 
   Search, 
   ArrowLeft, 
-  MoreVertical, 
   Filter
 } from 'lucide-react';
 import useBreakpoint from '@/app/hooks/organization-dashboard/useBreakpoint';
