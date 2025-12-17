@@ -61,7 +61,7 @@ const DashboardPage: React.FC = () => {
              <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
                 <Image src="/dashboard/profile-pics/image-2.svg" alt="Profile" fill className="object-cover" />
              </div>
-             <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-inter">Dashboard</h1>
+             <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-[inter]">Dashboard</h1>
           </div>
           <button className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-sm">
             <Bell className="w-5 h-5" />

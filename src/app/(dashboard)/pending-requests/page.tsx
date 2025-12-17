@@ -74,8 +74,8 @@ const PendingApplicationsPage = () => {
   return (
     <div className=" mx-auto">
 
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-abhaya">Pending Applications</h1>
+      <header className="mb-6 font-[inter]">
+        <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-[inter]">Pending Applications</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm font-inter">Review and manage incoming student applications.</p>
       </header>
 
