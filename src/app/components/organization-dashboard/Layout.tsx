@@ -34,6 +34,7 @@ const DashboardLayout: React.FC<{ children: ReactNode; activePath: string }> = (
   const pathname = usePathname();
 
   // Prevent hydration mismatch
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return <div className="min-h-screen bg-gray-50 dark:bg-[#0B0E14]" />;
@@ -260,7 +261,8 @@ const MobileNavItem = ({ href, icon, label, isActive }: { href: string, icon: Re
       isActive ? 'text-blue-600 dark:text-blue-400 scale-110' : 'text-gray-400 dark:text-gray-500'
     }`}
   >
-    {React.cloneElement(icon, { className: 'w-5 h-5' })} 
+    {/* {React.cloneElement(icon, { className: 'w-5 h-5' })}  */}
+    {React.cloneElement(icon)} 
     <span className={`text-[10px] mt-1 font-bold ${isActive ? 'opacity-100' : 'opacity-70'}`}>{label}</span>
   </Link>
 );

@@ -204,7 +204,7 @@ const ReportsPage = () => {
                     <div className="w-4" />
                   </div>
                   <div className="grid grid-cols-7 text-center gap-y-1">
-                    {/* Fixed Duplicate Key Issue by using specific string prefixes */}
+                    
                     {WEEK_DAYS.map((d, i) => (
                       <span key={`july-head-${i}`} className="text-[10px] font-bold text-gray-300 mb-2 font-[inter]">
                         {d}
