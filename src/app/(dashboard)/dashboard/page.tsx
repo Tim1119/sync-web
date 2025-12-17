@@ -1,12 +1,11 @@
-// src/app/components/organization-dashboard/DashboardPage.tsx
-
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
+import Image from 'next/image';
 import DashboardCard from '../../components/organization-dashboard/DashboardCard';
 import RecentActivityList from '../../components/organization-dashboard/RecentActivityList';
 import useBreakpoint from '@/app/hooks/organization-dashboard/useBreakpoint';
-import { Upload, Bell } from 'lucide-react';
+import { Upload, Bell, Search } from 'lucide-react';
 
 // --- MOCK DATA ---
 const desktopCardData = [
@@ -32,56 +31,86 @@ const desktopActivities = [
 ];
 
 const mobileActivities = [
-  { id: 1, activity: 'Student Enrolled', details: 'Student ID: 12345', avatarSrc: '/avatar1.jpg' },
-  { id: 2, activity: 'Card Activated', details: 'Card ID: 67890', avatarSrc: '/avatar2.jpg' },
-  { id: 3, activity: 'Verification Requested', details: 'Request ID: 11223', avatarSrc: '/avatar3.jpg' },
+  { id: 1, activity: 'Student Enrolled', details: 'Student ID: 12345', avatarSrc: '/dashboard/profile-pics/image-1.svg' },
+  { id: 2, activity: 'Card Activated', details: 'Card ID: 67890', avatarSrc: '/dashboard/profile-pics/image-2.svg' },
+  { id: 3, activity: 'Verification Requested', details: 'Request ID: 11223', avatarSrc: '/dashboard/profile-pics/image-1.svg' },
 ];
-// --- END MOCK DATA ---
-
 
 const DashboardPage: React.FC = () => {
   const isMobileLayout = useBreakpoint('lg'); 
+  const [searchQuery, setSearchQuery] = useState('');
 
   const cardData = isMobileLayout ? mobileCardData : desktopCardData;
   const activityData = isMobileLayout ? mobileActivities : desktopActivities;
 
   return (
-    <>
-      {/* Mobile Top Header (Hidden on desktop/large screens) */}
-      <header className="flex lg:hidden justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100">
-          <Bell className="w-6 h-6" />
-        </button>
-      </header>
+    <div className="pb-10">
+      {/* 1. MOBILE TOP HEADER (Profile + Title + Bell) */}
+      {isMobileLayout && (
+        <header className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-3">
+             <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-gray-800 shadow-sm">
+                <Image 
+                  src="/dashboard/profile-pics/image-2.svg" 
+                  alt="Profile" 
+                  fill 
+                  className="object-cover" 
+                />
+             </div>
+             <h1 className="text-2xl font-bold text-gray-900 dark:text-white font-inter">Dashboard</h1>
+          </div>
+          <button className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-sm">
+            <Bell className="w-5 h-5" />
+          </button>
+        </header>
+      )}
 
-      {/* Main Header / Action Button */}
+      {/* 2. MOBILE SEARCH BAR (Full Width) */}
+      {isMobileLayout && (
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input 
+            type="text"
+            placeholder="Search students or activities..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-[#161B22] border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none dark:text-white text-sm"
+          />
+        </div>
+      )}
+
+      {/* 3. MAIN HEADER / UPLOAD BUTTON (Desktop Title Hidden on Mobile) */}
       <div className="flex justify-between items-center mb-6 lg:mb-8">
-        <h1 className="hidden lg:block text-3xl font-bold text-gray-900">Dashboard</h1>
-        <button className="flex items-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors">
+        <h1 className="hidden lg:block text-3xl font-bold text-gray-900 dark:text-white font-inter">Dashboard</h1>
+        <button className="w-full lg:w-auto flex justify-center items-center bg-blue-600 text-white font-bold py-3.5 px-6 rounded-2xl lg:rounded-xl shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-[0.98]">
           <Upload className="w-4 h-4 mr-2" />
-          Upload Student Informations
+          Upload Student Information
         </button>
       </div>
 
-      {/* Statistics Cards Grid */}
+      {/* 4. STATISTICS CARDS GRID */}
       <div className={`grid gap-4 ${isMobileLayout ? 'grid-cols-2' : 'grid-cols-4'} mb-8`}>
         {cardData.map((data, index) => (
           <DashboardCard key={index} {...data} isMobileLayout={isMobileLayout} />
         ))}
       </div>
 
-      {/* Recent Activities Section */}
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Activities</h2>
-      <RecentActivityList 
-        activities={activityData} 
-        isMobileLayout={isMobileLayout} 
-      />
+      {/* 5. RECENT ACTIVITIES SECTION */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 font-inter">Recent Activities</h2>
+        <button className="text-sm font-semibold text-blue-600 dark:text-blue-400">View All</button>
+      </div>
+      
+      <div className="bg-white dark:bg-[#161B22] rounded-[2rem] lg:rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm">
+        <RecentActivityList 
+          activities={activityData} 
+          isMobileLayout={isMobileLayout} 
+        />
+      </div>
       
       {/* Spacer for bottom mobile nav */}
       {isMobileLayout && <div className="h-20"></div>} 
-
-    </>
+    </div>
   );
 };
 

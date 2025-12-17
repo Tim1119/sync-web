@@ -3,7 +3,7 @@
 import DashboardLayout from '@/app/components/organization-dashboard/Layout';
 import { headers } from 'next/headers'; 
 import React from 'react';
-
+import { ThemeProvider } from "@/app/components/general/ThemeProvider";
 // This is a Server Component. We use headers to reliably get the path.
 export default async function DashboardRootLayout({
   children,

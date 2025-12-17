@@ -8,6 +8,7 @@ import Footer from "./components/public/Footer";
 import { Abhaya_Libre } from "next/font/google";
 import { Inter } from "next/font/google";
 import ReactQueryProvider from "../components/providers/react-query-provider";
+import { ThemeProvider } from "@/app/components/general/ThemeProvider";
 
 
 const geistSans = Geist({
@@ -110,13 +111,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${abhaya.variable} ${inter.variable} antialiased bg-gray-50`}
       >
         <ReactQueryProvider>
           {/* Children will be either (public)/layout.tsx or (dashboard)/layout.tsx */}
+          {/* {children} */}
+          <ThemeProvider 
+          attribute="class" 
+          defaultTheme="light" 
+          enableSystem={true}
+        >
           {children}
+        </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>
