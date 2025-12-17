@@ -4,12 +4,12 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { 
   ArrowLeft, Search, ChevronRight, Users, Upload, 
-  Plus, Clock, X, FileText, CheckCircle2 
+  Plus, X, FileText, CheckCircle2 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useBreakpoint from '@/app/hooks/organization-dashboard/useBreakpoint';
 
-// --- MOCK DATA ---
+
 const currentAccessData = [
   { id: 1, name: 'Liam Carter', dept: 'Computer Science', status: 'Granted', validFrom: '9:00 AM', validUntil: '4:00 PM', date: '12/31/2024', image: '/dashboard/profile-pics/image-1.svg' },
   { id: 2, name: 'Olivia Bennett', dept: 'Engineering', status: 'Granted', validFrom: '9:00 AM', validUntil: '4:00 PM', date: '11/15/2024', image: '/dashboard/profile-pics/image-1.svg' },
@@ -27,7 +27,7 @@ const AccessControlPage = () => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
-  // --- LOGIC: Filtered Data ---
+
   const filteredData = useMemo(() => {
     return currentAccessData.filter(student => {
       const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -183,7 +183,7 @@ const AccessControlPage = () => {
     return (
       <AnimatePresence>
         {isUploadModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsUploadModalOpen(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative bg-white dark:bg-[#1C2128] w-full max-w-lg rounded-2xl shadow-2xl p-8 md:p-12">
               <button onClick={() => setIsUploadModalOpen(false)} className="absolute top-6 right-6 text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>

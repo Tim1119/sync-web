@@ -26,7 +26,7 @@ const DashboardPage = () => {
           <h1 className="text-4xl font-black tracking-tight dark:text-white leading-tight">University Dashboard</h1>
           <p className="text-gray-500 font-medium">Overview of the Federal University of Technology Akure</p>
         </div>
-        <button className="flex items-center bg-blue-600 text-white px-8 py-4 rounded-[1.5rem] font-black hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 dark:shadow-none active:scale-95">
+        <button className="flex items-center bg-blue-600 text-white px-8 py-4 rounded-3xl font-black hover:bg-blue-700 transition-all shadow-2xl shadow-blue-200 dark:shadow-none active:scale-95">
           <Upload className="w-5 h-5 mr-3" /> Upload Student Data
         </button>
       </div>
@@ -38,7 +38,7 @@ const DashboardPage = () => {
             animate={{ opacity: 1, scale: 1 }} 
             transition={{ delay: i * 0.1 }}
             key={i} 
-            className="bg-white dark:bg-[#161B22] p-6 rounded-[2rem] border dark:border-gray-800 shadow-sm hover:shadow-xl transition-all group cursor-default"
+            className="bg-white dark:bg-[#161B22] p-6 rounded-4xl border dark:border-gray-800 shadow-sm hover:shadow-xl transition-all group cursor-default"
           >
             <p className="text-gray-500 dark:text-gray-400 font-bold text-sm mb-4">{item.title}</p>
             <div className="flex items-end justify-between">
