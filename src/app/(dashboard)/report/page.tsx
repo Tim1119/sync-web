@@ -73,13 +73,14 @@ const ReportsPage = () => {
   const [endDate, setEndDate] = useState<number | null>(7);
 
   return (
-    <div className="max-w-[1400px] mx-auto pb-20 px-4 md:px-8 transition-colors">
+    <div className="pb-20 transition-colors">
       
       {/* Header Section */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 pt-6">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-[#113CFC] font-[inter]">System Analytics</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 font-[inter]">Detailed metrics and historical access logs</p>
+              <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-[inter]">System Analytics</h1>
+             <p className="text-gray-500 dark:text-gray-400 text-sm font-inter">Detailed metrics and historical access logs</p>
+          
         </div>
         <button 
           onClick={() => setShowExportModal(true)}
