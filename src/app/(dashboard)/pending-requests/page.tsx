@@ -72,7 +72,8 @@ const PendingApplicationsPage = () => {
 
   // --- DESKTOP VIEW (Script 2 Style) ---
   return (
-    <div className="max-w-7xl mx-auto p-8">
+    <div className=" mx-auto">
+
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-abhaya">Pending Applications</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm font-inter">Review and manage incoming student applications.</p>
@@ -83,10 +84,10 @@ const PendingApplicationsPage = () => {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
         <input
           type="text"
-          placeholder="Search by name or ID..."
+          placeholder="Search by name or ID"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-gray-100/50 dark:bg-[#161B22] border border-transparent dark:border-gray-800 rounded-xl dark:text-white transition-all outline-none text-sm"
+          className="w-full pl-10 pr-4 py-2.5 bg-[#F3F5FF] dark:bg-[#161B22] border border-transparent dark:border-gray-800 rounded-xl dark:text-white transition-all outline-none text-sm"
         />
       </div>
 

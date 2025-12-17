@@ -17,6 +17,7 @@ interface NavItemProps {
 
 const navItems: Omit<NavItemProps, 'isActive'>[] = [
   { href: '/dashboard', icon: <Home className="w-5 h-5" />, label: 'Dashboard' },
+  { href: '/pending-requests', icon: <Users className="w-5 h-5" />, label: 'Pending Request' },
   { href: '/dashboard/students', icon: <Users className="w-5 h-5" />, label: 'Students' },
   { href: '/dashboard/cards', icon: <CreditCard className="w-5 h-5" />, label: 'Cards' },
   { href: '/dashboard/access', icon: <Lock className="w-5 h-5" />, label: 'Access Control' },
