@@ -41,6 +41,7 @@ interface ContactDetails {
     phone: string;
     deliveryMethod: 'single' | 'multiple';
     recipientEmails: string[];
+    recipientAddresses: string[];
 }
 
 // --- Configuration Data ---
@@ -273,7 +274,8 @@ export default function CardForm() {
         email: '',
         phone: '',
         deliveryMethod: 'single',
-        recipientEmails: []
+        recipientEmails: [],
+        recipientAddresses: []
     });
     const [deliveryEmail, setDeliveryEmail] = useState('');
     const [deliveryName, setDeliveryName] = useState('');
@@ -333,19 +335,28 @@ export default function CardForm() {
     };
 
     const canProceedToPayment = () => {
-        if (!contact.firstName.trim() || !contact.lastName.trim() || !isValidEmail(contact.email)) {
-            return false;
-        }
+    // Buyer details must be valid
+    if (!contact.firstName.trim() || !contact.lastName.trim() || !isValidEmail(contact.email)) {
+        return false;
+    }
 
-        if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
-            return isValidEmail(deliveryEmail) && deliveryName.trim() !== '';
-        } else {
-            return contact.recipientEmails.length === totalQuantity && 
-                   contact.recipientEmails.every(email => isValidEmail(email)) &&
-                   recipientNames.length === totalQuantity &&
-                   recipientNames.every(name => name.trim() !== '');
-        }
-    };
+    if (contact.deliveryMethod === 'single' || totalQuantity <= 1) {
+        // Single delivery requires recipient name & email
+        return isValidEmail(deliveryEmail) && deliveryName.trim() !== '';
+    } else {
+        // Multiple delivery requires:
+        // 1. All recipient emails filled & valid
+        // 2. All recipient names filled
+        // 3. All recipient addresses filled
+        return contact.recipientEmails.length === totalQuantity &&
+               contact.recipientEmails.every(email => isValidEmail(email)) &&
+               recipientNames.length === totalQuantity &&
+               recipientNames.every(name => name.trim() !== '') &&
+               contact.recipientAddresses.length === totalQuantity &&
+               contact.recipientAddresses.every(addr => addr.trim() !== '');
+    }
+};
+
 
     const handleProceedToPayment = () => {
         if (hasDuplicateEmails()) {
@@ -361,50 +372,69 @@ export default function CardForm() {
     };
 
     const updateQuantity = (id: number, delta: number, e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        
-        setExpandedCardId(id); 
+    if (e) e.stopPropagation();
 
-        setCart(prev => {
-            const currentQty = prev[id] || 0;
-            const newQty = Math.max(0, currentQty + delta);
-            const newCart = { ...prev, [id]: newQty };
-            const newTotalQuantity = Object.values(newCart).reduce((a, b) => a + b, 0);
+    setExpandedCardId(id);
 
-            setContact(prevContact => {
-                const currentEmails = prevContact.recipientEmails;
-                let newEmails = [...currentEmails];
+    setCart(prev => {
+        const currentQty = prev[id] || 0;
+        const newQty = Math.max(0, currentQty + delta);
+        const newCart = { ...prev, [id]: newQty };
+        const newTotalQuantity = Object.values(newCart).reduce((a, b) => a + b, 0);
 
-                if (newTotalQuantity > currentEmails.length) {
-                    const diff = newTotalQuantity - currentEmails.length;
-                    newEmails = [...newEmails, ...new Array(diff).fill('')];
-                } else if (newTotalQuantity < currentEmails.length) {
-                    newEmails = newEmails.slice(0, newTotalQuantity);
-                }
+        // Update recipient arrays
+        setContact(prevContact => {
+            let newEmails = [...prevContact.recipientEmails];
+            let newAddresses = [...prevContact.recipientAddresses];
 
-                return { ...prevContact, recipientEmails: newEmails };
-            });
+            if (newTotalQuantity > newEmails.length) {
+                const diff = newTotalQuantity - newEmails.length;
+                newEmails = [...newEmails, ...new Array(diff).fill('')];
+                newAddresses = [...newAddresses, ...new Array(diff).fill('')];
+            } else if (newTotalQuantity < newEmails.length) {
+                newEmails = newEmails.slice(0, newTotalQuantity);
+                newAddresses = newAddresses.slice(0, newTotalQuantity);
+            }
 
-            // Update recipient names array
-            setRecipientNames(prevNames => {
-                let newNames = [...prevNames];
-                if (newTotalQuantity > prevNames.length) {
-                    const diff = newTotalQuantity - prevNames.length;
-                    newNames = [...newNames, ...new Array(diff).fill('')];
-                } else if (newTotalQuantity < prevNames.length) {
-                    newNames = newNames.slice(0, newTotalQuantity);
-                }
-                return newNames;
-            });
+            // --- Automatically switch delivery method ---
+            const newDeliveryMethod = newTotalQuantity > 1 ? 'multiple' : 'single';
 
-            return newCart;
+            return {
+                ...prevContact,
+                recipientEmails: newEmails,
+                recipientAddresses: newAddresses,
+                deliveryMethod: newDeliveryMethod
+            };
         });
-    };
+
+        // Update recipient names array
+        setRecipientNames(prevNames => {
+            let newNames = [...prevNames];
+            if (newTotalQuantity > prevNames.length) {
+                const diff = newTotalQuantity - prevNames.length;
+                newNames = [...newNames, ...new Array(diff).fill('')];
+            } else if (newTotalQuantity < prevNames.length) {
+                newNames = newNames.slice(0, newTotalQuantity);
+            }
+            return newNames;
+        });
+
+        return newCart;
+    });
+};
+
 
     const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setContact(prev => ({ ...prev, [name]: value }));
     };
+
+    const handleRecipientAddressChange = (index: number, value: string) => {
+        const newAddresses = [...contact.recipientAddresses];
+        newAddresses[index] = value;
+        setContact(prev => ({ ...prev, recipientAddresses: newAddresses }));
+    };
+
 
     const handleRecipientEmailChange = (index: number, value: string) => {
         const newEmails = [...contact.recipientEmails];
@@ -614,20 +644,23 @@ export default function CardForm() {
     );
 
     // --- Stage 2: Details ---
+    // --- Stage 2: Details (Simplified) ---
     const renderStage2 = () => {
+        // Build labels for each card
         const recipientLabels: string[] = [];
         const orderedCardIds = Object.keys(cart).map(Number).sort((a, b) => a - b);
-        
+
         for (const id of orderedCardIds) {
             const qty = cart[id] || 0;
             const template = CARD_TEMPLATES.find(t => t.id === id);
-
             if (qty > 0 && template) {
                 for (let i = 1; i <= qty; i++) {
                     recipientLabels.push(`${template.name} Card #${i}`);
                 }
             }
         }
+
+        const isMultiple = totalQuantity > 1;
 
         return (
             <div className="animate-fadeIn">
@@ -636,10 +669,10 @@ export default function CardForm() {
                     <p className="text-gray-400 max-w-xl mx-auto">Enter details for your cards below.</p>
                 </div>
 
-                 <div className="mb-10 px-4 relative">
-                     <h2 className="text-white text-center text-sm uppercase tracking-wider text-gray-500 mb-4">Selected Cards</h2>
-                     
-                     <div className="flex justify-center mb-6">
+                <div className="mb-10 px-4 relative">
+                    <h2 className="text-white text-center text-sm uppercase tracking-wider text-gray-500 mb-4">Selected Cards</h2>
+                    
+                    <div className="flex justify-center mb-6">
                         <button
                             onClick={() => setIsFlipped(f => !f)}
                             className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition p-2 rounded-full border border-blue-600/50 hover:bg-blue-900/20"
@@ -647,17 +680,17 @@ export default function CardForm() {
                             <RotateCw size={14} className={isFlipped ? 'animate-spin-reverse' : ''}/> 
                             {isFlipped ? 'Show Front' : 'Show Back'}
                         </button>
-                     </div>
+                    </div>
 
-                     <div 
+                    <div 
                         className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-4 no-scrollbar md:justify-center"
                         style={{ maskImage: 'linear-gradient(to right, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)' }}
-                     >
+                    >
                         {Object.entries(cart).map(([id, qty]) => {
                             if (qty === 0) return null;
                             const template = CARD_TEMPLATES.find(t => t.id === Number(id))!;
                             return (
-                                 <div key={id} className="flex-none w-[40%] md:w-[200px] snap-center bg-[#061454] rounded-xl p-4 border border-white/10 flex flex-col items-center">
+                                <div key={id} className="flex-none w-[40%] md:w-[200px] snap-center bg-[#061454] rounded-xl p-4 border border-white/10 flex flex-col items-center">
                                     <div className="w-full mb-3 relative">
                                         <MockCard template={template} isFlipped={isFlipped} /> 
                                         <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#0B1739]">
@@ -669,12 +702,13 @@ export default function CardForm() {
                             );
                         })}
                         <div className="flex-none w-4 md:hidden"></div>
-                     </div>
-                 </div>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 px-4">
                     <div className="lg:col-span-6">
                         <div className="space-y-6">
+                            {/* Buyer Info */}
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <label className="text-xs text-gray-400 uppercase">First name</label>
@@ -712,47 +746,11 @@ export default function CardForm() {
                                 />
                             </div>
 
-                            {totalQuantity > 1 && (
-                                <div className="border-t border-gray-800 pt-6 space-y-3">
-                                    <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'single' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
-                                        <input type="radio" name="deliveryMethod" value="single" checked={contact.deliveryMethod === 'single'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
-                                        <span className="text-sm text-gray-300">Send all card details to <b>one email</b></span>
-                                    </label>
-                                    
-                                    <label className={`flex items-center gap-3 cursor-pointer p-4 rounded-xl border transition-all ${contact.deliveryMethod === 'multiple' ? 'bg-white/5 border-blue-500' : 'border-transparent hover:bg-white/5'}`}>
-                                        <input type="radio" name="deliveryMethod" value="multiple" checked={contact.deliveryMethod === 'multiple'} onChange={handleContactChange} className="accent-blue-500 w-5 h-5" />
-                                        <span className="text-sm text-gray-300">Send each card to a <b>different email</b></span>
-                                    </label>
-                                </div>
-                            )}
-
-                            <div className="space-y-3 pt-2">
-                                {contact.deliveryMethod === 'single' || totalQuantity <= 1 ? (
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <label className="text-xs text-gray-400 uppercase">Recipient Full Name</label>
-                                            <input 
-                                                type="text"
-                                                value={deliveryName}
-                                                onChange={(e) => setDeliveryName(e.target.value)}
-                                                placeholder="Full name of the recipient" 
-                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
-                                            <input 
-                                                type="email"
-                                                value={deliveryEmail}
-                                                onChange={(e) => setDeliveryEmail(e.target.value)}
-                                                placeholder="Where should we send the cards?" 
-                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
-                                            />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4 animate-fadeIn">
-                                        <p className="text-sm text-blue-400">Please enter full name and email for each card:</p>
+                            {/* Recipient Info */}
+                            <div className="space-y-4 pt-2 animate-fadeIn">
+                                {isMultiple ? (
+                                    <>
+                                        <p className="text-sm text-blue-400">Enter full name, email, and address for each card:</p>
                                         {Array.from({ length: totalQuantity }).map((_, idx) => (
                                             <div key={idx} className="space-y-3 p-4 border border-white/10 rounded-lg bg-white/5">
                                                 <div className="space-y-1">
@@ -774,15 +772,47 @@ export default function CardForm() {
                                                         className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
                                                     />
                                                 </div>
+                                                <div className="space-y-1">
+                                                    <input 
+                                                        type="text" 
+                                                        value={contact.recipientAddresses[idx] || ''}
+                                                        onChange={(e) => handleRecipientAddressChange(idx, e.target.value)}
+                                                        placeholder={`Delivery address for ${recipientLabels[idx]}`}
+                                                        className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300"
+                                                    />
+                                                </div>
                                             </div>
                                         ))}
-                                    </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Recipient Full Name</label>
+                                            <input 
+                                                type="text"
+                                                value={deliveryName}
+                                                onChange={(e) => setDeliveryName(e.target.value)}
+                                                placeholder="Full name of the recipient" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs text-gray-400 uppercase">Delivery Email</label>
+                                            <input 
+                                                type="email"
+                                                value={deliveryEmail}
+                                                onChange={(e) => setDeliveryEmail(e.target.value)}
+                                                placeholder="Where should we send the cards?" 
+                                                className="w-full bg-[#6D7289] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none transition placeholder-gray-300" 
+                                            />
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </div>
                     </div>
 
-                     <div className="lg:col-span-4 relative">
+                    <div className="lg:col-span-4 relative">
                         <div className="sticky top-8 space-y-6">
                             <OrderSummary cart={cart} total={totalAmount} />
                             <button 
@@ -802,6 +832,7 @@ export default function CardForm() {
             </div>
         );
     };
+
 
     // --- Stage 3: Payment ---
     const renderStage3 = () => (
@@ -843,7 +874,8 @@ export default function CardForm() {
                         email: '',
                         phone: '',
                         deliveryMethod: 'single',
-                        recipientEmails: []
+                        recipientEmails: [],
+                        recipientAddresses: []
                     });
                     setDeliveryEmail('');
                     setDeliveryName('');
