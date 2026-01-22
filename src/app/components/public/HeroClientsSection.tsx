@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import { Info } from 'lucide-react';
-
+import { Info } from "lucide-react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Button = ({ children, className, variant, style, ...props }: any) => (
@@ -18,17 +17,112 @@ const Button = ({ children, className, variant, style, ...props }: any) => (
   </button>
 );
 
-
-interface Client { name: string; logo: string; }
-const clients: Client[] = [ { name: "Revolut", logo: "/landing/revolut-logo.svg" }, { name: "NorthOne", logo: "/landing/northone-logo.svg" }, { name: "Checkout", logo: "/landing/checkout-logo.svg" }, { name: "Revolut", logo: "/landing/revolut-logo.svg" }, { name: "NorthOne", logo: "/landing/northone-logo.svg" }, { name: "Checkout", logo: "/landing/checkout-logo.svg" }, ];
-interface CardFeature { text: string; }
-interface CardData { id: string; name: string; price: string; image: string; features: CardFeature[]; link: string; imageBgColor: string; }
-const cardsData: CardData[] = [ { id: "nova-card", name: "Nova Card", price: "₦35,000", image: "/landing/nova-card-front.png", features: [{ text: "Durable plastic finish" },{ text: "Full-color surface printing" },{ text: "Lightweight and everyday use" }], link: "/cards/nova", imageBgColor: "bg-gradient-to-l from-[#8CA0F7] via-[#5066C9] to-[#0A2496]", }, { id: "maple-card", name: "Maple Card", price: "₦50,000", image: "/landing/maple-card-front.png", features: [{ text: "Premium wooden body" },{ text: "Laser-engraved details" },{ text: "Natural texture and unique finish" }], link: "/cards/maple", imageBgColor: "bg-gradient-to-l from-[#EED7B4] via-[#AFA9A0] to-[#7C7871]", }, { id: "metal-card", name: "Auric Card", price: "₦60,000", image: "/landing/auric-card-horizontal.png", features: [{ text: "Solid metal construction" },{ text: "Minimal print, sleek look" },{ text: "Designed for a premium feel" }], link: "/cards/metal", imageBgColor: "bg-gradient-to-r from-[#374151] via-[#5A6A84] to-[#7C93B7]", }, ];
-const textVariant: Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const }, }, };
-const buttonVariant: Variants = { hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const, delay: 0.5 }, }, };
-const imageVariant: Variants = { hidden: { opacity: 0, x: 50 }, visible: { opacity: 1, x: 0, transition: { duration: 1, ease: "easeOut" as const }, }, };
-const sectionTextVariants: Variants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const }, }, };
-const cardVariants: Variants = { hidden: { opacity: 0, y: 50, scale: 0.95 }, visible: (i: number) => ({ opacity: 1, y: 0, scale: 1, transition: { delay: i * 0.2, duration: 0.8, ease: "easeOut" as const, }, }), };
+interface Client {
+  name: string;
+  logo: string;
+}
+const clients: Client[] = [
+  { name: "Revolut", logo: "/landing/revolut-logo.svg" },
+  { name: "NorthOne", logo: "/landing/northone-logo.svg" },
+  { name: "Checkout", logo: "/landing/checkout-logo.svg" },
+  { name: "Revolut", logo: "/landing/revolut-logo.svg" },
+  { name: "NorthOne", logo: "/landing/northone-logo.svg" },
+  { name: "Checkout", logo: "/landing/checkout-logo.svg" },
+];
+interface CardFeature {
+  text: string;
+}
+interface CardData {
+  id: string;
+  name: string;
+  price: string;
+  image: string;
+  features: CardFeature[];
+  link: string;
+  imageBgColor: string;
+}
+const cardsData: CardData[] = [
+  {
+    id: "nova-card",
+    name: "Nova Card",
+    price: "₦35,000",
+    image: "/landing/nova-card-front.png",
+    features: [
+      { text: "Durable plastic finish" },
+      { text: "Full-color surface printing" },
+      { text: "Lightweight and everyday use" },
+    ],
+    link: "/cards/nova",
+    imageBgColor: "bg-gradient-to-l from-[#8CA0F7] via-[#5066C9] to-[#0A2496]",
+  },
+  {
+    id: "maple-card",
+    name: "Maple Card",
+    price: "₦50,000",
+    image: "/landing/maple-card-front.png",
+    features: [
+      { text: "Premium wooden body" },
+      { text: "Laser-engraved details" },
+      { text: "Natural texture and unique finish" },
+    ],
+    link: "/cards/maple",
+    imageBgColor: "bg-gradient-to-l from-[#EED7B4] via-[#AFA9A0] to-[#7C7871]",
+  },
+  {
+    id: "metal-card",
+    name: "Auric Card",
+    price: "₦60,000",
+    image: "/landing/auric-card-horizontal.png",
+    features: [
+      { text: "Solid metal construction" },
+      { text: "Minimal print, sleek look" },
+      { text: "Designed for a premium feel" },
+    ],
+    link: "/cards/metal",
+    imageBgColor: "bg-gradient-to-r from-[#374151] via-[#5A6A84] to-[#7C93B7]",
+  },
+];
+const textVariant: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" as const },
+  },
+};
+const buttonVariant: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const, delay: 0.5 },
+  },
+};
+const imageVariant: Variants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 1, ease: "easeOut" as const },
+  },
+};
+const sectionTextVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" as const },
+  },
+};
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { delay: i * 0.2, duration: 0.8, ease: "easeOut" as const },
+  }),
+};
 
 // Reusable Logo Component
 const LogoItem = ({ client }: { client: Client }) => (
@@ -44,7 +138,13 @@ const LogoItem = ({ client }: { client: Client }) => (
 );
 
 // Reusable Card Component
-const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => {
+const CardComponent = ({
+  card,
+  custom,
+}: {
+  card: CardData;
+  custom: number;
+}) => {
   return (
     <motion.div
       className="relative px-4 py-2 lg:py-4 rounded-xl border border-white/10 bg-[#030C32]  overflow-hidden group 
@@ -59,43 +159,65 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
       <div className="absolute inset-0 pointer-events-none z-0">
         <motion.div
           className="absolute -top-16 -right-16 w-80 h-80 bg-[#113CFC]/70 blur-[150px] rounded-full"
-          style={{ mixBlendMode: 'screen' }}
+          style={{ mixBlendMode: "screen" }}
           initial={{ opacity: 0.3, scale: 0.8 }}
-          whileInView={{ opacity: 0.4, scale: 1, transition: { duration: 0.8, ease: "easeOut" } }}
+          whileInView={{
+            opacity: 0.4,
+            scale: 1,
+            transition: { duration: 0.8, ease: "easeOut" },
+          }}
           viewport={{ once: true, amount: 0.5 }}
-          whileHover={{ opacity: 0.9, scale: 1.15, transition: { duration: 0.4, ease: "easeOut" } }}
+          whileHover={{
+            opacity: 0.9,
+            scale: 1.15,
+            transition: { duration: 0.4, ease: "easeOut" },
+          }}
         />
         <motion.div
           className="absolute -top-20 -right-20 w-96 h-96 bg-white/30 blur-[180px] rounded-full"
-          style={{ mixBlendMode: 'screen' }}
+          style={{ mixBlendMode: "screen" }}
           initial={{ opacity: 0.1, scale: 0.7 }}
-          whileInView={{ opacity: 0.2, scale: 1, transition: { duration: 1, ease: "easeOut", delay: 0.1 } }}
+          whileInView={{
+            opacity: 0.2,
+            scale: 1,
+            transition: { duration: 1, ease: "easeOut", delay: 0.1 },
+          }}
           viewport={{ once: true, amount: 0.5 }}
-          whileHover={{ opacity: 0.5, scale: 1.25, transition: { duration: 0.5, ease: "easeOut" } }}
+          whileHover={{
+            opacity: 0.5,
+            scale: 1.25,
+            transition: { duration: 0.5, ease: "easeOut" },
+          }}
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-start text-left space-y-4 cursor-pointer">
-       <div
-          className={`w-full h-40 flex items-center justify-center mb-4 rounded-lg  font-[inter]`}
+      <div className="relative z-10 flex flex-col items-start text-left space-y-3 cursor-pointer">
+        <div
+          className={`w-full h-32 lg:h-36 flex items-center justify-center mb-2 lg:mb-3 rounded-lg font-[inter]`}
         >
           <Image
             src={card.image}
             alt={card.name}
-            width={220} 
-            height={140} 
+            width={220}
+            height={140}
             className="object-contain"
-            priority 
+            priority
           />
         </div>
 
-        <h3 className="text-xl font-bold text-white m-0 p-0">{card.name}</h3>
-        <p className="text-lg text-white font-semibold m-0 pb-2">{card.price}</p>
+        <h3 className="text-lg lg:text-xl font-bold text-white m-0 p-0">
+          {card.name}
+        </h3>
+        <p className="text-base lg:text-lg text-white font-semibold m-0 pb-1">
+          {card.price}
+        </p>
 
-        <ul className="text-gray-300 text-sm space-y-1 text-left w-full pl-0">
+        <ul className="text-gray-300 text-xs lg:text-sm space-y-0.5 text-left w-full pl-0">
           {card.features.map((feature, idx) => (
             <li key={idx} className="flex items-start">
-              <span className="text-[#113CFC] mr-2 text-base  leading-none">•</span>
+              <span className="text-[#113CFC] mr-2 text-base  leading-none">
+                •
+              </span>
               <span>{feature.text}</span>
             </li>
           ))}
@@ -115,328 +237,352 @@ const CardComponent = ({ card, custom }: { card: CardData; custom: number }) => 
   );
 };
 
-
 // ==================================================================
 // --- ORIGINAL ANIMATED WALLET CARDS COMPONENT (LEFT FOR MOBILE VIEW) ---
 // ==================================================================
 
-const CARD_ANIMATION_HEIGHT_STEP = 15; 
-const CARD_WIDTH = 250; 
-const CARD_HEIGHT = 180; 
+const CARD_ANIMATION_HEIGHT_STEP = 15;
+const CARD_WIDTH = 250;
+const CARD_HEIGHT = 180;
 const CARD_COUNT = 3;
-const WALLET_WIDTH = 300; 
-const BACK_WALLET_HEIGHT = 190; 
-const FRONT_WALLET_HEIGHT = 247; 
-const WALLET_TOP_ADJUSTMENT = 20; 
+const WALLET_WIDTH = 300;
+const BACK_WALLET_HEIGHT = 190;
+const FRONT_WALLET_HEIGHT = 247;
+const WALLET_TOP_ADJUSTMENT = 20;
 
 const cardEntranceVariants: Variants = {
-    hidden: { opacity: 0, y: -200, rotate: 20, scale: 0.7, x: 0 },
-    
-    // The initial, stacked position
-    visible: (i: number) => ({
-        opacity: 1,
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP, 
-        rotate: 0,
-        scale: 1, 
-        x: 0, 
-        transition: {
-            delay: 0.5 + (i * 0.15), 
-            type: "spring",
-            stiffness: 120, 
-            damping: 15,
-            mass: 0.8
-        },
-    }),
+  hidden: { opacity: 0, y: -200, rotate: 20, scale: 0.7, x: 0 },
+
+  // The initial, stacked position
+  visible: (i: number) => ({
+    opacity: 1,
+    y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP,
+    rotate: 0,
+    scale: 1,
+    x: 0,
+    transition: {
+      delay: 0.5 + i * 0.15,
+      type: "spring",
+      stiffness: 120,
+      damping: 15,
+      mass: 0.8,
+    },
+  }),
 };
 
 // Animation that runs when the parent is hovered
 const cardPopOutVariants: Variants = {
-    // Note: The `initial` state here overrides the entrance variant's Y when switching between pop/initial, which is intentional for F-M `animate` usage.
-    pop: (i: number) => ({
-        // Lift the card higher by 10px from its stacked position
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP - 10,
-        transition: {
-            duration: 0.3,
-            ease: "easeOut" as const
-        },
-    }),
-    initial: (i: number) => ({
-        // Return to the initial stacked position
-        y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP,
-        transition: {
-            duration: 0.3,
-            ease: "easeOut" as const
-        },
-    }),
+  // Note: The `initial` state here overrides the entrance variant's Y when switching between pop/initial, which is intentional for F-M `animate` usage.
+  pop: (i: number) => ({
+    // Lift the card higher by 10px from its stacked position
+    y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP - 10,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut" as const,
+    },
+  }),
+  initial: (i: number) => ({
+    // Return to the initial stacked position
+    y: (CARD_COUNT - 1 - i) * CARD_ANIMATION_HEIGHT_STEP,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut" as const,
+    },
+  }),
 };
-
 
 const AnimatedWalletCards = () => {
-    // State to track if the entire wallet area is hovered
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [isWalletHovered, setIsWalletHovered] = useState(false);
-    
-    const cards = [
-        { key: 1, z: 10, image: "/landing/nova-card-back-h.png", customIndex: 0 }, 
-        { key: 2, z: 9, image: "/landing/maple-card-back-h.png", customIndex: 1 }, 
-        { key: 3, z: 8, image: "/landing/metal-card-back-h.png", customIndex: 2 }, 
-    ];
-    
-    const FRONT_WALLET_IMAGE = "/landing/front.png"; 
-    const BACK_WALLET_IMAGE = "/landing/back.png"; 
-    
-    const MAX_Y_OFFSET = (CARD_COUNT - 1) * CARD_ANIMATION_HEIGHT_STEP;
-    const BASE_CARD_TOP = `calc(29% - ${MAX_Y_OFFSET}px / 2 - ${WALLET_TOP_ADJUSTMENT}px)`; 
-    const FRONT_WALLET_INITIAL_Y = '-50%'; 
+  // State to track if the entire wallet area is hovered
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isWalletHovered, setIsWalletHovered] = useState(false);
 
-    return (
-        <motion.div
-            className="relative w-full max-w-sm h-[250px] flex justify-center items-center overflow-hidden cursor-pointer"
+  const cards = [
+    { key: 1, z: 10, image: "/landing/nova-card-back-h.png", customIndex: 0 },
+    { key: 2, z: 9, image: "/landing/maple-card-back-h.png", customIndex: 1 },
+    { key: 3, z: 8, image: "/landing/metal-card-back-h.png", customIndex: 2 },
+  ];
+
+  const FRONT_WALLET_IMAGE = "/landing/front.png";
+  const BACK_WALLET_IMAGE = "/landing/back.png";
+
+  const MAX_Y_OFFSET = (CARD_COUNT - 1) * CARD_ANIMATION_HEIGHT_STEP;
+  const BASE_CARD_TOP = `calc(29% - ${MAX_Y_OFFSET}px / 2 - ${WALLET_TOP_ADJUSTMENT}px)`;
+  const FRONT_WALLET_INITIAL_Y = "-50%";
+
+  return (
+    <motion.div
+      className="relative w-full max-w-sm h-[250px] flex justify-center items-center overflow-hidden cursor-pointer"
+      initial="hidden"
+      whileInView="visible"
+      // Use onHoverStart/End on the container to set the hover state
+      onHoverStart={() => setIsWalletHovered(true)}
+      onHoverEnd={() => setIsWalletHovered(false)}
+      viewport={{ once: true, amount: 0.4 }}
+    >
+      {/* 1. BACK WALLET PIECE (Lowest Z) */}
+      <motion.div
+        className="absolute rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          zIndex: 5,
+          width: WALLET_WIDTH,
+          height: BACK_WALLET_HEIGHT,
+          top: `calc(26%)`,
+          transform: "translateY(-30%)",
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+      >
+        <Image
+          src={BACK_WALLET_IMAGE}
+          alt="Sync Purse Back"
+          fill
+          className="object-cover w-full h-full"
+          priority
+        />
+      </motion.div>
+
+      {/* 2. Animated Cards - React to the parent hover state */}
+      {cards.map((card) => {
+        // Calculate the true Y-offset for the initial stack position
+        const currentYOffset =
+          (CARD_COUNT - 1 - card.customIndex) * CARD_ANIMATION_HEIGHT_STEP;
+
+        return (
+          // The outer motion.div handles the entrance animation
+          <motion.div
+            key={card.key}
+            className={`absolute rounded-xl shadow-xl bg-cover bg-center overflow-hidden`}
+            custom={card.customIndex}
+            variants={cardEntranceVariants}
             initial="hidden"
             whileInView="visible"
-            // Use onHoverStart/End on the container to set the hover state
-            onHoverStart={() => setIsWalletHovered(true)}
-            onHoverEnd={() => setIsWalletHovered(false)}
-            viewport={{ once: true, amount: 0.4 }}
-        >
-            {/* 1. BACK WALLET PIECE (Lowest Z) */}
-            <motion.div 
-                className="absolute rounded-2xl shadow-2xl overflow-hidden"
-                style={{ 
-                    zIndex: 5, 
-                    width: WALLET_WIDTH,
-                    height: BACK_WALLET_HEIGHT,
-                    top: `calc(26%)`,
-                    transform: 'translateY(-30%)',
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
+            // Override/Individual Hover for a single card
+            whileHover={{
+              scale: 1.05,
+              y: currentYOffset - 15,
+              zIndex: 50,
+            }}
+            style={{
+              zIndex: card.z,
+              width: CARD_WIDTH,
+              height: CARD_HEIGHT,
+              top: BASE_CARD_TOP,
+            }}
+          >
+            {/* The inner motion.div handles the pop-out animation triggered by the parent state */}
+            <motion.div
+              variants={cardPopOutVariants}
+              custom={card.customIndex}
+              animate={isWalletHovered ? "pop" : "initial"}
             >
-                <Image
-                    src={BACK_WALLET_IMAGE}
-                    alt="Sync Purse Back"
-                    fill
-                    className="object-cover w-full h-full"
-                    priority
-                />
+              <Image
+                src={card.image}
+                alt={`Card ${card.key}`}
+                width={CARD_WIDTH}
+                height={CARD_HEIGHT}
+                className="object-cover w-full h-full"
+                priority
+              />
             </motion.div>
+          </motion.div>
+        );
+      })}
 
-            {/* 2. Animated Cards - React to the parent hover state */}
-            {cards.map((card) => {
-                // Calculate the true Y-offset for the initial stack position
-                const currentYOffset = (CARD_COUNT - 1 - card.customIndex) * CARD_ANIMATION_HEIGHT_STEP;
-
-                return (
-                    // The outer motion.div handles the entrance animation
-                    <motion.div
-                        key={card.key}
-                        className={`absolute rounded-xl shadow-xl bg-cover bg-center overflow-hidden`}
-                        custom={card.customIndex}
-                        variants={cardEntranceVariants}
-                        initial="hidden" 
-                        whileInView="visible"
-                        
-                        // Override/Individual Hover for a single card
-                        whileHover={{ 
-                            scale: 1.05, 
-                            y: currentYOffset - 15, 
-                            zIndex: 50 
-                        }}
-
-                        style={{ 
-                            zIndex: card.z, 
-                            width: CARD_WIDTH,
-                            height: CARD_HEIGHT,
-                            top: BASE_CARD_TOP, 
-                        }}
-                    >
-                        {/* The inner motion.div handles the pop-out animation triggered by the parent state */}
-                        <motion.div 
-                            variants={cardPopOutVariants} 
-                            custom={card.customIndex}
-                            animate={isWalletHovered ? "pop" : "initial"}
-                        >
-                            <Image
-                                src={card.image}
-                                alt={`Card ${card.key}`}
-                                width={CARD_WIDTH} 
-                                height={CARD_HEIGHT} 
-                                className="object-cover w-full h-full" 
-                                priority
-                            />
-                        </motion.div>
-                    </motion.div>
-                );
-            })}
-
-
-             {/* 3. FRONT WALLET PIECE (The Mask - Highest Z) */}
-             <motion.div 
-                className="absolute rounded-2xl shadow-2xl overflow-hidden"
-                style={{ 
-                    zIndex: 20, 
-                    width: WALLET_WIDTH,
-                    height: FRONT_WALLET_HEIGHT, 
-                    top: `calc(6% + ${WALLET_TOP_ADJUSTMENT}px)`,
-                    transform: FRONT_WALLET_INITIAL_Y, 
-                }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
-            >
-                <Image
-                    src={FRONT_WALLET_IMAGE}
-                    alt="Sync Purse Front"
-                    fill
-                    className="absolute object-cover w-full h-full"
-                    priority
-                />
-            </motion.div> 
-
-        </motion.div>
-    );
+      {/* 3. FRONT WALLET PIECE (The Mask - Highest Z) */}
+      <motion.div
+        className="absolute rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          zIndex: 20,
+          width: WALLET_WIDTH,
+          height: FRONT_WALLET_HEIGHT,
+          top: `calc(6% + ${WALLET_TOP_ADJUSTMENT}px)`,
+          transform: FRONT_WALLET_INITIAL_Y,
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 1.0 }}
+      >
+        <Image
+          src={FRONT_WALLET_IMAGE}
+          alt="Sync Purse Front"
+          fill
+          className="absolute object-cover w-full h-full"
+          priority
+        />
+      </motion.div>
+    </motion.div>
+  );
 };
-
 
 // ==================================================================
 // --- NEW FLOATING CARD STACK COMPONENT (FOR DESKTOP HERO) ---
 // ==================================================================
 
 // CONSTANT for easily adjusting horizontal separation (e.g., set to 60 or 80 for more space)
-const CARD_HORIZONTAL_SPACING = 40; 
+const CARD_HORIZONTAL_SPACING = 40;
 
 // Define the structure for the card data used in the FloatingCardStack
-interface StackCardData { 
-    id: string; 
-    image: string; 
-    alt: string; 
-    rotation: number; 
-    xMultiplier: number; 
-    y: number; 
-    zIndex: number;
+interface StackCardData {
+  id: string;
+  image: string;
+  alt: string;
+  rotation: number;
+  xMultiplier: number;
+  y: number;
+  zIndex: number;
 }
 
 const FloatingCardStack = () => {
-    
-    // Data mapping for the three cards 
-    const cardImages: StackCardData[] = [
-        // Metal Card (Farthest Left: xMultiplier = -1)
-        { id: "metal-card", image: "/landing/auric-card-horizontal.png", alt: "Auric Metal Card", rotation: -10, xMultiplier: -4, y: -180, zIndex: 10 },
-        // Maple Card (Center: xMultiplier = 0)
-        { id: "maple-card", image: "/landing/maple-card-front.png", alt: "Maple Wood Card", rotation: 5, xMultiplier: -1 , y: -60, zIndex: 11 },
-        // Nova Card (Farthest Right: xMultiplier = 1)
-        { id: "nova-card", image: "/landing/nova-card-front.png", alt: "Nova Plastic Card", rotation: 10, xMultiplier: 2, y: 85, zIndex: 12 },
-    ];
-    
-    // Variants for the PARENT container (only handles the stagger/sequence)
-    const parentVariants: Variants = {
-        visible: { 
-            transition: { 
-                staggerChildren: 0.15, // Stagger the children's "visible" state
-                delayChildren: 0.2 // Optional initial delay for the first card
-            } 
-        },
-    };
-    
-    // Variants for the CHILD cards (handles the drop down)
-    const childCardVariants: Variants = {
-        // Start far above the target position for a 'drop down' effect
-        hidden: (card: StackCardData) => ({ 
-            opacity: 0, 
-            scale: 0.8, 
-            y: card.y - 300, // Use card data directly from custom prop
-        }),
-        // Target position, using a spring for a satisfying drop
-        visible: (card: StackCardData) => ({
-            opacity: 1,
-            scale: 1,
-            // Calculate X based on the multiplier and the adjustable spacing constant
-            x: card.xMultiplier * CARD_HORIZONTAL_SPACING,
-            y: card.y, // Final resting Y position
-            rotate: card.rotation,
-            transition: {
-                duration: 1.0,
+  // Data mapping for the three cards
+  const cardImages: StackCardData[] = [
+    // Metal Card (Farthest Left: xMultiplier = -1)
+    {
+      id: "metal-card",
+      image: "/landing/auric-card-horizontal.png",
+      alt: "Auric Metal Card",
+      rotation: -10,
+      xMultiplier: -4,
+      y: -120, // Moved down to avoid nav overlap
+      zIndex: 10,
+    },
+    // Maple Card (Center: xMultiplier = 0)
+    {
+      id: "maple-card",
+      image: "/landing/maple-card-front.png",
+      alt: "Maple Wood Card",
+      rotation: 5,
+      xMultiplier: -1,
+      y: -20, // Moved down to avoid nav overlap
+      zIndex: 11,
+    },
+    // Nova Card (Farthest Right: xMultiplier = 1)
+    {
+      id: "nova-card",
+      image: "/landing/nova-card-front.png",
+      alt: "Nova Plastic Card",
+      rotation: 10,
+      xMultiplier: 2,
+      y: 100, // Moved down to avoid nav overlap
+      zIndex: 12,
+    },
+  ];
+
+  // Variants for the PARENT container (only handles the stagger/sequence)
+  const parentVariants: Variants = {
+    visible: {
+      transition: {
+        staggerChildren: 0.15, // Stagger the children's "visible" state
+        delayChildren: 0.2, // Optional initial delay for the first card
+      },
+    },
+  };
+
+  // Variants for the CHILD cards (handles the drop down)
+  const childCardVariants: Variants = {
+    // Start far above the target position for a 'drop down' effect
+    hidden: (card: StackCardData) => ({
+      opacity: 0,
+      scale: 0.8,
+      y: card.y - 200, // Reduced initial offset to prevent nav overlap
+    }),
+    // Target position, using a spring for a satisfying drop
+    visible: (card: StackCardData) => ({
+      opacity: 1,
+      scale: 1,
+      // Calculate X based on the multiplier and the adjustable spacing constant
+      x: card.xMultiplier * CARD_HORIZONTAL_SPACING,
+      y: card.y, // Final resting Y position
+      rotate: card.rotation,
+      transition: {
+        duration: 1.0,
+        ease: "easeOut" as const,
+        type: "spring",
+        stiffness: 80,
+        damping: 10,
+        mass: 1.0,
+      },
+    }),
+  };
+
+  return (
+    <motion.div
+      className="relative w-[400px] h-[350px] lg:w-[500px] lg:h-[450px] flex items-center justify-center pointer-events-auto mt-8 lg:mt-0"
+      initial="hidden"
+      whileInView="visible" // Triggers drop down on scroll/load
+      viewport={{ once: false, amount: 0.1 }}
+      variants={parentVariants} // Use the parent variants here for staggering
+    >
+      {cardImages.map((card, index) => {
+        // Calculate the true X-offset for the continuous animation
+        const currentXOffset = card.xMultiplier * CARD_HORIZONTAL_SPACING;
+
+        return (
+          <motion.div
+            key={card.id}
+            className={`absolute w-[280px] h-[180px] lg:w-[350px] lg:h-[220px] rounded-xl shadow-2xl overflow-hidden cursor-pointer`}
+            // Pass the entire card object as custom prop for drop-down variants
+            custom={card}
+            variants={childCardVariants}
+            // --- Continuous float/breathing animation (RESTORED) ---
+            animate={{
+              // Apply breathing animation around the calculated offset
+              x: [
+                currentXOffset,
+                currentXOffset + 5,
+                currentXOffset - 5,
+                currentXOffset,
+              ],
+              y: [card.y, card.y + 10, card.y],
+              rotate: [
+                card.rotation,
+                card.rotation + 0.5,
+                card.rotation - 0.5,
+                card.rotation,
+              ],
+              transition: {
+                duration: 8 + index * 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+            }}
+            // -----------------------------------------------------
+
+            // --- Hover Animation Implementation ---
+            whileHover={{
+              y: card.y - 20, // Lift up 20px from resting Y
+              scale: 1.05, // Grow 5%
+              // Rotate further in its existing direction (e.g., -10 becomes -15, 10 becomes 15)
+              rotate: card.rotation + (card.rotation > 0 ? 5 : -5),
+              transition: {
+                duration: 0.3,
                 ease: "easeOut" as const,
                 type: "spring",
-                stiffness: 80, 
+                stiffness: 200,
                 damping: 10,
-                mass: 1.0,
-            },
-        }),
-    };
+              },
+            }}
+            // ---------------------------------------------
 
-    return (
-        <motion.div 
-            className="relative w-[400px] h-[350px] lg:w-[500px] lg:h-[450px] flex items-center justify-center pointer-events-auto"
-            initial="hidden"
-            whileInView="visible" // Triggers drop down on scroll/load
-            viewport={{ once: false, amount: 0.1 }}
-            variants={parentVariants} // Use the parent variants here for staggering
-        >
-            {cardImages.map((card, index) => {
-                // Calculate the true X-offset for the continuous animation
-                const currentXOffset = card.xMultiplier * CARD_HORIZONTAL_SPACING;
-                
-                return (
-                    <motion.div
-                        key={card.id}
-                        className={`absolute w-[280px] h-[180px] lg:w-[350px] lg:h-[220px] rounded-xl shadow-2xl overflow-hidden cursor-pointer`}
-                        
-                        // Pass the entire card object as custom prop for drop-down variants
-                        custom={card} 
-                        variants={childCardVariants} 
-                        
-                        // --- Continuous float/breathing animation (RESTORED) ---
-                        animate={{
-                            // Apply breathing animation around the calculated offset
-                            x: [currentXOffset, currentXOffset + 5, currentXOffset - 5, currentXOffset],
-                            y: [card.y, card.y + 10, card.y],
-                            rotate: [card.rotation, card.rotation + 0.5, card.rotation - 0.5, card.rotation],
-                            transition: {
-                                duration: 8 + index * 1.5,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            },
-                        }}
-                        // -----------------------------------------------------
-
-                        // --- Hover Animation Implementation ---
-                        whileHover={{
-                            y: card.y - 20, // Lift up 20px from resting Y
-                            scale: 1.05, // Grow 5%
-                            // Rotate further in its existing direction (e.g., -10 becomes -15, 10 becomes 15)
-                            rotate: card.rotation + (card.rotation > 0 ? 5 : -5), 
-                            transition: { 
-                                duration: 0.3, 
-                                ease: "easeOut" as const, 
-                                type: "spring", 
-                                stiffness: 200,
-                                damping: 10,
-                            },
-                        }}
-                        // ---------------------------------------------
-
-                        style={{ 
-                            zIndex: card.zIndex,
-                            // Set the initial transform using the calculated offset
-                            transform: `translate(${currentXOffset}px, ${card.y}px) rotate(${card.rotation}deg)`,
-                        }}
-                    >
-                        <Image
-                            src={card.image}
-                            alt={card.alt}
-                            fill
-                            className="object-cover w-full h-full"
-                            priority
-                        />
-                    </motion.div>
-                )
-            })}
-        </motion.div>
-    );
+            style={{
+              zIndex: card.zIndex,
+              // Set the initial transform using the calculated offset
+              transform: `translate(${currentXOffset}px, ${card.y}px) rotate(${card.rotation}deg)`,
+            }}
+          >
+            <Image
+              src={card.image}
+              alt={card.alt}
+              fill
+              className="object-cover w-full h-full"
+              priority
+            />
+          </motion.div>
+        );
+      })}
+    </motion.div>
+  );
 };
-
 
 // ==================================================================
 // --- MERGED MAIN COMPONENT ---
@@ -448,25 +594,32 @@ export default function MergedLandingSection() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (typeof window !== 'undefined') {
-        if (window.innerWidth < 768) { setItemsPerView(1); } 
-        else if (window.innerWidth < 1024) { setItemsPerView(2); } 
-        else { setItemsPerView(3); }
+      if (typeof window !== "undefined") {
+        if (window.innerWidth < 768) {
+          setItemsPerView(1);
+        } else if (window.innerWidth < 1024) {
+          setItemsPerView(2);
+        } else {
+          setItemsPerView(3);
+        }
       }
     };
     const handleScroll = () => {
-      if (typeof window !== 'undefined') {
-        if (window.scrollY > 50) { setIsImageVisible(false); } 
-        else { setIsImageVisible(true); }
+      if (typeof window !== "undefined") {
+        if (window.scrollY > 50) {
+          setIsImageVisible(false);
+        } else {
+          setIsImageVisible(true);
+        }
       }
     };
-    if (typeof window !== 'undefined') {
-      handleResize(); 
+    if (typeof window !== "undefined") {
+      handleResize();
       window.addEventListener("resize", handleResize);
       window.addEventListener("scroll", handleScroll);
     }
     return () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.removeEventListener("resize", handleResize);
         window.removeEventListener("scroll", handleScroll);
       }
@@ -475,33 +628,35 @@ export default function MergedLandingSection() {
 
   const duplicatedClients = useMemo(() => {
     const effectiveDuplicates = itemsPerView === 3 ? 2 : 3;
-    const duplicates = Array(effectiveDuplicates).fill(null).map(() => [...clients]).flat();
+    const duplicates = Array(effectiveDuplicates)
+      .fill(null)
+      .map(() => [...clients])
+      .flat();
     return duplicates;
   }, [itemsPerView]);
 
   const SCROLL_DURATION = `${clients.length * itemsPerView * 3}s`;
-  const trackWidth = itemsPerView === 1 ? "w-[300%]" : itemsPerView === 2 ? "w-[200%]" : "w-[300%]";
-
+  const trackWidth =
+    itemsPerView === 1
+      ? "w-[300%]"
+      : itemsPerView === 2
+      ? "w-[200%]"
+      : "w-[300%]";
 
   return (
     <div
-      className="relative w-full overflow-hidden pt-20"
+      className="relative w-full overflow-hidden pt-12 lg:pt-16"
       style={{
-        background: '#030C32', 
+        background: "#030C32",
       }}
     >
-
       {/* ==================================================
         GLOBAL CENTRALIZED GLOW SYSTEM 
         ==================================================
       */}
       <div className="absolute inset-0 pointer-events-none z-10">
-        <div
-          className="md:absolute md:top-[600px] md:left-1/3 md:w-[600px] md:h-[400px] bg-white/15 blur-[150px] mix-blend-screen rounded-[40%_60%_50%_70%/60%_40%_70%_50%]"
-        />
-        <div
-          className="md:absolute md:top-[700px] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[900px] md:h-[700px] bg-white/3 blur-[250px] mix-blend-screen rounded-full"
-        />
+        <div className="md:absolute md:top-[600px] md:left-1/3 md:w-[600px] md:h-[400px] bg-white/15 blur-[150px] mix-blend-screen rounded-[40%_60%_50%_70%/60%_40%_70%_50%]" />
+        <div className="md:absolute md:top-[700px] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[900px] md:h-[700px] bg-white/3 blur-[250px] mix-blend-screen rounded-full" />
       </div>
 
       {/* Background Decorative Image - Conditionally Rendered */}
@@ -531,8 +686,8 @@ export default function MergedLandingSection() {
         ==================================================
       */}
       <div className="relative z-20 ">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-10 lg:pt-22 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-6 lg:pt-12 pb-8 lg:pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 pt-10 gap-8 lg:gap-10 items-center">
             {/* LEFT SIDE CONTENT */}
             <motion.div
               className="space-y-6 h-full"
@@ -540,200 +695,165 @@ export default function MergedLandingSection() {
               animate="visible"
               variants={textVariant}
             >
-              <h1 className="text-center text-3xl sm:text-5xl lg:text-[84px] font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
-                <span className="lg:w-full lg:text-left">
-                    One Card.
-                </span>
+              <h1 className="text-center text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold font-[abhaya] text-white leading-tight lg:flex lg:flex-col lg:items-start">
+                <span className="lg:w-full lg:text-left">One Card.</span>
                 <span className="text-[#113CFC] lg:w-full lg:text-left">
-                    Endless Possibilities
+                  Endless Possibilities
                 </span>
-            </h1>
+              </h1>
 
-              <p className="text-center text-lg lg:text-xl text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 lg:text-justify font-[inter]">
+              <p className="text-center text-base lg:text-lg text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 lg:text-justify font-[inter] mt-2 lg:mt-3">
                 Create, share, and manage your digital identity — built for
                 professionals, teams, and institutions.
               </p>
 
-
               {/* === MOBILE-ONLY IMAGE WITH INTENSE GLOWS - USES WALLET COMPONENT === */}
-              <div className="relative flex justify-center pt-8 pb-0 lg:hidden min-h-[300px]">
+              <div className="relative flex justify-center pt-4 pb-0 lg:hidden min-h-[250px]">
                 {/* GLOWS BEHIND THE CARDS - MOBILE */}
-                <div
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0"
-                />
-                <div
-                  className="absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
-                />
-                <div
-                  className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0"
-                />
-                
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-white/30 blur-[150px] rounded-full z-0" />
+                <div className="absolute top-[5%] left-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0" />
+                <div className="absolute bottom-[5%] right-[5%] w-[180px] h-[180px] bg-[#113CFC]/50 blur-[100px] rounded-full z-0" />
                 <AnimatedWalletCards /> {/* ⬅️ ORIGINAL WALLET ANIMATION */}
               </div>
 
-            
-             <motion.div
-                  className="flex gap-4 pt-2 justify-center lg:justify-start"
-                  initial="hidden"
-                  animate="visible"
-                  variants={buttonVariant}
+              <motion.div
+                className="flex gap-3 lg:gap-4 pt-3 lg:pt-4 justify-center lg:justify-start"
+                initial="hidden"
+                animate="visible"
+                variants={buttonVariant}
               >
-                  <Link href="/cards" passHref>
-                       <Button className="font-[inter] bg-[#113CFC] hover:bg-[#0E33E0] cursor-pointer text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-3 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
-                          Buy Card
-                      </Button>
-                  </Link>
+                <Link href="/cards" passHref>
+                  <Button className="font-[inter] bg-[#113CFC] hover:bg-[#0E33E0] cursor-pointer text-white w-full sm:w-auto px-3 py-3 lg:px-8 lg:py-3 text-base font-medium rounded-lg shadow-lg transition-all duration-300">
+                    Buy Card
+                  </Button>
+                </Link>
 
-                  <Link href="/how-it-works" passHref>
-                      <Button
-                          variant="outline"
-                          className="font-[inter] w-full sm:w-auto text-base font-medium cursor-pointer
+                <Link href="/how-it-works" passHref>
+                  <Button
+                    variant="outline"
+                    className="font-[inter] w-full sm:w-auto text-base font-medium cursor-pointer
                                     text-white border-2 border-[#113CFC] bg-transparent
                                     hover:bg-[#113CFC] hover:text-white transition-all duration-300 rounded-lg px-3 py-3 lg:px-8 lg:py-3s"
-                      >
-                          See How It Works
-                      </Button>
-                  </Link>
+                  >
+                    See How It Works
+                  </Button>
+                </Link>
               </motion.div>
             </motion.div>
 
             {/* RIGHT SIDE IMAGE (DESKTOP) */}
             <motion.div
-              className="relative hidden lg:flex justify-center items-center h-[400px]" // Adjusted to center the stack
+              className="relative hidden lg:flex justify-center items-start pt-4 lg:pt-6 h-[350px] xl:h-[400px] overflow-visible" // Adjusted to center the stack and prevent nav overlap
               initial="hidden"
               animate="visible"
               variants={imageVariant}
             >
               {/* GLOWS BEHIND THE CARDS - DESKTOP */}
-              <div
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/30 blur-[200px] rounded-full z-0"
-              />
-              <div
-                className="absolute top-[5%] left-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0"
-              />
-              <div
-                className="absolute bottom-[5%] right-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0"
-              />
-              <div
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-white/40 blur-[120px] rounded-full z-0"
-              />
-              <div
-                className="absolute top-[-5%] right-[0%] w-[180px] h-[180px] bg-white/20 blur-[100px] rounded-full z-0"
-              />
-              <div
-                className="absolute bottom-[-5%] left-[0%] w-[180px] h-[180px] bg-[#113CFC]/30 blur-[110px] rounded-full z-0"
-              />
-              
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/30 blur-[200px] rounded-full z-0" />
+              <div className="absolute top-[5%] left-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0" />
+              <div className="absolute bottom-[5%] right-[5%] w-[220px] h-[220px] bg-[#113CFC]/50 blur-[150px] rounded-full z-0" />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] bg-white/40 blur-[120px] rounded-full z-0" />
+              <div className="absolute top-[-5%] right-[0%] w-[180px] h-[180px] bg-white/20 blur-[100px] rounded-full z-0" />
+              <div className="absolute bottom-[-5%] left-[0%] w-[180px] h-[180px] bg-[#113CFC]/30 blur-[110px] rounded-full z-0" />
+
               {/* ⬅️ NEW FLOATING CARD STACK WITH ANIMATIONS */}
-              <FloatingCardStack /> 
-              
+              <FloatingCardStack />
             </motion.div>
           </div>
         </div>
       </div>
 
-
       {/* ==================================================
-        SECTION 2: CLIENTS LOGO SCROLL 
+        SECTION 2: CLIENTS LOGO SCROLL - COMMENTED OUT
         ==================================================
       */}
-      <div className="relative z-20 w-full overflow-hidden pb-12 py-4"> 
+      {/* 
+      <div className="relative z-20 w-full overflow-hidden pb-6 lg:pb-8 py-3">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 ">
-            {/* Heading */}
-            <motion.div
-              className="text-center mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-gray-300 text-[17px]  mb-2">
-                Clients Include
-              </p>
+          <motion.div
+            className="text-center mb-4 lg:mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-gray-300 text-sm lg:text-base mb-1 lg:mb-2">
+              Clients Include
+            </p>
 
-              <h2 className="text-2xl xs: sm:text-4xl lg:text-[36px] font-medium text-white">
-                <span>Our trusted Organizations and Universities</span>
-              </h2>
-            </motion.div>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-medium text-white">
+              <span>Our trusted Organizations and Universities</span>
+            </h2>
+          </motion.div>
 
-            {/* LOGO SCROLL TRACK WRAPPER */}
-            <div className="relative w-full py-5 overflow-hidden border-t border-b border-white/20"> 
-
-              {/* Left Glow Effect for the Logo Track */}
-              <div 
-                className="
+          <div className="relative w-full py-3 lg:py-4 overflow-hidden border-t border-b border-white/20">
+            <div
+              className="
                   md:absolute md:inset-y-0 md:left-0 md:w-32 md:h-full 
                   bg-[#113CFC]/10 blur-3xl rounded-full 
                   pointer-events-none z-10
-                " 
-              />
-              
-              {/* Right Glow Effect for the Logo Track */}
-              <div 
-                className="
+                "
+            />
+
+            <div
+              className="
                   md:absolute md:inset-y-0 md:right-0 md:w-32 md:h-full 
                   bg-[#113CFC]/10 blur-3xl rounded-full 
                   pointer-events-none z-10 
-                " 
-              />
+                "
+            />
 
-              <motion.div
-                className={`flex flex-nowrap whitespace-nowrap ${trackWidth}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                // NOTE: The keyframes for 'scroll-left' must be defined globally in your CSS/Tailwind config.
-                style={{
-                  animation: `scroll-left ${SCROLL_DURATION} linear infinite`,
-                }}
-              >
-                {/* Render the duplicated list of logos for infinite loop */}
-                {duplicatedClients.map((client, index) => (
-                  <LogoItem key={index} client={client} />
-                ))}
+            <motion.div
+              className={`flex flex-nowrap whitespace-nowrap ${trackWidth}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              style={{
+                animation: `scroll-left ${SCROLL_DURATION} linear infinite`,
+              }}
+            >
+              {duplicatedClients.map((client, index) => (
+                <LogoItem key={index} client={client} />
+              ))}
+            </motion.div>
 
-              </motion.div>
-
-              {/* FADE OVERLAYS: Blend logos into the background at the edges */}
-              <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#030C32] to-transparent pointer-events-none z-30" />
-              <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#030C32] to-transparent pointer-events-none z-30" />
-
-            </div>
+            <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-[#030C32] to-transparent pointer-events-none z-30" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-[#030C32] to-transparent pointer-events-none z-30" />
+          </div>
         </div>
       </div>
+      */}
 
       {/* ==================================================
         SECTION 3: CARD SELECTION 
         ==================================================
       */}
-      <div className="relative w-full overflow-hidden pt-12 md:pt-3 pb-24 md:pb-3 "> 
-
+      <div className="relative w-full overflow-hidden pt-6 lg:pt-8 pb-12 lg:pb-16">
         <div className="relative z-10 max-w-7xl mx-auto px-0 lg:px-8">
           {/* Section Heading and Description */}
           <motion.div
-            className="text-center mb-12 space-y-4 px-6 lg:px-0" 
+            className="text-center mb-6 lg:mb-8 space-y-2 px-6 lg:px-0"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
             variants={sectionTextVariants}
           >
-            <h2 className="text-4xl sm:text-5xl font-bold text-white">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
               Choose Your Perfect Card
             </h2>
           </motion.div>
 
           {/* Cards Grid */}
           <motion.div
-            className="flex gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory pt-4 pb-3  px-6 md:px-8 lg:px-0 lg:grid lg:grid-cols-3 lg:gap-14 lg:overflow-x-visible lg:justify-items-center lg:w-fit mx-auto"
+            className="flex gap-3 md:gap-6 overflow-x-auto snap-x snap-mandatory pt-3 pb-2 px-6 md:px-8 lg:px-0 lg:grid lg:grid-cols-3 lg:gap-8 xl:gap-10 lg:overflow-x-visible lg:justify-items-center lg:w-fit mx-auto"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
             {[...cardsData].reverse().map((card, index) => (
-            <CardComponent key={card.id} card={card} custom={index} />
-          ))}
-
+              <CardComponent key={card.id} card={card} custom={index} />
+            ))}
           </motion.div>
         </div>
       </div>
