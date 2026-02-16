@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   title: "SYNC - Smart University ID & Access Control Solutions",
   description:
     "Transform your university with next-generation NFC student ID cards. Secure access control, mobile verification, and comprehensive analytics for modern campus management.",
-  
+
   // Optional but recommended for SEO
   keywords: [
     "university ID cards",
@@ -56,17 +56,17 @@ export const metadata: Metadata = {
     "student access control",
     "university technology",
   ],
-  
+
   // Branding / authorship
   authors: [{ name: "SYNC Team" }],
   publisher: "SYNC",
   creator: "SYNC",
-  
+
   // Favicon / icons
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-    shortcut: "/favicon.ico",
+    icon: "/sync-logo.ico",
+    apple: "/sync-logo.ico",
+    shortcut: "/sync-logo.ico",
   },
 
   // Open Graph for social sharing
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
       "Transform your university with next-generation NFC student ID cards. Secure access control, mobile verification, and comprehensive analytics for modern campus management.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/sync-logo.ico",
         width: 1200,
         height: 630,
         alt: "SYNC - Smart University ID Solutions",
@@ -93,7 +93,7 @@ export const metadata: Metadata = {
     title: "SYNC - Smart University ID & Access Control Solutions",
     description:
       "Transform your university with next-generation NFC student ID cards. Secure access control, mobile verification, and comprehensive analytics.",
-    images: ["/og-image.png"],
+    images: ["/sync-logo.ico"],
     creator: "@buy_sync",
   },
 
@@ -118,13 +118,13 @@ export default function RootLayout({
         <ReactQueryProvider>
           {/* Children will be either (public)/layout.tsx or (dashboard)/layout.tsx */}
           {/* {children} */}
-          <ThemeProvider 
-          attribute="class" 
-          defaultTheme="light" 
-          enableSystem={true}
-        >
-          {children}
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem={true}
+          >
+            {children}
+          </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>
