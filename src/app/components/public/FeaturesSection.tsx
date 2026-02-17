@@ -49,7 +49,7 @@ export default function FeaturesSection() {
     },
   };
   return (
-  
+
     <div
       className="relative w-full overflow-hidden"
       style={{
