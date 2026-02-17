@@ -103,7 +103,7 @@ export default function FeaturesSection() {
 
               {/* Content on the left, Image on the right (internal flex) */}
               <div className="flex flex-col lg:flex-row justify-between h-[600px] gap-4 lg:h-[400px]">
-                {/* TEXT CONTENT (Left side) */}
+
                 <div className="lg:w-1/2 mb-6 lg:mb-0 pt-4 relative z-30 flex flex-col justify-center text-center lg:text-left">
                   <h3 className="text-4xl font-medium text-white mb-4">
                     Seamless onboarding
