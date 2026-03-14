@@ -97,7 +97,6 @@ export const metadata: Metadata = {
     creator: "@buy_sync",
   },
 
-  // Robots
   robots: {
     index: true,
     follow: true,
