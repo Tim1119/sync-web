@@ -1,466 +1,874 @@
-import React, { useState } from 'react';
-import { Check, ChevronLeft, ChevronRight, User, Zap, Wifi, ShoppingBag } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Zap,
+  Wifi,
+  ShoppingBag,
+} from "lucide-react";
 
 // --- TypeScript Interfaces ---
 interface CardTemplate {
-    id: number;
-    name: string;
-    price: number;
-    theme: string;
-    color: string;
-    subtext: string;
+  id: number;
+  name: string;
+  price: number;
+  theme: string;
+  color: string;
+  subtext: string;
 }
 
 interface FormData {
-    templateId: number;
-    selectedTemplate: CardTemplate;
-    cardHolderName: string;
+  templateId: number;
+  selectedTemplate: CardTemplate;
+  cardHolderName: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingCost: number;
 }
 
 interface MockCardProps {
-    template: CardTemplate | undefined;
-    details: FormData;
-    isSelected: boolean;
-    isVertical?: boolean;
-    previewName?: string;
+  template: CardTemplate | undefined;
+  details: FormData;
+  isSelected: boolean;
+  isVertical?: boolean;
+  previewName?: string;
 }
 
 interface StageProps {
-    formData: FormData;
-    setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-    nextStage: () => void;
-    prevStage: () => void;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  nextStage: () => void;
+  prevStage: () => void;
 }
 
 // --- Configuration Data ---
 const CARD_TEMPLATES: CardTemplate[] = [
-    { id: 1, name: 'Nova', price: 35000, theme: 'bg-blue-600', color: '#2563EB', subtext: 'Bold and Modern' },
-    { id: 2, name: 'Maple', price: 50000, theme: 'bg-yellow-800', color: '#B45309', subtext: 'Natural Wood Grain' },
-    { id: 3, name: 'Auric', price: 60000, theme: 'bg-gray-900', color: '#111827', subtext: 'Sleek and Minimal' },
+  {
+    id: 1,
+    name: "Nova",
+    price: 35000,
+    theme: "bg-blue-600",
+    color: "#2563EB",
+    subtext: "Bold and Modern",
+  },
+  {
+    id: 2,
+    name: "Maple",
+    price: 50000,
+    theme: "bg-yellow-800",
+    color: "#B45309",
+    subtext: "Natural Wood Grain",
+  },
+  {
+    id: 3,
+    name: "Auric",
+    price: 60000,
+    theme: "bg-gray-900",
+    color: "#111827",
+    subtext: "Sleek and Minimal",
+  },
 ];
 
 // --- Mock Card Component for Preview ---
-const MockCard: React.FC<MockCardProps> = ({ template, details, isSelected, isVertical = true, previewName }) => {
-    const defaultColor = template?.color || '#2563EB';
-    const cardHolderText = details.cardHolderName || previewName || 'YOUR NAME HERE';
+const MockCard: React.FC<MockCardProps> = ({
+  template,
+  details,
+  isSelected,
+  isVertical = true,
+  previewName,
+}) => {
+  const defaultColor = template?.color || "#2563EB";
+  const cardHolderText =
+    details.cardHolderName || previewName || "YOUR NAME HERE";
 
-    return (
-        <div
-            className={`w-full h-full rounded-xl p-4 shadow-xl transition-all duration-300
-            ${isSelected ? 'ring-4 ring-blue-500/80 scale-[1.02]' : 'ring-1 ring-white/10'}
+  return (
+    <div
+      className={`w-full h-full rounded-xl p-4 shadow-xl transition-all duration-300
+            ${isSelected ? "ring-4 ring-blue-500/80 scale-[1.02]" : "ring-1 ring-white/10"}
             `}
-            style={{
-                background: template?.theme || 'bg-gray-700',
-                backgroundImage: `linear-gradient(135deg, ${defaultColor}, ${defaultColor}DD)`,
-                position: 'relative',
-                overflow: 'hidden',
-                // Define aspect ratio based on orientation
-                aspectRatio: isVertical ? '1 / 1.58' : '1.58 / 1',
-            }}
+      style={{
+        background: template?.theme || "bg-gray-700",
+        backgroundImage: `linear-gradient(135deg, ${defaultColor}, ${defaultColor}DD)`,
+        position: "relative",
+        overflow: "hidden",
+        // Define aspect ratio based on orientation
+        aspectRatio: isVertical ? "1 / 1.58" : "1.58 / 1",
+      }}
+    >
+      {/* Subtle background texture/pattern */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 100% 100%, #ffffff 0%, transparent 50%)",
+        }}
+      />
+
+      {/* Card Content */}
+      <div className="absolute inset-0 flex flex-col justify-between p-4">
+        {/* Contactless Icon (Top Right) */}
+        <div
+          className={`text-white ${isVertical ? "absolute top-4 right-4" : "flex justify-end"}`}
         >
-            {/* Subtle background texture/pattern */}
-            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 100% 100%, #ffffff 0%, transparent 50%)' }} />
-
-            {/* Card Content */}
-            <div className="absolute inset-0 flex flex-col justify-between p-4">
-                
-                {/* Contactless Icon (Top Right) */}
-                <div className={`text-white ${isVertical ? 'absolute top-4 right-4' : 'flex justify-end'}`}>
-                    <Wifi className="h-5 w-5 transform -rotate-90" />
-                </div>
-
-                {/* Logo Placeholder - Central, Large (Vertical layout) */}
-                {isVertical && (
-                    <div className="flex-grow flex items-center justify-center pt-8">
-                        <Zap className="h-10 w-10 text-white" />
-                    </div>
-                )}
-                
-                {/* Logo Placeholder - Small (Horizontal layout) */}
-                {!isVertical && (
-                    <div className="flex justify-start">
-                        <Zap className="h-7 w-7 text-white" />
-                    </div>
-                )}
-
-                {/* Details (bottom) */}
-                <div className="text-white font-mono pt-4">
-                    <p className="text-xs opacity-70 mb-1">Card Holder</p>
-                    <p className="text-sm font-bold truncate">
-                        {cardHolderText}
-                    </p>
-                </div>
-            </div>
+          <Wifi className="h-5 w-5 transform -rotate-90" />
         </div>
-    );
+
+        {/* Logo Placeholder - Central, Large (Vertical layout) */}
+        {isVertical && (
+          <div className="flex-grow flex items-center justify-center pt-8">
+            <Zap className="h-10 w-10 text-white" />
+          </div>
+        )}
+
+        {/* Logo Placeholder - Small (Horizontal layout) */}
+        {!isVertical && (
+          <div className="flex justify-start">
+            <Zap className="h-7 w-7 text-white" />
+          </div>
+        )}
+
+        {/* Details (bottom) */}
+        <div className="text-white font-mono pt-4">
+          <p className="text-xs opacity-70 mb-1">Card Holder</p>
+          <p className="text-sm font-bold truncate">{cardHolderText}</p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 // --- Stepper Component ---
 const Stepper: React.FC<{ currentStage: number }> = ({ currentStage }) => {
-    const steps = [
-        { id: 1, name: 'Template' },
-        { id: 2, name: 'Details' },
-        { id: 3, name: 'Payment' },
-        { id: 4, name: 'Complete' },
-    ];
+  const steps = [
+    { id: 1, name: "Template" },
+    { id: 2, name: "Details" },
+    { id: 3, name: "Shipping" },
+    { id: 4, name: "Payment" },
+    { id: 5, name: "Complete" },
+  ];
 
-    return (
-        <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-16 max-w-xl mx-auto">
-            {steps.map((step, index) => (
-                <React.Fragment key={step.id}>
-                    {/* Step Icon & Name */}
-                    <div className="flex flex-col items-center">
-                        <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
-                                currentStage > step.id
-                                    ? 'bg-blue-600' // Completed
-                                    : currentStage === step.id
-                                    ? 'bg-blue-600' // Active
-                                    : 'bg-gray-700 border-2 border-gray-600' // Inactive
-                            }`}
-                        >
-                            {currentStage > step.id ? (
-                                <Check className="w-4 h-4 text-white" />
-                            ) : (
-                                <span className={`text-sm font-semibold ${currentStage === step.id ? 'text-white' : 'text-gray-400'}`}>
-                                    {step.id}
-                                </span>
-                            )}
-                        </div>
-                        <p
-                            className={`mt-2 text-xs md:text-sm font-medium transition-colors duration-300 ${
-                                currentStage >= step.id ? 'text-white' : 'text-gray-400'
-                            }`}
-                        >
-                            Step {step.id}
-                            <span className="hidden md:inline"> {step.name}</span>
-                        </p>
-                    </div>
+  return (
+    <div className="flex items-center justify-center space-x-2 md:space-x-4 mb-16 max-w-xl mx-auto">
+      {steps.map((step, index) => (
+        <React.Fragment key={step.id}>
+          {/* Step Icon & Name */}
+          <div className="flex flex-col items-center">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                currentStage > step.id
+                  ? "bg-blue-600" // Completed
+                  : currentStage === step.id
+                    ? "bg-blue-600" // Active
+                    : "bg-gray-700 border-2 border-gray-600" // Inactive
+              }`}
+            >
+              {currentStage > step.id ? (
+                <Check className="w-4 h-4 text-white" />
+              ) : (
+                <span
+                  className={`text-sm font-semibold ${currentStage === step.id ? "text-white" : "text-gray-400"}`}
+                >
+                  {step.id}
+                </span>
+              )}
+            </div>
+            <p
+              className={`mt-2 text-xs md:text-sm font-medium transition-colors duration-300 ${
+                currentStage >= step.id ? "text-white" : "text-gray-400"
+              }`}
+            >
+              Step {step.id}
+              <span className="hidden md:inline"> {step.name}</span>
+            </p>
+          </div>
 
-                    {/* Separator Line */}
-                    {index < steps.length - 1 && (
-                        <div
-                            className={`h-0.5 w-12 transition-colors duration-300 ${
-                                currentStage > step.id ? 'bg-blue-600' : 'bg-gray-700'
-                            }`}
-                        />
-                    )}
-                </React.Fragment>
-            ))}
-        </div>
-    );
+          {/* Separator Line */}
+          {index < steps.length - 1 && (
+            <div
+              className={`h-0.5 w-12 transition-colors duration-300 ${
+                currentStage > step.id ? "bg-blue-600" : "bg-gray-700"
+              }`}
+            />
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
 };
 
 // --- Stage 1: Template Selection ---
-const Stage1TemplateSelection: React.FC<Omit<StageProps, 'prevStage'>> = ({ formData, setFormData, nextStage }) => {
-    const selectedId = formData.templateId;
+const Stage1TemplateSelection: React.FC<Omit<StageProps, "prevStage">> = ({
+  formData,
+  setFormData,
+  nextStage,
+}) => {
+  const selectedId = formData.templateId;
 
-    const handleSelect = (templateId: number) => {
-        const template = CARD_TEMPLATES.find(t => t.id === templateId);
-        if (template) {
-            setFormData(prev => ({ ...prev, templateId, selectedTemplate: template }));
-        }
-    };
+  const handleSelect = (templateId: number) => {
+    const template = CARD_TEMPLATES.find((t) => t.id === templateId);
+    if (template) {
+      setFormData((prev) => ({
+        ...prev,
+        templateId,
+        selectedTemplate: template,
+      }));
+    }
+  };
 
-    const isNextDisabled = !selectedId;
+  const isNextDisabled = !selectedId;
 
-    return (
-        <div className="text-center">
-            <h2 className="text-3xl md:text-2xl font-bold text-white mb-3">Choose Your Card Template</h2>
-            <p className="text-gray-400 mb-12">Pick a style that fits your personality. You can customize your details next.</p>
+  return (
+    <div className="text-center">
+      <h2 className="text-3xl md:text-2xl font-bold text-white mb-3">
+        Choose Your Card Template
+      </h2>
+      <p className="text-gray-400 mb-12">
+        Pick a style that fits your personality. You can customize your details
+        next.
+      </p>
 
-            <div className="flex flex-col items-center md:flex-row justify-center gap-8 mb-16">
-                {CARD_TEMPLATES.map((template) => (
-                    <div
-                        key={template.id}
-                        className={`bg-gray-800 p-6 rounded-2xl w-full max-w-[300px] shadow-2xl transition-all duration-300 border-2 cursor-pointer ${
-                            selectedId === template.id ? 'border-blue-500 transform scale-[1.03]' : 'border-gray-700 hover:border-blue-800'
-                        }`}
-                        onClick={() => handleSelect(template.id)}
-                    >
-                        {/* Card Visual Mock (Vertical and smaller for selection) */}
-                        <div className="mb-6 mx-auto w-24 h-40 rounded-lg overflow-hidden relative">
-                           <MockCard 
-                                template={template} 
-                                details={formData} 
-                                isSelected={selectedId === template.id} 
-                                previewName={template.name}
-                            />
-                        </div>
-                        
-                        <h3 className="text-xl font-bold text-white">{template.name}</h3>
-                        <p className="text-gray-400 text-sm mt-1 mb-4">₦{template.price.toLocaleString('en-US')}</p>
-                        
-                        <button
-                            onClick={(e) => { e.stopPropagation(); handleSelect(template.id); }} // Prevent parent click from firing twice
-                            className={`w-full py-2 rounded-lg font-semibold transition-colors duration-200 ${
-                                selectedId === template.id 
-                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/50'
-                                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                            }`}
-                        >
-                            {selectedId === template.id ? 'Template Selected' : 'Select Template'}
-                        </button>
-                    </div>
-                ))}
+      <div className="flex flex-col items-center md:flex-row justify-center gap-8 mb-16">
+        {CARD_TEMPLATES.map((template) => (
+          <div
+            key={template.id}
+            className={`bg-gray-800 p-6 rounded-2xl w-full max-w-[300px] shadow-2xl transition-all duration-300 border-2 cursor-pointer ${
+              selectedId === template.id
+                ? "border-blue-500 transform scale-[1.03]"
+                : "border-gray-700 hover:border-blue-800"
+            }`}
+            onClick={() => handleSelect(template.id)}
+          >
+            {/* Card Visual Mock (Vertical and smaller for selection) */}
+            <div className="mb-6 mx-auto w-24 h-40 rounded-lg overflow-hidden relative">
+              <MockCard
+                template={template}
+                details={formData}
+                isSelected={selectedId === template.id}
+                previewName={template.name}
+              />
             </div>
 
+            <h3 className="text-xl font-bold text-white">{template.name}</h3>
+            <p className="text-gray-400 text-sm mt-1 mb-4">
+              ₦{template.price.toLocaleString("en-US")}
+            </p>
+
             <button
-                onClick={nextStage}
-                disabled={isNextDisabled}
-                className={`flex items-center justify-center mx-auto px-10 py-3 rounded-xl font-bold transition-all duration-300 ${
-                    isNextDisabled
-                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40'
-                }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSelect(template.id);
+              }} // Prevent parent click from firing twice
+              className={`w-full py-2 rounded-lg font-semibold transition-colors duration-200 ${
+                selectedId === template.id
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-500/50"
+                  : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
             >
-                Next <ChevronRight className="w-5 h-5 ml-2" />
+              {selectedId === template.id
+                ? "Template Selected"
+                : "Select Template"}
             </button>
-        </div>
-    );
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={nextStage}
+        disabled={isNextDisabled}
+        className={`flex items-center justify-center mx-auto px-10 py-3 rounded-xl font-bold transition-all duration-300 ${
+          isNextDisabled
+            ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
+        }`}
+      >
+        Next <ChevronRight className="w-5 h-5 ml-2" />
+      </button>
+    </div>
+  );
 };
 
 // --- Stage 2: Details Input ---
-const Stage2Details: React.FC<StageProps> = ({ formData, setFormData, nextStage, prevStage }) => {
-    const template = formData.selectedTemplate || CARD_TEMPLATES[0];
+const Stage2Details: React.FC<StageProps> = ({
+  formData,
+  setFormData,
+  nextStage,
+  prevStage,
+}) => {
+  const template = formData.selectedTemplate || CARD_TEMPLATES[0];
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        // Allows only letters and spaces, converts to uppercase
-        const sanitizedValue = value.replace(/[^a-zA-Z\s]/g, '').toUpperCase();
-        setFormData(prev => ({ ...prev, [name]: sanitizedValue }));
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    // Allows only letters and spaces, converts to uppercase
+    const sanitizedValue = value.replace(/[^a-zA-Z\s]/g, "").toUpperCase();
+    setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
+  };
 
-    // Simple validation check: Name must be present and at least 3 characters
-    const isNextDisabled = !formData.cardHolderName || formData.cardHolderName.length < 3;
+  // Simple validation check: Name must be present and at least 3 characters
+  const isNextDisabled =
+    !formData.cardHolderName || formData.cardHolderName.length < 3;
 
-    return (
-        <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Card Customization</h2>
-            <p className="text-gray-400 mb-12">Enter the name you want displayed on your selected &apos;{template.name}&apos; card.</p>
-            
-            <div className="max-w-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                {/* Left Column: Card Preview */}
-                <div className="flex justify-center md:justify-end items-center pt-4">
-                    <div className="w-36 h-60 md:w-48 md:h-80"> {/* Responsive container for preview */}
-                        <MockCard template={template} details={formData} isSelected={true} />
-                    </div>
-                </div>
+  return (
+    <div className="text-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+        Card Customization
+      </h2>
+      <p className="text-gray-400 mb-12">
+        Enter the name you want displayed on your selected &apos;{template.name}
+        &apos; card.
+      </p>
 
-                {/* Right Column: Form Fields */}
-                <div className="space-y-6 text-left flex flex-col justify-center">
-                    {/* Card Holder Name */}
-                    <div>
-                        <label htmlFor="cardHolderName" className="text-gray-300 text-sm font-medium mb-2 flex items-center">
-                            <User className="w-4 h-4 mr-2" /> Name on Card
-                        </label>
-                        <input
-                            type="text"
-                            id="cardHolderName"
-                            name="cardHolderName"
-                            value={formData.cardHolderName || ''}
-                            onChange={handleChange}
-                            maxLength={26}
-                            placeholder="E.G., SAMUEL BLESSING D."
-                            className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 transition duration-150 uppercase"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                            Max 26 characters (Letters and spaces only).
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-center space-x-4">
-                <button
-                    onClick={prevStage}
-                    className="flex items-center px-6 py-3 rounded-xl font-bold bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
-                >
-                    <ChevronLeft className="w-5 h-5 mr-2" /> Back
-                </button>
-                <button
-                    onClick={nextStage}
-                    disabled={isNextDisabled}
-                    className={`flex items-center px-10 py-3 rounded-xl font-bold transition-all duration-300 ${
-                        isNextDisabled
-                            ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40'
-                    }`}
-                >
-                    Next <ChevronRight className="w-5 h-5 ml-2" />
-                </button>
-            </div>
+      <div className="max-w-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        {/* Left Column: Card Preview */}
+        <div className="flex justify-center md:justify-end items-center pt-4">
+          <div className="w-36 h-60 md:w-48 md:h-80">
+            {" "}
+            {/* Responsive container for preview */}
+            <MockCard
+              template={template}
+              details={formData}
+              isSelected={true}
+            />
+          </div>
         </div>
-    );
-};
 
-// --- Stage 3: Payment ---
-const Stage3Payment: React.FC<StageProps> = ({ formData, nextStage, prevStage }) => {
-    const template = formData.selectedTemplate || CARD_TEMPLATES[0];
-
-    const displayPrice = template.price || 60000;
-
-    return (
-        <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Card Summary & Payment</h2>
-            
-            <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-10 mb-12 p-4 md:p-8 bg-gray-800/60 rounded-xl border border-gray-700">
-                
-                {/* Left Section: Card Summary & Price */}
-                <div className="w-full md:w-1/3 flex flex-col items-center md:items-start space-y-4">
-                    {/* Price/Title Section */}
-                    <div className='w-full'>
-                        <h3 className="text-xl font-semibold text-white md:text-left text-center hidden md:block">{template.name} Digital Card</h3>
-                        <h3 className="text-xl font-semibold text-white md:text-left text-center block md:hidden">Card Summary</h3>
-                        <p className="text-4xl md:text-5xl font-extrabold text-blue-400 mt-2">
-                            ₦{displayPrice.toLocaleString('en-US')}
-                        </p>
-                        <p className="text-gray-400 text-sm mt-1">One-time template fee.</p>
-                    </div>
-                    
-                    {/* Mock Card Preview (Horizontal view, slightly tilted) */}
-                    <div className="mt-4 w-48 h-32 relative transform rotate-[-8deg] translate-x-4 md:-translate-x-4">
-                        <MockCard 
-                            template={template} 
-                            details={formData} 
-                            isSelected={false} 
-                            isVertical={false}
-                        />
-                    </div>
-                </div>
-
-                {/* Vertical Separator (Hidden on mobile) */}
-                <div className="hidden md:block w-px h-64 bg-gray-700" />
-                
-                {/* Right Section: Payment Button */}
-                <div className="w-full md:w-2/3 space-y-6 text-left">
-
-                    {/* Pay Now Button */}
-                    <button
-                        onClick={nextStage}
-                        className="w-full flex items-center justify-center px-10 py-4 rounded-xl font-bold transition-all duration-300 text-lg bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
-                    >
-                        <ShoppingBag className="w-5 h-5 mr-2" /> Pay Now
-                    </button>
-                    
-                    <p className="text-xs text-gray-500 text-center pt-2">
-                        By proceeding, you agree to our Terms and Conditions.
-                    </p>
-                </div>
-            </div>
-
-            {/* Navigation Buttons (Back only) */}
-            <div className="flex justify-center space-x-4">
-                <button
-                    onClick={prevStage}
-                    className="flex items-center px-6 py-3 rounded-xl font-bold bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
-                >
-                    <ChevronLeft className="w-5 h-5 mr-2" /> Back to Details
-                </button>
-            </div>
+        {/* Right Column: Form Fields */}
+        <div className="space-y-6 text-left flex flex-col justify-center">
+          {/* Card Holder Name */}
+          <div>
+            <label
+              htmlFor="cardHolderName"
+              className="text-gray-300 text-sm font-medium mb-2 flex items-center"
+            >
+              <User className="w-4 h-4 mr-2" /> Name on Card
+            </label>
+            <input
+              type="text"
+              id="cardHolderName"
+              name="cardHolderName"
+              value={formData.cardHolderName || ""}
+              onChange={handleChange}
+              maxLength={26}
+              placeholder="E.G., SAMUEL BLESSING D."
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 transition duration-150 uppercase"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Max 26 characters (Letters and spaces only).
+            </p>
+          </div>
         </div>
-    );
-};
+      </div>
 
-
-// --- Stage 4: Complete ---
-const Stage4Complete: React.FC<Omit<StageProps, 'formData' | 'setFormData' | 'prevStage'>> = ({ nextStage }) => (
-    <div className="text-center max-w-lg mx-auto p-10 bg-gray-800/60 rounded-xl shadow-2xl border border-gray-700">
-        <h2 className="text-3xl font-bold text-white mb-3">Payment Successful</h2>
-        <p className="text-gray-400 mb-8">Your digital card is now active. You can access your dashboard to manage your details and share your card instantly.</p>
-        
-        <div className="mb-8">
-            <div className="w-28 h-28 rounded-full bg-green-500/20 flex items-center justify-center mx-auto animate-pulse ring-4 ring-green-500/30">
-                <Check className="w-16 h-16 text-green-400" strokeWidth={3} />
-            </div>
-            <p className="text-green-400 mt-6 text-xl font-semibold">Order Complete!</p>
-        </div>
-        
+      {/* Navigation Buttons */}
+      <div className="flex justify-center space-x-4">
         <button
-            onClick={nextStage}
-            className="flex items-center justify-center mx-auto px-10 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40 transition duration-300"
+          onClick={prevStage}
+          className="flex items-center px-6 py-3 rounded-xl font-bold bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
         >
-            Start New Order <ChevronRight className="w-5 h-5 ml-2" />
+          <ChevronLeft className="w-5 h-5 mr-2" /> Back
         </button>
+        <button
+          onClick={nextStage}
+          disabled={isNextDisabled}
+          className={`flex items-center px-10 py-3 rounded-xl font-bold transition-all duration-300 ${
+            isNextDisabled
+              ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
+          }`}
+        >
+          Next <ChevronRight className="w-5 h-5 ml-2" />
+        </button>
+      </div>
     </div>
-);
+  );
+};
 
+// --- Shipping Logic (Mirrored from Backend) ---
+enum ShippingZone {
+  ZONE_1 = "Zone 1",
+  ZONE_2 = "Zone 2",
+  ZONE_3 = "Zone 3", // Origin
+  ZONE_4 = "Zone 4",
+  ZONE_5 = "Zone 5",
+  ZONE_6 = "Zone 6",
+  ZONE_7 = "Zone 7",
+}
+
+const ZONE_PRICING: Record<ShippingZone, number> = {
+  [ShippingZone.ZONE_1]: 1700,
+  [ShippingZone.ZONE_2]: 2600,
+  [ShippingZone.ZONE_3]: 3000,
+  [ShippingZone.ZONE_4]: 2500,
+  [ShippingZone.ZONE_5]: 3000,
+  [ShippingZone.ZONE_6]: 3500,
+  [ShippingZone.ZONE_7]: 3300,
+};
+
+const CITY_ZONES: Record<string, ShippingZone> = {
+  // Zone 1
+  lagos: ShippingZone.ZONE_1,
+
+  // Zone 2
+  agbara: ShippingZone.ZONE_2,
+  "mowe ibafo": ShippingZone.ZONE_2,
+  ajah: ShippingZone.ZONE_2,
+  akute: ShippingZone.ZONE_2,
+  awoyaya: ShippingZone.ZONE_2,
+  badagry: ShippingZone.ZONE_2,
+  epe: ShippingZone.ZONE_2,
+  "ibeju-lekki": ShippingZone.ZONE_2,
+  "ibeju lekki": ShippingZone.ZONE_2,
+  ijanikin: ShippingZone.ZONE_2,
+  ikorodu: ShippingZone.ZONE_2,
+  ojo: ShippingZone.ZONE_2,
+  ojokoro: ShippingZone.ZONE_2,
+  okokomaiko: ShippingZone.ZONE_2,
+  sagamu: ShippingZone.ZONE_2,
+
+  // Zone 3 (Origin)
+  abeokuta: ShippingZone.ZONE_3,
+  abuja: ShippingZone.ZONE_3,
+  "port harcourt": ShippingZone.ZONE_3,
+  akure: ShippingZone.ZONE_3,
+  awka: ShippingZone.ZONE_3,
+  ibadan: ShippingZone.ZONE_3,
+  asaba: ShippingZone.ZONE_3,
+  benin: ShippingZone.ZONE_3,
+  eleme: ShippingZone.ZONE_3,
+  gwagwalada: ShippingZone.ZONE_3,
+  idu: ShippingZone.ZONE_3,
+  nnewi: ShippingZone.ZONE_3,
+  obantoko: ShippingZone.ZONE_3,
+  onitsha: ShippingZone.ZONE_3,
+  osogbo: ShippingZone.ZONE_3,
+  owerri: ShippingZone.ZONE_3,
+  oyigbo: ShippingZone.ZONE_3,
+
+  // Zone 4
+  "ado ekiti": ShippingZone.ZONE_4,
+  agbor: ShippingZone.ZONE_4,
+  akoko: ShippingZone.ZONE_4,
+  ede: ShippingZone.ZONE_4,
+  ikire: ShippingZone.ZONE_4,
+  ikirun: ShippingZone.ZONE_4,
+  "ile ife": ShippingZone.ZONE_4,
+  ilesha: ShippingZone.ZONE_4,
+  iwo: ShippingZone.ZONE_4,
+  masaka: ShippingZone.ZONE_4,
+  nsukka: ShippingZone.ZONE_4,
+  offa: ShippingZone.ZONE_4,
+  ogbomosho: ShippingZone.ZONE_4,
+  "ondo town": ShippingZone.ZONE_4,
+  ore: ShippingZone.ZONE_4,
+  owo: ShippingZone.ZONE_4,
+  "oyo town": ShippingZone.ZONE_4,
+  umuahia: ShippingZone.ZONE_4,
+  ilorin: ShippingZone.ZONE_4,
+
+  // Zone 5
+  aba: ShippingZone.ZONE_5,
+  "ago iwoye": ShippingZone.ZONE_5,
+  calabar: ShippingZone.ZONE_5,
+  enugu: ShippingZone.ZONE_5,
+  "ijebu igbo": ShippingZone.ZONE_5,
+  "ijebu ode": ShippingZone.ZONE_5,
+  "ikot ekpene": ShippingZone.ZONE_5,
+  ilaro: ShippingZone.ZONE_5,
+  "ilishan remo": ShippingZone.ZONE_5,
+  iperu: ShippingZone.ZONE_5,
+  jos: ShippingZone.ZONE_5,
+  kaduna: ShippingZone.ZONE_5,
+  maiduguri: ShippingZone.ZONE_5,
+  minna: ShippingZone.ZONE_5,
+  "sango otta": ShippingZone.ZONE_5,
+  "redeemed camp": ShippingZone.ZONE_5,
+  uyo: ShippingZone.ZONE_5,
+  warri: ShippingZone.ZONE_5,
+  yenagoa: ShippingZone.ZONE_5,
+
+  // Zone 6
+  abakaliki: ShippingZone.ZONE_6,
+  bauchi: ShippingZone.ZONE_6,
+  kano: ShippingZone.ZONE_6,
+  eket: ShippingZone.ZONE_6,
+  gombe: ShippingZone.ZONE_6,
+  lokoja: ShippingZone.ZONE_6,
+  okene: ShippingZone.ZONE_6,
+  suleja: ShippingZone.ZONE_6,
+  udu: ShippingZone.ZONE_6,
+  yola: ShippingZone.ZONE_6,
+  zaria: ShippingZone.ZONE_6,
+
+  // Zone 7
+  abraka: ShippingZone.ZONE_7,
+  agbarho: ShippingZone.ZONE_7,
+  "bonny island": ShippingZone.ZONE_7,
+  egor: ShippingZone.ZONE_7,
+  ekpoma: ShippingZone.ZONE_7,
+  etsako: ShippingZone.ZONE_7,
+  fupre: ShippingZone.ZONE_7,
+  keffi: ShippingZone.ZONE_7,
+  lafia: ShippingZone.ZONE_7,
+  markurdi: ShippingZone.ZONE_7,
+  obiaruku: ShippingZone.ZONE_7,
+  oghara: ShippingZone.ZONE_7,
+  ozoro: ShippingZone.ZONE_7,
+  sapele: ShippingZone.ZONE_7,
+  ughelli: ShippingZone.ZONE_7,
+  uromi: ShippingZone.ZONE_7,
+};
+
+const calculateShippingCost = (city: string): number => {
+  if (!city) return ZONE_PRICING[ShippingZone.ZONE_3];
+
+  const normalizedCity = city.toLowerCase().trim();
+
+  if (CITY_ZONES[normalizedCity])
+    return ZONE_PRICING[CITY_ZONES[normalizedCity]];
+
+  for (const [key, zone] of Object.entries(CITY_ZONES)) {
+    if (normalizedCity.includes(key) || key.includes(normalizedCity)) {
+      return ZONE_PRICING[zone];
+    }
+  }
+
+  return ZONE_PRICING[ShippingZone.ZONE_3]; // Default
+};
+
+// --- Stage 3: Shipping ---
+const Stage3Shipping: React.FC<StageProps> = ({
+  formData,
+  setFormData,
+  nextStage,
+  prevStage,
+}) => {
+  const [cityError, setCityError] = useState<string>("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "shippingCity") {
+      setCityError(""); // Clear error on type
+      const cost = calculateShippingCost(value);
+      setFormData((prev) => ({
+        ...prev,
+        shippingCity: value,
+        shippingCost: cost,
+      }));
+    }
+  };
+
+  const isNextDisabled =
+    !formData.shippingAddress ||
+    !formData.shippingCity ||
+    !formData.shippingState;
+
+  return (
+    <div className="text-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+        Shipping Details
+      </h2>
+      <p className="text-gray-400 mb-12">
+        Where should we create and send your card?
+      </p>
+
+      <div className="max-w-xl mx-auto space-y-6 text-left mb-12">
+        <div>
+          <label className="text-gray-300 text-sm font-medium mb-2 block">
+            Address
+          </label>
+          <input
+            type="text"
+            name="shippingAddress"
+            value={formData.shippingAddress || ""}
+            onChange={handleChange}
+            placeholder="123 Main Street"
+            className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-gray-300 text-sm font-medium mb-2 block">
+              City / Town
+            </label>
+            <input
+              type="text"
+              name="shippingCity"
+              value={formData.shippingCity || ""}
+              onChange={handleChange}
+              placeholder="e.g. Lagos"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+            />
+            {cityError && (
+              <p className="text-red-400 text-xs mt-1">{cityError}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-gray-300 text-sm font-medium mb-2 block">
+              State
+            </label>
+            <input
+              type="text"
+              name="shippingState"
+              value={formData.shippingState || ""}
+              onChange={handleChange}
+              placeholder="e.g. Lagos State"
+              className="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white"
+            />
+          </div>
+        </div>
+
+        <div className="p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
+          <div className="flex justify-between items-center text-blue-200">
+            <span>Estimated Shipping Cost:</span>
+            <span className="font-bold text-xl">
+              ₦{(formData.shippingCost || 3000).toLocaleString("en-US")}
+            </span>
+          </div>
+          <p className="text-xs text-blue-300/70 mt-1">
+            Determined by city:{" "}
+            {Object.keys(CITY_ZONES).find((k) =>
+              formData.shippingCity?.toLowerCase().includes(k),
+            )
+              ? "Covered Zone"
+              : "Standard Rate (Zone 3)"}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={prevStage}
+          className="flex items-center px-6 py-3 rounded-xl font-bold bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
+        >
+          <ChevronLeft className="w-5 h-5 mr-2" /> Back
+        </button>
+        <button
+          onClick={nextStage}
+          disabled={isNextDisabled}
+          className={`flex items-center px-10 py-3 rounded-xl font-bold transition-all duration-300 ${
+            isNextDisabled
+              ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
+          }`}
+        >
+          Next <ChevronRight className="w-5 h-5 ml-2" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// --- Stage 4: Payment ---
+const Stage4Payment: React.FC<StageProps> = ({
+  formData,
+  nextStage,
+  prevStage,
+}) => {
+  const template = formData.selectedTemplate || CARD_TEMPLATES[0];
+
+  // Ensure shipping cost is calculated if not already
+  const shippingCost =
+    formData.shippingCost || calculateShippingCost(formData.shippingCity || "");
+  const itemPrice = template.price;
+  const totalPrice = itemPrice + shippingCost;
+
+  return (
+    <div className="text-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+        Card Summary & Payment
+      </h2>
+
+      <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-10 mb-12 p-4 md:p-8 bg-gray-800/60 rounded-xl border border-gray-700">
+        {/* Left Section: Card Summary & Price */}
+        <div className="w-full md:w-1/3 flex flex-col items-center md:items-start space-y-4">
+          {/* Price/Title Section */}
+          <div className="w-full">
+            <h3 className="text-xl font-semibold text-white md:text-left text-center hidden md:block">
+              {template.name} Digital Card
+            </h3>
+            <h3 className="text-xl font-semibold text-white md:text-left text-center block md:hidden">
+              Card Summary
+            </h3>
+
+            <div className="mt-4 space-y-2 border-b border-gray-600 pb-4 mb-4">
+              <div className="flex justify-between text-gray-300">
+                <span>Card Price</span>
+                <span>₦{itemPrice.toLocaleString("en-US")}</span>
+              </div>
+              <div className="flex justify-between text-gray-300">
+                <span>Shipping ({formData.shippingCity})</span>
+                <span>₦{shippingCost.toLocaleString("en-US")}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-gray-200 font-semibold">Total</span>
+              <p className="text-3xl md:text-4xl font-extrabold text-blue-400">
+                ₦{totalPrice.toLocaleString("en-US")}
+              </p>
+            </div>
+          </div>
+
+          {/* Mock Card Preview (Horizontal view, slightly tilted) */}
+          <div className="mt-4 w-48 h-32 relative transform rotate-[-8deg] translate-x-4 md:-translate-x-4">
+            <MockCard
+              template={template}
+              details={formData}
+              isSelected={false}
+              isVertical={false}
+            />
+          </div>
+        </div>
+
+        {/* Vertical Separator (Hidden on mobile) */}
+        <div className="hidden md:block w-px h-64 bg-gray-700" />
+
+        {/* Right Section: Payment Button */}
+        <div className="w-full md:w-2/3 space-y-6 text-left">
+          {/* Pay Now Button */}
+          <button
+            onClick={nextStage}
+            className="w-full flex items-center justify-center px-10 py-4 rounded-xl font-bold transition-all duration-300 text-lg bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40"
+          >
+            <ShoppingBag className="w-5 h-5 mr-2" /> Pay Now
+          </button>
+
+          <p className="text-xs text-gray-500 text-center pt-2">
+            By proceeding, you agree to our Terms and Conditions.
+          </p>
+        </div>
+      </div>
+
+      {/* Navigation Buttons (Back only) */}
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={prevStage}
+          className="flex items-center px-6 py-3 rounded-xl font-bold bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
+        >
+          <ChevronLeft className="w-5 h-5 mr-2" /> Back to Details
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// --- Stage 5: Complete ---
+const Stage5Complete: React.FC<
+  Omit<StageProps, "formData" | "setFormData" | "prevStage">
+> = ({ nextStage }) => (
+  <div className="text-center max-w-lg mx-auto p-10 bg-gray-800/60 rounded-xl shadow-2xl border border-gray-700">
+    <h2 className="text-3xl font-bold text-white mb-3">Payment Successful</h2>
+    <p className="text-gray-400 mb-8">
+      Your digital card is now active. You can access your dashboard to manage
+      your details and share your card instantly.
+    </p>
+
+    <div className="mb-8">
+      <div className="w-28 h-28 rounded-full bg-green-500/20 flex items-center justify-center mx-auto animate-pulse ring-4 ring-green-500/30">
+        <Check className="w-16 h-16 text-green-400" strokeWidth={3} />
+      </div>
+      <p className="text-green-400 mt-6 text-xl font-semibold">
+        Order Complete!
+      </p>
+    </div>
+
+    <button
+      onClick={nextStage}
+      className="flex items-center justify-center mx-auto px-10 py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/40 transition duration-300"
+    >
+      Start New Order <ChevronRight className="w-5 h-5 ml-2" />
+    </button>
+  </div>
+);
 
 // --- Main Application Component (Exported for Next.js) ---
 export const CardForm = () => {
-    // Initialize selectedTemplate with the first item to ensure a default is always selected
-    const initialTemplate = CARD_TEMPLATES[0];
+  // Initialize selectedTemplate with the first item to ensure a default is always selected
+  const initialTemplate = CARD_TEMPLATES[0];
 
-    const [currentStage, setCurrentStage] = useState<number>(1);
-    const [formData, setFormData] = useState<FormData>({
-        templateId: initialTemplate.id,
-        selectedTemplate: initialTemplate,
-        cardHolderName: '',
-    });
+  const [currentStage, setCurrentStage] = useState<number>(1);
+  const [formData, setFormData] = useState<FormData>({
+    templateId: initialTemplate.id,
+    selectedTemplate: initialTemplate,
+    cardHolderName: "",
+    shippingAddress: "",
+    shippingCity: "",
+    shippingState: "",
+    shippingCost: 3000, // Default to Zone 3
+  });
 
-    const nextStage = () => {
-        if (currentStage < 4) {
-            setCurrentStage(prev => prev + 1);
-        }
-    };
+  const nextStage = () => {
+    if (currentStage < 5) {
+      setCurrentStage((prev) => prev + 1);
+    }
+  };
 
-    const prevStage = () => {
-        if (currentStage > 1) {
-            setCurrentStage(prev => prev - 1);
-        }
-    };
+  const prevStage = () => {
+    if (currentStage > 1) {
+      setCurrentStage((prev) => prev - 1);
+    }
+  };
 
-    const stageProps = { formData, setFormData, nextStage, prevStage };
+  const stageProps = { formData, setFormData, nextStage, prevStage };
 
-    const renderStage = () => {
-        switch (currentStage) {
-            case 1:
-                return <Stage1TemplateSelection {...stageProps} />;
-            case 2:
-                return <Stage2Details {...stageProps} />;
-            case 3:
-                return <Stage3Payment {...stageProps} />;
-            case 4:
-                return <Stage4Complete nextStage={() => setCurrentStage(1)} />;
-            default:
-                return null;
-        }
-    };
+  const renderStage = () => {
+    switch (currentStage) {
+      case 1:
+        return <Stage1TemplateSelection {...stageProps} />;
+      case 2:
+        return <Stage2Details {...stageProps} />;
+      case 3:
+        return <Stage3Shipping {...stageProps} />;
+      case 4:
+        return <Stage4Payment {...stageProps} />;
+      case 5:
+        return <Stage5Complete nextStage={() => setCurrentStage(1)} />;
+      default:
+        return null;
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-[#030C32] text-white font-sans relative overflow-hidden">
-            {/* Background Grid and Glow Effect for the visual aesthetic */}
-            <div className="absolute inset-0 z-0 opacity-10" style={{
-                backgroundImage: 'repeating-linear-gradient(0deg, #1f2937 0px, #1f2937 1px, transparent 1px, transparent 50px), repeating-linear-gradient(90deg, #1f2937 0px, #1f2937 1px, transparent 1px, transparent 50px)',
-                backgroundSize: '50px 50px',
-            }} />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] z-0" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] z-0" />
+  return (
+    <div className="min-h-screen bg-[#030C32] text-white font-sans relative overflow-hidden">
+      {/* Background Grid and Glow Effect for the visual aesthetic */}
+      <div
+        className="absolute inset-0 z-0 opacity-10"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, #1f2937 0px, #1f2937 1px, transparent 1px, transparent 50px), repeating-linear-gradient(90deg, #1f2937 0px, #1f2937 1px, transparent 1px, transparent 50px)",
+          backgroundSize: "50px 50px",
+        }}
+      />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] z-0" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] z-0" />
 
-            {/* --- Navbar Placeholder (Top) --- */}
-            <header className="relative z-10 p-4 md:p-6 border-b border-gray-800/50">
-                <nav className="max-w-7xl mx-auto flex justify-between items-center">
-                    <div className="text-2xl font-bold text-white">Sync Card</div>
-                    <div className="text-sm text-gray-400 hidden sm:block">Welcome</div>
-                </nav>
-                
-            </header>
+      {/* --- Navbar Placeholder (Top) --- */}
+      <header className="relative z-10 p-4 md:p-6 border-b border-gray-800/50">
+        <nav className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="text-2xl font-bold text-white">Sync Card</div>
+          <div className="text-sm text-gray-400 hidden sm:block">Welcome</div>
+        </nav>
+      </header>
 
-            {/* --- Main Form Content --- */}
-            <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-                <Stepper currentStage={currentStage} />
-                <div className="p-4 md:p-8 bg-gray-900/50 rounded-2xl shadow-2xl backdrop-blur-md border border-gray-700/50">
-                    {renderStage()}
-                </div>
-            </main>
-
-            {/* --- Footer Placeholder (Bottom) --- */}
-            <footer className="relative z-10 mt-20 p-4 border-t border-gray-800/50 text-center text-xs text-gray-500">
-                &copy; {new Date().getFullYear()} Sync Card. All rights reserved.
-            </footer>
+      {/* --- Main Form Content --- */}
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <Stepper currentStage={currentStage} />
+        <div className="p-4 md:p-8 bg-gray-900/50 rounded-2xl shadow-2xl backdrop-blur-md border border-gray-700/50">
+          {renderStage()}
         </div>
-    );
+      </main>
+
+      {/* --- Footer Placeholder (Bottom) --- */}
+      <footer className="relative z-10 mt-20 p-4 border-t border-gray-800/50 text-center text-xs text-gray-500">
+        &copy; {new Date().getFullYear()} Sync Card. All rights reserved.
+      </footer>
+    </div>
+  );
 };
 
 export default CardForm;
