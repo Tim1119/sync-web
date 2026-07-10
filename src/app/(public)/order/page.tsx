@@ -52,7 +52,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 1,
     name: "Nova",
-    price: 35000,
+    price: 15000,
     theme: "bg-blue-600",
     color: "#2563EB",
     subtext: "Bold and Modern",
@@ -60,7 +60,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 2,
     name: "Maple",
-    price: 50000,
+    price: 25000,
     theme: "bg-yellow-800",
     color: "#D4B99F",
     subtext: "Natural Wood Grain",
@@ -68,7 +68,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 3,
     name: "Auric",
-    price: 60000,
+    price: 35000,
     theme: "bg-gray-900",
     color: "#282828",
     subtext: "Sleek and Minimal",

@@ -348,7 +348,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 1,
     name: "Auric",
-    price: 60000,
+    price: 35000,
     theme: "bg-neutral-900",
     color: "#171717",
     tagline: "Engineered prestige.",
@@ -367,7 +367,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 2,
     name: "Maple",
-    price: 50000,
+    price: 25000,
     theme: "bg-[#E3CAA5]",
     color: "#D4B99F",
     tagline: "Natural. Sustainable. Unique.",
@@ -386,7 +386,7 @@ const CARD_TEMPLATES: CardTemplate[] = [
   {
     id: 3,
     name: "Nova",
-    price: 35000,
+    price: 15000,
     theme: "bg-blue-600",
     color: "#2563EB",
     tagline: "Sleek. Modern. High-performance.",
@@ -1457,7 +1457,7 @@ export default function CardForm() {
             </div>
           </div>
 
-          <div className="lg:col-span-4 relative">
+          {/* <div className="lg:col-span-4 relative">
             <div className="sticky top-8 space-y-6">
               <OrderSummary cart={cart} total={totalAmount} contact={contact} />
               <button
@@ -1474,7 +1474,32 @@ export default function CardForm() {
                 Proceed to Payment
               </button>
             </div>
-          </div>
+          </div> */}
+
+          <div className="lg:col-span-4 relative">
+  <div className="sticky top-8 space-y-6">
+    <OrderSummary cart={cart} total={totalAmount} contact={contact} />
+    <div className="flex gap-3">
+      <button
+        onClick={() => changeStep(step - 1)}
+        className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-white bg-gray-800 hover:bg-gray-700 transition-all"
+      >
+        <ChevronLeft className="w-5 h-5" /> Back
+      </button>
+      <button
+        onClick={handleProceedToPayment}
+        disabled={!canProceedToPayment()}
+        className={`flex-1 py-4 rounded-xl font-bold text-lg shadow-lg transition-all
+          ${canProceedToPayment()
+            ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-900/20"
+            : "bg-gray-800 text-gray-500 cursor-not-allowed"
+          }`}
+      >
+        Proceed to Payment
+      </button>
+    </div>
+  </div>
+</div>
         </div>
       </div>
     );
