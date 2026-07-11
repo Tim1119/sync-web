@@ -45,7 +45,7 @@ const cardsData: CardData[] = [
   {
     id: "nova-card",
     name: "Nova Card",
-    price: "₦35,000",
+    price: "₦15,000",
     image: "/landing/nova-card-front.png",
     features: [
       { text: "Durable plastic finish" },
@@ -58,7 +58,7 @@ const cardsData: CardData[] = [
   {
     id: "maple-card",
     name: "Maple Card",
-    price: "₦50,000",
+    price: "₦25,000",
     image: "/landing/maple-card-front.png",
     features: [
       { text: "Premium wooden body" },
@@ -71,7 +71,7 @@ const cardsData: CardData[] = [
   {
     id: "metal-card",
     name: "Auric Card",
-    price: "₦60,000",
+    price: "₦35,000",
     image: "/landing/auric-card-horizontal.png",
     features: [
       { text: "Solid metal construction" },
